@@ -5,40 +5,45 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Role
+ * Class ProductSkin
  * @package App
  * -------------------------------------
  * @property integer id
  *
  * @property string name
- * @property string desc
+ * @property string status
  *
  * @property string created_at
  * @property string updated_at
  *
  */
-class Role extends Model
+class ProductSkin extends Model
 {
     const LIMIT = 10;
+    const ACTIVATE_STATUS = 'activate',
+        DEACTIVATE_STATUS = 'deactivate';
 
-    protected $table = 'roles';
+    protected $table = 'product_skins';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name', 'desc'];
+    protected $fillable = ['name'];
 
     public $validateMessage = [
         'name.required' => 'tên không thể bỏ trống.',
         'name.max' => 'tên tối đa 255 ký tự',
-        'desc.required' => 'mô tả không thể bỏ trống.',
     ];
 
     public $validateRules = [
         'name' => 'required|max:255',
-        'desc' => 'required',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Company::class, 'city_id', 'id');
+    }
 
     public function search($searchParams = [])
     {
@@ -49,6 +54,16 @@ class Role extends Model
         }
 
         return $model->paginate(self::LIMIT);
+    }
+
+    public function getListSkins($addAll = true){
+        $data =  $this->select('id', 'name')->get()->toArray();
+
+        if ($addAll) {
+            $firstItem = ['id' => null, 'name' => 'Tất cả'];
+            array_unshift($data, $firstItem);
+        }
+        return $data;
     }
 
 }

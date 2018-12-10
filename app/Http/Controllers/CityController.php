@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Role;
+use App\City;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class CityController extends Controller
 {
 
     /**
@@ -19,12 +19,12 @@ class RoleController extends Controller
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
-        $model = new Role();
+        $model = new City();
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams
         ];
-        return view('role.index', $shared);
+        return view('city.index', $shared);
     }
 
     /**
@@ -34,11 +34,11 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $model = new Role();
+        $model = new City();
         $shared = [
             "model" => $model
         ];
-        return view('role.create', $shared);
+        return view('city.create', $shared);
     }
 
     /**
@@ -48,16 +48,12 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $model = new Role();
-
+        $model = new City();
         $this->validate($request, $model->validateRules, $model->validateMessage);
-
         $model->name = $request->get('name');
-        $model->desc = $request->get('desc');
-
         $model->save();
         return redirect()
-            ->route('roles.index')
+            ->route('cities.index')
             ->with('success', 'Thêm mới thành công');
     }
 
@@ -73,7 +69,7 @@ class RoleController extends Controller
         $shared = [
             "model" => $model
         ];
-        return view('role.edit', $shared);
+        return view('city.edit', $shared);
     }
 
     /**
@@ -89,10 +85,9 @@ class RoleController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->name = $request->get('name');
-        $model->desc = $request->get('desc');
         $model->save();
         return redirect()
-            ->route('roles.index')
+            ->route('cities.index')
             ->with('success', 'Cập nhật thành công');
     }
 
@@ -105,6 +100,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        # find model and delete
         $model = $this->finById($id);
 
         if ($model->delete()) {
@@ -123,10 +119,10 @@ class RoleController extends Controller
 
     /**
      * @param $id
-     * @return Role
+     * @return City
      */
     protected function finById($id)
     {
-        return Role::findOrFail($id);
+        return City::findOrFail($id);
     }
 }

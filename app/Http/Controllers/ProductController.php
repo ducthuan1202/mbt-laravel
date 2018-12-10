@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Role;
+use App\Product;
+use App\ProductSkin;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class ProductController extends Controller
 {
 
     /**
@@ -15,16 +16,20 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         $searchParams = [
-            'keyword' => ''
+            'skin' => null,
+            'keyword' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
-        $model = new Role();
+        $skinModel = new ProductSkin();
+        $model = new Product();
+
         $shared = [
             'data' => $model->search($searchParams),
-            'searchParams' => $searchParams
+            'searchParams' => $searchParams,
+            'skins' => $skinModel->getListSkins(),
         ];
-        return view('role.index', $shared);
+        return view('product.index', $shared);
     }
 
     /**
@@ -34,11 +39,14 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $model = new Role();
+        $skinModel = new ProductSkin();
+        $model = new Product();
         $shared = [
-            "model" => $model
+            "model" => $model,
+            'skins' => $skinModel->getListSkins(),
         ];
-        return view('role.create', $shared);
+
+        return view('product.create', $shared);
     }
 
     /**
@@ -48,16 +56,13 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $model = new Role();
-
+        $model = new Product();
         $this->validate($request, $model->validateRules, $model->validateMessage);
-
-        $model->name = $request->get('name');
-        $model->desc = $request->get('desc');
-
+        $model->capacity = $request->get('capacity');
+        $model->status = ProductSkin::ACTIVATE_STATUS;
         $model->save();
         return redirect()
-            ->route('roles.index')
+            ->route('products.index')
             ->with('success', 'Thêm mới thành công');
     }
 
@@ -69,11 +74,13 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
+        $skinModel = new ProductSkin();
         $model = $this->finById($id);
         $shared = [
-            "model" => $model
+            "model" => $model,
+            'skins' => $skinModel->getListSkins(),
         ];
-        return view('role.edit', $shared);
+        return view('product.edit', $shared);
     }
 
     /**
@@ -89,10 +96,9 @@ class RoleController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->name = $request->get('name');
-        $model->desc = $request->get('desc');
         $model->save();
         return redirect()
-            ->route('roles.index')
+            ->route('products.index')
             ->with('success', 'Cập nhật thành công');
     }
 
@@ -105,6 +111,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        # find model and delete
         $model = $this->finById($id);
 
         if ($model->delete()) {
@@ -123,10 +130,10 @@ class RoleController extends Controller
 
     /**
      * @param $id
-     * @return Role
+     * @return Product
      */
     protected function finById($id)
     {
-        return Role::findOrFail($id);
+        return Product::findOrFail($id);
     }
 }

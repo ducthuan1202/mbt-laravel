@@ -1,3 +1,6 @@
+@php
+    $user = \Illuminate\Support\Facades\Auth::user();
+@endphp
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -26,6 +29,7 @@
 </head>
 
 <body class="nav-md">
+
 <div class="container body">
     <div class="main_container">
         @include('layouts.partials.sidebar')
