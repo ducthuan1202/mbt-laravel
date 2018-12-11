@@ -16,9 +16,10 @@ class CreateProducts extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_skin_id');
+            $table->string('name');
             $table->string('capacity')->comment('công suất');
-            $table->string('voltage_input')->comment('điện áp đầu vào');
-            $table->string('voltage_output')->comment('điện áp đầu ra');
+            $table->string('voltage_input')->comment('điện áp vào');
+            $table->string('voltage_output')->comment('điện áp ra');
             $table->integer('price');
             $table->string('standard')->comment('tiêu chuẩn');
             $table->string('status');

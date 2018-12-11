@@ -27,7 +27,7 @@ class CompanyController extends Controller
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'cities'=>$cityModel->getListCities()
+            'cities'=>$cityModel->getDropDownList()
         ];
         return view('company.index', $shared);
     }
@@ -43,7 +43,7 @@ class CompanyController extends Controller
         $model = new Company();
         $shared = [
             "model" => $model,
-            'cities'=>$cityModel->getListCities()
+            'cities'=>$cityModel->getDropDownList()
         ];
         return view('company.create', $shared);
     }
@@ -57,11 +57,11 @@ class CompanyController extends Controller
     {
         $model = new Company();
         $this->validate($request, $model->validateRules, $model->validateMessage);
-        $model->city_id = $request->get('city_id');
-        $model->name = $request->get('name');
-        $model->desc = $request->get('desc');
+        $model->fill($request->all());
         $model->save();
-        return redirect()->route('companies.index')->with('success', 'Thêm mới thành công');
+        return redirect()
+            ->route('companies.index')
+            ->with('success', 'Thêm mới thành công');
     }
 
     /**
@@ -76,7 +76,7 @@ class CompanyController extends Controller
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
-            'cities'=>$cityModel->getListCities()
+            'cities'=>$cityModel->getDropDownList()
         ];
         return view('company.edit', $shared);
     }
@@ -93,11 +93,11 @@ class CompanyController extends Controller
     {
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
-        $model->city_id = $request->get('city_id');
-        $model->name = $request->get('name');
-        $model->desc = $request->get('desc');
+        $model->fill($request->all());
         $model->save();
-        return redirect()->route('companies.index')->with('success', 'Cập nhật thành công');
+        return redirect()
+            ->route('companies.index')
+            ->with('success', 'Cập nhật thành công');
     }
 
     /**

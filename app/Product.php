@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer id
  *
  * @property integer product_skin_id
+ * @property string name
  * @property string capacity
  * @property string voltage_input
  * @property string voltage_output
@@ -21,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string created_at
  * @property string updated_at
  *
- *
+ * @property ProductSkin skin
  */
 class Product extends Model
 {
@@ -35,15 +36,20 @@ class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['product_skin_id','capacity','voltage_input','voltage_output','price','standard', 'status'];
+    protected $fillable = [
+        'product_skin_id', 'name',
+        'capacity', 'voltage_input', 'voltage_output',
+        'price', 'standard', 'status'
+    ];
 
     public $validateMessage = [
-        'product_skin_id.required' => 'tên không thể bỏ trống.',
-        'capacity.required' => 'tên không thể bỏ trống.',
-        'voltage_input.required' => 'tên không thể bỏ trống.',
-        'voltage_output.required' => 'tên không thể bỏ trống.',
-        'price.required' => 'tên không thể bỏ trống.',
-        'standard.required' => 'tên không thể bỏ trống.',
+        'name.required' => 'Tên sản phẩm không thể bỏ trống.',
+        'product_skin_id.required' => 'Chọn loại hình sản phẩm.',
+        'capacity.required' => 'Công suất không thể bỏ trống.',
+        'voltage_input.required' => 'Điện áp vào không thể bỏ trống.',
+        'voltage_output.required' => 'Điện áp ra không thể bỏ trống.',
+        'price.required' => 'Giá bán không thể bỏ trống.',
+        'standard.required' => 'Tiêu chuẩn không thể bỏ trống.',
     ];
 
     public $validateRules = [
@@ -52,12 +58,23 @@ class Product extends Model
         'name' => 'required|max:255',
         'voltage_input' => 'required|max:255',
         'voltage_output' => 'required|max:255',
-        'price' => 'required|max:255',
+        'price' => 'required|max:11',
         'standard' => 'required|max:255',
     ];
 
-    public function skin(){
+    public function skin()
+    {
         return $this->hasOne(ProductSkin::class, 'id', 'product_skin_id');
+    }
+
+    public function getDropDownList($addAll = true){
+        $data =  $this->select('id', 'name')->get()->toArray();
+
+        if ($addAll) {
+            $firstItem = ['id' => null, 'name' => 'Tất cả'];
+            array_unshift($data, $firstItem);
+        }
+        return $data;
     }
 
     public function search($searchParams = [])
@@ -68,8 +85,23 @@ class Product extends Model
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
         }
-
+        // filter by skin
+        if (isset($searchParams['skin']) && !empty($searchParams['skin'])) {
+            $model = $model->where('product_skin_id', $searchParams['skin']);
+        }
         return $model->paginate(self::LIMIT);
     }
 
+    public function formatSkin()
+    {
+        if ($this->skin) {
+            return $this->skin->name;
+        }
+        return 'không xác định';
+    }
+
+    public static function formatMoney($money)
+    {
+        return number_format($money) . ',000 đ';
+    }
 }

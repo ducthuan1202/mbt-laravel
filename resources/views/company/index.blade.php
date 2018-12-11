@@ -37,39 +37,39 @@
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
-                            <tr class="headings">
-                                <th>STT</th>
-                                <th>Khu Vực</th>
-                                <th>Tên Công Ty</th>
-                                <th>Mô Tả</th>
-                                <th>Hành Động</th>
-                            </tr>
+                        <tr class="headings">
+                            <th>STT</th>
+                            <th>Tên Công Ty</th>
+                            <th>Khu Vực</th>
+                            <th>Mô Tả</th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @if(count($data))
-                                @foreach($data as $item)
-                                    <tr>
-                                        <td style="width: 50px">{{$item->id}}</td>
-                                        <td>{{$item->formatCity()}}</td>
-                                        <td>{{$item->name}}</td>
-                                        <td>{{$item->desc}}</td>
-                                        <td style="width: 200px">
-                                            <div class="btn-group">
-                                                <a class="btn btn-default" href="{{route('companies.edit', $item->id)}}">
-                                                    <i class="fa fa-edit"></i> Sửa
-                                                </a>
-                                                <a class="btn btn-default" onclick="MBT_Company.delete({{$item->id}})">
-                                                    <i class="fa fa-trash"></i> Xóa
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
+                        @if(count($data))
+                            @foreach($data as $item)
                                 <tr>
-                                    <td colspan="100%">Không có dữ liệu.</td>
+                                    <td style="width: 50px">{{$item->id}}</td>
+                                    <td>{{$item->name}}</td>
+                                    <td>{{$item->formatCity()}}</td>
+                                    <td>{{str_limit($item->desc, 250)}}</td>
+                                    <td style="width: 200px">
+                                        <div class="btn-group">
+                                            <a class="btn btn-default" href="{{route('companies.edit', $item->id)}}">
+                                                <i class="fa fa-edit"></i> Sửa
+                                            </a>
+                                            <a class="btn btn-default" onclick="MBT_Company.delete({{$item->id}})">
+                                                <i class="fa fa-trash"></i> Xóa
+                                            </a>
+                                        </div>
+                                    </td>
                                 </tr>
-                            @endif
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="100%">Không có dữ liệu.</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                 </div>
@@ -84,5 +84,5 @@
 
 @section('script')
     <!-- FastClick -->
-    <script src="{{ asset('/template/build/js/city.js') }}"></script>
+    <script src="{{ asset('/template/build/js/company.js') }}"></script>
 @endsection

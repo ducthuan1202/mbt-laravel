@@ -17,14 +17,18 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::middleware(['auth'])->group(function () {
 
-Route::resource('roles', 'RoleController');
-Route::resource('cities', 'CityController');
-Route::resource('companies', 'CompanyController');
-Route::resource('skins', 'ProductSkinController');
-Route::resource('products', 'ProductController');
-Route::resource('customers', 'ProductSkinController');
-Route::resource('orders', 'ProductSkinController');
-Route::resource('users', 'ProductSkinController');
-Route::resource('cares', 'ProductSkinController');
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::resource('roles', 'RoleController');
+    Route::resource('cities', 'CityController');
+    Route::resource('companies', 'CompanyController');
+    Route::resource('skins', 'ProductSkinController');
+    Route::resource('products', 'ProductController');
+    Route::resource('customers', 'CustomerController');
+    Route::resource('orders', 'ProductSkinController');
+    Route::resource('users', 'ProductSkinController');
+    Route::resource('cares', 'ProductSkinController');
+    Route::resource('quotations', 'PriceQuotationController');
+
+});

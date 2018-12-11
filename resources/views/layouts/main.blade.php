@@ -22,7 +22,10 @@
     <link href="{{ asset('/template/vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet"/>
     <!-- NProgress -->
     <link href="{{ asset('/template/vendors/nprogress/nprogress.css') }}" rel="stylesheet"/>
+    <!-- bootstrap-daterangepicker -->
+    <link href="{{ asset('/template/vendors/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet"/>
 
+    @yield('style')
 
     <!-- Custom Theme Style -->
     <link href="{{ asset('/template/build/css/custom.min.css') }}" rel="stylesheet"/>
@@ -50,16 +53,21 @@
 
 <!-- jQuery -->
 <script src="{{ asset('/template/vendors/jquery/dist/jquery.min.js') }}"></script>
-<script>$.ajaxSetup({headers: {'X-CSRF-TOKEN': '{{csrf_token()}}'}});</script>
+
 <!-- Bootstrap -->
 <script src="{{ asset('/template/vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+<!-- bootstrap-daterangepicker -->
+<script src="{{ asset('/template/vendors/moment/min/moment.min.js') }}"></script>
+<script src="{{ asset('/template/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 <!-- Sweetalert -->
 <script src="{{ asset('/template/vendors/sweetalert/sweetalert.min.js') }}"></script>
+
+<script>$.ajaxSetup({headers: {'X-CSRF-TOKEN': '{{csrf_token()}}'}});</script>
+
 <!-- general -->
 <script src="{{ asset('/template/build/js/general.js') }}"></script>
+
 @yield('script')
-<!-- Custom Theme Scripts -->
-<script src="{{ asset('/template/build/js/custom.min.js') }}"></script>
 </body>
 </html>
 

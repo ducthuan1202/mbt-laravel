@@ -46,19 +46,15 @@ class City extends Model
 
     public function search($searchParams = [])
     {
-        $model = $this;
+        $model = $this->orderBy('id', 'desc');
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
         }
-
-        // order by id desc
-        $model->orderBy('id', 'desc');
-
         return $model->paginate(self::LIMIT);
     }
 
-    public function getListCities($addAll = true){
+    public function getDropDownList($addAll = true){
         $data =  $this->select('id', 'name')->get()->toArray();
 
         if ($addAll) {

@@ -52,7 +52,7 @@ class ProductSkinController extends Controller
     {
         $model = new ProductSkin();
         $this->validate($request, $model->validateRules, $model->validateMessage);
-        $model->name = $request->get('name');
+        $model->fill($request->all());
         $model->status = ProductSkin::ACTIVATE_STATUS;
         $model->save();
         return redirect()
@@ -87,7 +87,7 @@ class ProductSkinController extends Controller
     {
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
-        $model->name = $request->get('name');
+        $model->fill($request->all());
         $model->save();
         return redirect()
             ->route('skins.index')

@@ -40,7 +40,7 @@
                             <tr class="headings">
                                 <th>STT</th>
                                 <th>Tên Khu Vực</th>
-                                <th>Hành Động</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>

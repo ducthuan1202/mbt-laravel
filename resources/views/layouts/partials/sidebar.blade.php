@@ -14,7 +14,7 @@
             </div>
             <div class="profile_info">
                 <span>Xin Chào,</span>
-                <h2>{{$user->name}}</h2>
+                <h2>{{$user ? $user->name : ''}}</h2>
             </div>
         </div>
         <!-- /menu profile quick info -->
@@ -27,32 +27,32 @@
                 <h3>General</h3>
                 <ul class="nav side-menu">
                     <li>
-                        <a><i class="fa fa-home"></i> Bảng Tin</a>
+                        <a><i class="fa fa-area-chart"></i> Bảng Tin</a>
                     </li>
                     <li>
-                        <a href="{{route('cities.index')}}"><i class="fa fa-home"></i> Khu Vực</a>
+                        <a href="{{route('cities.index')}}"><i class="fa fa-location-arrow"></i> Khu Vực</a>
                     </li>
                     <li>
-                        <a href="{{route('companies.index')}}"><i class="fa fa-home"></i> Công Ty</a>
+                        <a href="{{route('companies.index')}}"><i class="fa fa-briefcase"></i> Công Ty</a>
                     </li>
                     <li>
-                        <a href="{{route('products.index')}}"><i class="fa fa-home"></i> Sản Phẩm</a>
+                        <a href="{{route('products.index')}}"><i class="fa fa-cube"></i> Sản Phẩm</a>
                     </li>
                     <li>
-                        <a href="{{route('skins.index')}}"><i class="fa fa-home"></i> Loại Hình SP</a>
+                        <a href="{{route('skins.index')}}"><i class="fa fa-language"></i> Loại Hình SP</a>
                     </li>
                     <li>
-                        <a href="{{route('customers.index')}}"><i class="fa fa-home"></i> Khách Hàng</a>
+                        <a href="{{route('customers.index')}}"><i class="fa fa-users"></i> Khách Hàng</a>
                     </li>
                     <li>
-                        <a href="{{route('cares.index')}}"><i class="fa fa-home"></i> Chăm Sóc KH</a>
+                        <a href="{{route('cares.index')}}"><i class="fa fa-phone-square"></i> Chăm Sóc KH</a>
                     </li>
                     <li>
-                        <a href="{{route('cities.index')}}"><i class="fa fa-home"></i> Báo Giá</a>
+                        <a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Báo Giá</a>
                     </li>
                     <li>
                         <a href="{{route('orders.index')}}">
-                            <i class="fa fa-home"></i> Đơn Hàng
+                            <i class="fa fa-shopping-cart"></i> Đơn Hàng
                             <span class="label label-success pull-right">12</span>
                         </a>
                     </li>
@@ -62,10 +62,10 @@
                 <h3>Live On</h3>
                 <ul class="nav side-menu">
                     <li>
-                        <a href="{{route('users.index')}}"><i class="fa fa-bug"></i> Thành Viên</a>
+                        <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Thành Viên</a>
                     </li>
                     <li>
-                        <a href="{{route('roles.index')}}"><i class="fa fa-bug"></i> Nhóm Quyền</a>
+                        <a href="{{route('roles.index')}}"><i class="fa fa-sitemap"></i> Nhóm Quyền</a>
                     </li>
                 </ul>
             </div>

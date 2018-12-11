@@ -30,7 +30,7 @@ class Company extends Model
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'city_id', 'desc'];
 
     public $validateMessage = [
         'city_id.required' => 'khu vực không thể bỏ trống.',
@@ -68,6 +68,16 @@ class Company extends Model
         $model = $model->orderBy('id', 'desc');
 
         return $model->paginate(self::LIMIT);
+    }
+
+    public function getDropDownList($addAll = true){
+        $data =  $this->select('id', 'name')->get()->toArray();
+
+        if ($addAll) {
+            $firstItem = ['id' => null, 'name' => 'Tất cả'];
+            array_unshift($data, $firstItem);
+        }
+        return $data;
     }
 
     public function formatCity(){
