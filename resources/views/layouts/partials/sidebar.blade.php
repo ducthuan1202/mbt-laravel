@@ -24,7 +24,7 @@
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
-                <h3>General</h3>
+                <h3>Tổng Quan</h3>
                 <ul class="nav side-menu">
                     <li>
                         <a><i class="fa fa-area-chart"></i> Bảng Tin</a>
@@ -39,22 +39,25 @@
                         <a href="{{route('products.index')}}"><i class="fa fa-cube"></i> Sản Phẩm</a>
                     </li>
                     <li>
-                        <a href="{{route('skins.index')}}"><i class="fa fa-language"></i> Loại Hình SP</a>
+                        <a href="{{route('skins.index')}}"><i class="fa fa-language"></i> Ngoại Hình Sản Phẩm</a>
                     </li>
                     <li>
                         <a href="{{route('customers.index')}}"><i class="fa fa-users"></i> Khách Hàng</a>
                     </li>
                     <li>
-                        <a href="{{route('cares.index')}}"><i class="fa fa-phone-square"></i> Chăm Sóc KH</a>
+                        <a href="{{route('cares.index')}}"><i class="fa fa-phone-square"></i> Chăm Sóc Khách Hàng</a>
                     </li>
                     <li>
-                        <a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Báo Giá</a>
+                        <a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Quản Lý Báo Giá</a>
                     </li>
                     <li>
                         <a href="{{route('orders.index')}}">
-                            <i class="fa fa-shopping-cart"></i> Đơn Hàng
+                            <i class="fa fa-shopping-cart"></i> Quản Lý Đơn Hàng
                             <span class="label label-success pull-right">12</span>
                         </a>
+                    </li>
+                    <li>
+                        <a href="{{route('cares.index')}}"><i class="fa fa-slideshare"></i> Công Nợ</a>
                     </li>
                 </ul>
             </div>
@@ -62,7 +65,7 @@
                 <h3>Live On</h3>
                 <ul class="nav side-menu">
                     <li>
-                        <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Thành Viên</a>
+                        <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Quản Lý Nhân Sự</a>
                     </li>
                     <li>
                         <a href="{{route('roles.index')}}"><i class="fa fa-sitemap"></i> Nhóm Quyền</a>

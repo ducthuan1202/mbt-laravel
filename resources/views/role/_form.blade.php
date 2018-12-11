@@ -22,6 +22,16 @@
 </div>
 
 <div class="form-group">
+    <label>Nhóm Quyền</label>
+    <select class="form-control" name="role_group">
+        @foreach($group as $key => $val)
+            <option value="{{ $key }}" {{ $key == $model->role_group ? 'selected' : '' }}>{{$val}}</option>
+        @endforeach
+    </select>
+
+</div>
+
+<div class="form-group">
     <label>Mô tả</label>
     <textarea class="form-control" name="desc">{{old('desc') ? old('desc') : $model->desc}}</textarea>
 </div>

@@ -22,7 +22,8 @@ class RoleController extends Controller
         $model = new Role();
         $shared = [
             'data' => $model->search($searchParams),
-            'searchParams' => $searchParams
+            'searchParams' => $searchParams,
+            'group'=>$model->getListRoles(),
         ];
         return view('role.index', $shared);
     }
@@ -36,7 +37,8 @@ class RoleController extends Controller
     {
         $model = new Role();
         $shared = [
-            "model" => $model
+            "model" => $model,
+            'group'=>$model->getListRoles(),
         ];
         return view('role.create', $shared);
     }
@@ -67,7 +69,8 @@ class RoleController extends Controller
     {
         $model = $this->finById($id);
         $shared = [
-            "model" => $model
+            "model" => $model,
+            'group'=>$model->getListRoles(),
         ];
         return view('role.edit', $shared);
     }

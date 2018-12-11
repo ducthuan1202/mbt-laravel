@@ -40,6 +40,8 @@
                             <tr class="headings">
                                 <th>STT</th>
                                 <th>Tên</th>
+                                <th>Nhóm</th>
+                                <th>Mô Tả</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -49,6 +51,7 @@
                                     <tr>
                                         <td style="width: 50px">{{$item->id}}</td>
                                         <td>{{$item->name}}</td>
+                                        <td>{!! $item->formatGroupRole() !!}</td>
                                         <td>{!! $item->desc !!}</td>
                                         <td style="width: 200px">
                                             <div class="btn-group">
