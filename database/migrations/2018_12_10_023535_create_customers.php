@@ -20,10 +20,11 @@ class CreateCustomers extends Migration
             $table->string('name');
             $table->string('position')->comment('Chức vụ');
             $table->string('mobile');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('address');
-            $table->integer('total_sale')->comment('tổng tiền đã giao dịch');
-            $table->string('status')->nullable();
+            $table->integer('total_sale')->nullable()->comment('tổng tiền đã giao dịch');
+            $table->string('buy_status');
+            $table->string('status');
             $table->timestamps();
         });
     }

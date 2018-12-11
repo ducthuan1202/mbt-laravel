@@ -27,7 +27,7 @@ class ProductController extends Controller
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'skins' => $skinModel->getListSkins(),
+            'skins' => $skinModel->getDropDownList(),
         ];
         return view('product.index', $shared);
     }
@@ -43,7 +43,7 @@ class ProductController extends Controller
         $model = new Product();
         $shared = [
             "model" => $model,
-            'skins' => $skinModel->getListSkins(),
+            'skins' => $skinModel->getDropDownList(),
         ];
 
         return view('product.create', $shared);
@@ -58,8 +58,8 @@ class ProductController extends Controller
     {
         $model = new Product();
         $this->validate($request, $model->validateRules, $model->validateMessage);
-        $model->capacity = $request->get('capacity');
-        $model->status = ProductSkin::ACTIVATE_STATUS;
+        $model->fill($request->all());
+        $model->status = Product::ACTIVATE_STATUS;
         $model->save();
         return redirect()
             ->route('products.index')
@@ -78,7 +78,7 @@ class ProductController extends Controller
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
-            'skins' => $skinModel->getListSkins(),
+            'skins' => $skinModel->getDropDownList(),
         ];
         return view('product.edit', $shared);
     }
@@ -95,7 +95,7 @@ class ProductController extends Controller
     {
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
-        $model->name = $request->get('name');
+        $model->fill($request->all());
         $model->save();
         return redirect()
             ->route('products.index')

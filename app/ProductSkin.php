@@ -29,7 +29,7 @@ class ProductSkin extends Model
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name','status'];
 
     public $validateMessage = [
         'name.required' => 'tên không thể bỏ trống.',
@@ -56,7 +56,7 @@ class ProductSkin extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public function getListSkins($addAll = true){
+    public function getDropDownList($addAll = true){
         $data =  $this->select('id', 'name')->get()->toArray();
 
         if ($addAll) {

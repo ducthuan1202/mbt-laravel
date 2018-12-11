@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Role;
+use App\Customer;
+use App\PriceQuotation;
+use App\Product;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class PriceQuotationController extends Controller
 {
 
     /**
@@ -15,16 +17,27 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         $searchParams = [
-            'keyword' => ''
+            'customer' => null,
+            'product' => null,
+            'keyword' => null,
+            'date' => null,
+            'status' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
-        $model = new Role();
+        // get relation
+        $productModel = new Product();
+        $customerModel = new Customer();
+
+        $model = new PriceQuotation();
         $shared = [
             'data' => $model->search($searchParams),
-            'searchParams' => $searchParams
+            'searchParams' => $searchParams,
+            'products'=>$productModel->getDropDownList(),
+            'customers'=>$customerModel->getDropDownList(),
+            'customerStatus'=>$model->getCustomerStatus(),
         ];
-        return view('role.index', $shared);
+        return view('quotation.index', $shared);
     }
 
     /**
@@ -34,11 +47,20 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $model = new Role();
+        $productModel = new Product();
+        $customerModel = new Customer();
+
+        $model = new PriceQuotation();
+        $model->amount = 1;
+        $model->total_money = 0;
+
         $shared = [
-            "model" => $model
+            "model" => $model,
+            'products'=>$productModel->getDropDownList(),
+            'customers'=>$customerModel->getDropDownList(),
+            'customerStatus'=>$model->getCustomerStatus(),
         ];
-        return view('role.create', $shared);
+        return view('quotation.create', $shared);
     }
 
     /**
@@ -48,12 +70,14 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $model = new Role();
+        $model = new PriceQuotation();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
+        $model->total_money = (int) $model->price * (int) $model->amount;
+        $model->status = PriceQuotation::ACTIVATE_STATUS;
         $model->save();
         return redirect()
-            ->route('roles.index')
+            ->route('quotations.index')
             ->with('success', 'Thêm mới thành công');
     }
 
@@ -65,11 +89,17 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
+        $productModel = new Product();
+        $customerModel = new Customer();
+
         $model = $this->finById($id);
         $shared = [
-            "model" => $model
+            "model" => $model,
+            'products'=>$productModel->getDropDownList(),
+            'customers'=>$customerModel->getDropDownList(),
+            'customerStatus'=>$model->getCustomerStatus(),
         ];
-        return view('role.edit', $shared);
+        return view('quotation.edit', $shared);
     }
 
     /**
@@ -85,9 +115,10 @@ class RoleController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
+        $model->total_money = (int) $model->price * (int) $model->amount;
         $model->save();
         return redirect()
-            ->route('roles.index')
+            ->route('quotations.index')
             ->with('success', 'Cập nhật thành công');
     }
 
@@ -100,6 +131,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        # find model and delete
         $model = $this->finById($id);
 
         if ($model->delete()) {
@@ -118,10 +150,10 @@ class RoleController extends Controller
 
     /**
      * @param $id
-     * @return Role
+     * @return PriceQuotation
      */
     protected function finById($id)
     {
-        return Role::findOrFail($id);
+        return PriceQuotation::findOrFail($id);
     }
 }

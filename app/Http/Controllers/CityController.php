@@ -50,7 +50,7 @@ class CityController extends Controller
     {
         $model = new City();
         $this->validate($request, $model->validateRules, $model->validateMessage);
-        $model->name = $request->get('name');
+        $model->fill($request->all());
         $model->save();
         return redirect()
             ->route('cities.index')
@@ -84,7 +84,7 @@ class CityController extends Controller
     {
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
-        $model->name = $request->get('name');
+        $model->fill($request->all());
         $model->save();
         return redirect()
             ->route('cities.index')

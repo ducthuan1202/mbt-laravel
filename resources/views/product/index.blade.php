@@ -45,14 +45,11 @@
                         <thead>
                             <tr class="headings">
                                 <th>STT</th>
+                                <th>Tên Sản Phẩm</th>
+                                <th>Thông Số Kỹ Thuật</th>
                                 <th>Loại Hình</th>
-                                <th>Hiệu Suất</th>
-                                <th>Điện Áp Vào</th>
-                                <th>Điện Áp Ra</th>
                                 <th>Giá Bán</th>
-                                <th>Tiêu Chuẩn</th>
-                                <th>Trạng Thái</th>
-                                <th>Hành Động</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,13 +57,16 @@
                                 @foreach($data as $item)
                                     <tr>
                                         <td style="width: 50px">{{$item->id}}</td>
-                                        <td>{{$item->capacity}}</td>
-                                        <td>{{$item->voltage_input}}</td>
-                                        <td>{{$item->voltage_output}}</td>
-                                        <td>{{$item->price}}</td>
-                                        <td>{{$item->standard}}</td>
-                                        <td>{{$item->status}}</td>
-                                        <td style="width: 200px">
+                                        <td>{{$item->name}}</td>
+                                        <td>
+                                            <span>Tiêu Chuẩn: <code>{{$item->standard}}</code></span><br/>
+                                            <span>Hiệu Suất: <code>{{$item->capacity}}</code></span><br/>
+                                            <span>Điện Áp Vào: <code>{{$item->voltage_input}}</code></span><br/>
+                                            <span>Điện Áp Ra: <code>{{$item->voltage_output}}</code></span>
+                                        </td>
+                                        <td>{{$item->formatSkin()}}</td>
+                                        <td>{{$item::formatMoney($item->price)}}</td>
+                                        <td style="width: 170px">
                                             <div class="btn-group">
                                                 <a class="btn btn-default" href="{{route('products.edit', $item->id)}}">
                                                     <i class="fa fa-edit"></i> Sửa
@@ -97,5 +97,5 @@
 
 @section('script')
     <!-- FastClick -->
-    <script src="{{ asset('/template/build/js/city.js') }}"></script>
+    <script src="{{ asset('/template/build/js/product.js') }}"></script>
 @endsection

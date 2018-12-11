@@ -3,6 +3,50 @@
 @section('content')
     <!-- page content -->
     <div class="right_col" role="main">
+
+        <div class="row">
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-caret-square-o-right"></i>
+                    </div>
+                    <div class="count">179</div>
+
+                    <h3>New Sign ups</h3>
+                    <p>Lorem ipsum psdea itgum rixt.</p>
+                </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-comments-o"></i>
+                    </div>
+                    <div class="count">179</div>
+
+                    <h3>New Sign ups</h3>
+                    <p>Lorem ipsum psdea itgum rixt.</p>
+                </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-sort-amount-desc"></i>
+                    </div>
+                    <div class="count">179</div>
+
+                    <h3>New Sign ups</h3>
+                    <p>Lorem ipsum psdea itgum rixt.</p>
+                </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-check-square-o"></i>
+                    </div>
+                    <div class="count">179</div>
+
+                    <h3>New Sign ups</h3>
+                    <p>Lorem ipsum psdea itgum rixt.</p>
+                </div>
+            </div>
+        </div>
+
         <!-- top tiles -->
         <div class="row tile_count">
             <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
@@ -751,8 +795,7 @@
     <link href="{{ asset('/template/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}" rel="stylesheet"/>
     <!-- JQVMap -->
     <link href="{{ asset('/template/vendors/jqvmap/dist/jqvmap.min.css') }}" rel="stylesheet"/>
-    <!-- bootstrap-daterangepicker -->
-    <link href="{{ asset('/template/vendors/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet"/>
+
 @endsection
 
 @section('script')
@@ -786,7 +829,5 @@
     <script src="{{ asset('/template/vendors/jqvmap/dist/jquery.vmap.js') }}"></script>
     <script src="{{ asset('/template/vendors/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
     <script src="{{ asset('/template/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js') }}"></script>
-    <!-- bootstrap-daterangepicker -->
-    <script src="{{ asset('/template/vendors/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('/template/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+
 @endsection

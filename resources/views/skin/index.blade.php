@@ -40,8 +40,7 @@
                             <tr class="headings">
                                 <th>STT</th>
                                 <th>Tên Loại Hình</th>
-                                <th>Trạng Thái</th>
-                                <th>Hành Động</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -50,7 +49,6 @@
                                     <tr>
                                         <td style="width: 50px">{{$item->id}}</td>
                                         <td>{{$item->name}}</td>
-                                        <td>{{$item->status}}</td>
                                         <td style="width: 200px">
                                             <div class="btn-group">
                                                 <a class="btn btn-default" href="{{route('skins.edit', $item->id)}}">

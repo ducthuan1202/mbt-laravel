@@ -1,3 +1,9 @@
+@php
+    /**
+     * @var $data \App\Customer[]
+     */
+@endphp
+
 @extends('layouts.main')
 
 @section('content')
@@ -5,13 +11,13 @@
         <div class="x_panel">
             <div class="x_title">
                 <h2>
-                    Nhóm Quyền
+                    Khách Hàng
                     <small>Danh sách</small>
                 </h2>
 
                 <ul class="nav navbar-right panel_toolbox">
                     <li>
-                        <a class="btn btn-round btn-default btn-xs" href="{{route('roles.create')}}">
+                        <a class="btn btn-round btn-default btn-xs" href="{{route('customers.create')}}">
                             <i class="fa fa-plus"></i> Thêm mới
                         </a>
                     </li>
@@ -23,7 +29,7 @@
             <div class="x_content">
 
                 <div role="Search form">
-                    @include('role._search')
+                    @include('customer._search')
                 </div>
 
                 @if($message = Session::get('success'))
@@ -39,7 +45,13 @@
                         <thead>
                             <tr class="headings">
                                 <th>STT</th>
-                                <th>Tên</th>
+                                <th>Tên Khách Hàng</th>
+                                <th>Chức Vụ</th>
+                                <th>Công Ty</th>
+                                <th>SĐT, Email</th>
+                                <th>Địa Chỉ</th>
+                                <th>Khu Vực</th>
+                                <th>Trạng Thái</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -49,13 +61,21 @@
                                     <tr>
                                         <td style="width: 50px">{{$item->id}}</td>
                                         <td>{{$item->name}}</td>
-                                        <td>{!! $item->desc !!}</td>
-                                        <td style="width: 200px">
+                                        <td>{{$item->position}}</td>
+                                        <td>{{$item->formatCompany()}}</td>
+                                        <td>
+                                            {{$item->mobile}} <br/>
+                                            {{$item->email}}
+                                        </td>
+                                        <td>{{$item->address}}</td>
+                                        <td>{{$item->formatCity()}}</td>
+                                        <td>{!! $item->formatBuyStatus() !!}</td>
+                                        <td style="width: 170px">
                                             <div class="btn-group">
-                                                <a class="btn btn-default" href="{{route('roles.edit', $item->id)}}">
+                                                <a class="btn btn-default" href="{{route('customers.edit', $item->id)}}">
                                                     <i class="fa fa-edit"></i> Sửa
                                                 </a>
-                                                <a class="btn btn-default" onclick="MBT_Role.delete({{$item->id}})">
+                                                <a class="btn btn-default" onclick="MBT_Customer.delete({{$item->id}})">
                                                     <i class="fa fa-trash"></i> Xóa
                                                 </a>
                                             </div>
@@ -80,6 +100,5 @@
 @endsection
 
 @section('script')
-    <!-- FastClick -->
-    <script src="{{ asset('/template/build/js/role.js') }}"></script>
+    <script src="{{ asset('/template/build/js/customer.js') }}"></script>
 @endsection

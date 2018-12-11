@@ -44,8 +44,11 @@ class LoginController extends Controller
      */
     protected function credentials(Request $request)
     {
-        if(is_numeric($request->get('email'))){
-            return ['mobile'=>$request->get('email'),'password'=>$request->get('password')];
+        if (is_numeric($request->get('email'))) {
+            return [
+                'mobile' => $request->get('email'),
+                'password' => $request->get('password')
+            ];
         }
         return $request->only($this->username(), 'password');
     }
@@ -53,9 +56,7 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $this->guard()->logout();
-
         $request->session()->invalidate();
-
         return $this->loggedOut($request) ?: redirect('/login');
     }
 }

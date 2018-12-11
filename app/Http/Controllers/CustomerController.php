@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Role;
+use App\City;
+use App\Company;
+use App\Customer;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class CustomerController extends Controller
 {
 
     /**
@@ -15,16 +17,25 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         $searchParams = [
-            'keyword' => ''
+            'city' => null,
+            'company' => null,
+            'keyword' => null,
+            'buy' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
-        $model = new Role();
+        // get cities
+        $cityModel = new City();
+        $companyModel = new Company();
+        $model = new Customer();
         $shared = [
             'data' => $model->search($searchParams),
-            'searchParams' => $searchParams
+            'searchParams' => $searchParams,
+            'cities'=>$cityModel->getDropDownList(),
+            'companies'=>$companyModel->getDropDownList(),
+            'buyStatus' => $model->getBuyStatus()
         ];
-        return view('role.index', $shared);
+        return view('customer.index', $shared);
     }
 
     /**
@@ -34,11 +45,18 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $model = new Role();
+        $cityModel = new City();
+        $companyModel = new Company();
+        $model = new Customer();
+        $model->total_sale = 0;
+
         $shared = [
-            "model" => $model
+            "model" => $model,
+            'cities'=>$cityModel->getDropDownList(),
+            'companies'=>$companyModel->getDropDownList(),
+            'buyStatus' => $model->getBuyStatus(),
         ];
-        return view('role.create', $shared);
+        return view('customer.create', $shared);
     }
 
     /**
@@ -48,12 +66,13 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $model = new Role();
+        $model = new Customer();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
+        $model->status = Customer::ACTIVATE_STATUS;
         $model->save();
         return redirect()
-            ->route('roles.index')
+            ->route('customers.index')
             ->with('success', 'Thêm mới thành công');
     }
 
@@ -65,11 +84,16 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
+        $cityModel = new City();
+        $companyModel = new Company();
         $model = $this->finById($id);
         $shared = [
-            "model" => $model
+            "model" => $model,
+            'cities'=>$cityModel->getDropDownList(),
+            'companies'=>$companyModel->getDropDownList(),
+            'buyStatus' => $model->getBuyStatus()
         ];
-        return view('role.edit', $shared);
+        return view('customer.edit', $shared);
     }
 
     /**
@@ -87,7 +111,7 @@ class RoleController extends Controller
         $model->fill($request->all());
         $model->save();
         return redirect()
-            ->route('roles.index')
+            ->route('customers.index')
             ->with('success', 'Cập nhật thành công');
     }
 
@@ -100,6 +124,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        # find model and delete
         $model = $this->finById($id);
 
         if ($model->delete()) {
@@ -118,10 +143,10 @@ class RoleController extends Controller
 
     /**
      * @param $id
-     * @return Role
+     * @return Customer
      */
     protected function finById($id)
     {
-        return Role::findOrFail($id);
+        return Customer::findOrFail($id);
     }
 }
