@@ -23,51 +23,50 @@
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
-                <h3>Tổng Quan</h3>
+                <h3>Quản Lý</h3>
                 <ul class="nav side-menu">
                     <li>
-                        <a><i class="fa fa-area-chart"></i> Bảng Tin</a>
-                    </li>
-                    <li>
-                        <a href="{{route('cities.index')}}"><i class="fa fa-location-arrow"></i> Khu Vực</a>
-                    </li>
-                    <li>
-                        <a href="{{route('companies.index')}}"><i class="fa fa-briefcase"></i> Công Ty</a>
-                    </li>
-                    <li>
-                        <a href="{{route('products.index')}}"><i class="fa fa-cube"></i> Sản Phẩm</a>
-                    </li>
-                    <li>
-                        <a href="{{route('skins.index')}}"><i class="fa fa-language"></i> Ngoại Hình Sản Phẩm</a>
+                        <a href="{{route('home')}}"><i class="fa fa-home"></i> Bảng Tin</a>
                     </li>
                     <li>
                         <a href="{{route('customers.index')}}"><i class="fa fa-users"></i> Khách Hàng</a>
                     </li>
                     <li>
-                        <a href="{{route('cares.index')}}"><i class="fa fa-phone-square"></i> Chăm Sóc Khách Hàng</a>
+                        <a href="{{route('cares.index')}}"><i class="fa fa-phone-square"></i> CSKH</a>
                     </li>
                     <li>
-                        <a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Quản Lý Báo Giá</a>
+                        <a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Báo Giá</a>
                     </li>
                     <li>
                         <a href="{{route('orders.index')}}">
-                            <i class="fa fa-shopping-cart"></i> Quản Lý Đơn Hàng
+                            <i class="fa fa-shopping-cart"></i> Đơn Hàng
                             <span class="label label-success pull-right">12</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('cares.index')}}"><i class="fa fa-slideshare"></i> Công Nợ</a>
                     </li>
+
+                    <li>
+                        <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Nhân Sự</a>
+                    </li>
                 </ul>
             </div>
+
             <div class="menu_section">
-                <h3>Live On</h3>
+                <h3>Tổng Hợp </h3>
                 <ul class="nav side-menu">
                     <li>
-                        <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Quản Lý Nhân Sự</a>
+                        <a href="{{route('cities.index')}}"><i class="fa fa-map-marker"></i> Khu Vực</a>
                     </li>
                     <li>
-                        <a href="{{route('roles.index')}}"><i class="fa fa-sitemap"></i> Nhóm Quyền</a>
+                        <a href="{{route('companies.index')}}"><i class="fa fa-briefcase"></i> Công Ty</a>
+                    </li>
+                    <li>
+                        <a href="{{route('products.index')}}"><i class="fa fa-cube"></i> Máy Biến Thế</a>
+                    </li>
+                    <li>
+                        <a href="{{route('skins.index')}}"><i class="fa fa-language"></i> Ngoại Hình Máy</a>
                     </li>
                 </ul>
             </div>

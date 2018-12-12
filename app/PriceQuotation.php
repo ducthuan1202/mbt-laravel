@@ -47,7 +47,7 @@ class PriceQuotation extends Model
      */
     protected $fillable = [
         'customer_id', 'product_id', 'quotations_date', 'amount', 'price', 'total_money',
-        'setup_at', 'delivery_at', 'customer_status', 'guarantee','note','status',
+        'setup_at', 'delivery_at', 'customer_status', 'guarantee', 'note', 'status',
     ];
 
     public $validateMessage = [
@@ -101,7 +101,7 @@ class PriceQuotation extends Model
 
             $startDate = $this->dmyToymd($d[0]);
             $endDate = $this->dmyToymd($d[1]);
-            if(preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $startDate) && preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $endDate)){
+            if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $startDate) && preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $endDate)) {
                 $model = $model->whereBetween('quotations_date', [$startDate, $endDate]);
             }
         }
@@ -152,7 +152,7 @@ class PriceQuotation extends Model
     public function formatCustomerStatus()
     {
         $arr = $this->getCustomerStatus();
-        switch ($this->customer_status){
+        switch ($this->customer_status) {
             case self::SIGNED_CUSTOMER_STATUS:
                 $output = $arr[self::SIGNED_CUSTOMER_STATUS];
                 $cls = 'btn-info';
@@ -174,12 +174,14 @@ class PriceQuotation extends Model
         return number_format($money) . ',000 đ';
     }
 
-    public function dmyToymd($date){
+    public function dmyToymd($date)
+    {
         $date = str_replace('/', '-', $date);
         return date('Y-m-d', strtotime($date));
     }
 
-    public function extractDate($str, $separator = ' - '){
+    public function extractDate($str, $separator = ' - ')
+    {
         return explode($separator, $str);
     }
 }

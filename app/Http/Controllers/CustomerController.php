@@ -31,8 +31,8 @@ class CustomerController extends Controller
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'cities'=>$cityModel->getDropDownList(),
-            'companies'=>$companyModel->getDropDownList(),
+            'cities' => $cityModel->getDropDownList(),
+            'companies' => $companyModel->getDropDownList(),
             'buyStatus' => $model->getBuyStatus()
         ];
         return view('customer.index', $shared);
@@ -52,8 +52,8 @@ class CustomerController extends Controller
 
         $shared = [
             "model" => $model,
-            'cities'=>$cityModel->getDropDownList(),
-            'companies'=>$companyModel->getDropDownList(),
+            'cities' => $cityModel->getDropDownList(),
+            'companies' => $companyModel->getDropDownList(),
             'buyStatus' => $model->getBuyStatus(),
         ];
         return view('customer.create', $shared);
@@ -89,8 +89,8 @@ class CustomerController extends Controller
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
-            'cities'=>$cityModel->getDropDownList(),
-            'companies'=>$companyModel->getDropDownList(),
+            'cities' => $cityModel->getDropDownList(),
+            'companies' => $companyModel->getDropDownList(),
             'buyStatus' => $model->getBuyStatus()
         ];
         return view('customer.edit', $shared);

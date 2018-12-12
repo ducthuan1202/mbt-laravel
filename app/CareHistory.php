@@ -64,7 +64,7 @@ class CareHistory extends Model
     public function search()
     {
         $model = $this->orderBy('start_date', 'desc');
-        if(!empty($this->care_id)){
+        if (!empty($this->care_id)) {
             $model = $model->where('care_id', $this->care_id);
         }
         return $model->get();
@@ -84,25 +84,29 @@ class CareHistory extends Model
         return $data;
     }
 
-    public function checkBeforeSave(){
-        if(!empty($this->start_date)){
+    public function checkBeforeSave()
+    {
+        if (!empty($this->start_date)) {
             $this->start_date = $this->dmyToymd($this->start_date);
         }
-        if(!empty($this->end_date)){
+        if (!empty($this->end_date)) {
             $this->end_date = $this->dmyToymd($this->end_date);
         }
 
     }
 
-    public function formatDate($time){
+    public function formatDate($time)
+    {
         return date('d/m/Y', strtotime($time));
     }
 
-    public function formatStartDate(){
+    public function formatStartDate()
+    {
         return $this->formatDate($this->start_date);
     }
 
-    public function formatEndDate(){
+    public function formatEndDate()
+    {
         return $this->formatDate($this->end_date);
     }
 
@@ -115,7 +119,7 @@ class CareHistory extends Model
     public function formatStatus()
     {
         $arr = $this->getStatus();
-        switch ($this->status){
+        switch ($this->status) {
             case self::ACTIVATE_STATUS:
                 $output = $arr[self::ACTIVATE_STATUS];
                 $cls = 'btn-info';

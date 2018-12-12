@@ -29,7 +29,7 @@ class ProductSkin extends Model
      *
      * @var array
      */
-    protected $fillable = ['name','status'];
+    protected $fillable = ['name', 'status'];
 
     public $validateMessage = [
         'name.required' => 'tên không thể bỏ trống.',
@@ -56,13 +56,20 @@ class ProductSkin extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public function getDropDownList($addAll = true){
-        $data =  $this->select('id', 'name')->get()->toArray();
+    public function getDropDownList($addAll = true)
+    {
+        $data = $this->select('id', 'name')->get()->toArray();
 
         if ($addAll) {
             $firstItem = ['id' => null, 'name' => 'Tất cả'];
             array_unshift($data, $firstItem);
         }
+
+        if (!$data) {
+            $firstItem = ['id' => null, 'name' => 'Không có dữ liệu'];
+            array_unshift($data, $firstItem);
+        }
+
         return $data;
     }
 

@@ -77,6 +77,10 @@ class Customer extends Model
         return $this->hasOne(Company::class, 'id', 'company_id');
     }
 
+    public static function countNumber(){
+        return self::count();
+    }
+
     // search data
     public function search($searchParams = [])
     {
@@ -103,13 +107,19 @@ class Customer extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public function getDropDownList($addAll = true){
-        $data =  $this->select('id', 'name')->get()->toArray();
+    public function getDropDownList($addAll = true)
+    {
+        $data = $this->select('id', 'name')->get()->toArray();
 
         if ($addAll) {
             $firstItem = ['id' => null, 'name' => 'Tất cả'];
             array_unshift($data, $firstItem);
         }
+        if (!$data) {
+            $firstItem = ['id' => null, 'name' => 'Không có dữ liệu'];
+            array_unshift($data, $firstItem);
+        }
+
         return $data;
     }
 
@@ -146,7 +156,7 @@ class Customer extends Model
     public function formatBuyStatus()
     {
         $arr = $this->getBuyStatus();
-        switch ($this->buy_status){
+        switch ($this->buy_status) {
             case self::HAS_BUY_STATUS:
                 $output = $arr[self::HAS_BUY_STATUS];
                 $cls = 'btn-info';

@@ -21,12 +21,11 @@ class UserController extends Controller
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
-        $roleModel = new Role();
         $model = new User();
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'roles' => $roleModel->getDropDownList(),
+            'roles' => $model->getListRoles(),
             'status' => $model->getStatus(),
         ];
         return view('user.index', $shared);
@@ -43,7 +42,7 @@ class UserController extends Controller
         $model = new User();
         $shared = [
             "model" => $model,
-            'roles' => $roleModel->getDropDownList(false),
+            'roles' => $model->getListRoles(),
             'status' => $model->getStatus(false),
         ];
         return view('user.create', $shared);
@@ -74,11 +73,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $roleModel = new Role();
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
-            'roles' => $roleModel->getDropDownList(false),
+            'roles' => $model->getListRoles(),
             'status' => $model->getStatus(false),
         ];
         return view('user.edit', $shared);
@@ -98,7 +96,6 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'role_id' => 'required',
-            'mobile' => 'required|unique:users,mobile',
         ], $model->validateMessage);
 
         $model->fill($request->all());
