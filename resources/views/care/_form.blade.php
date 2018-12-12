@@ -28,7 +28,7 @@
         </div>
         <div class="form-group">
             <label>Ngày Gọi</label>
-            <input type="text" class="form-control drp-single" name="call_date" value="{{old('call_date') ? old('call_date') : $model->call_date}}"/>
+            <input type="text" class="form-control drp-single" name="call_date" value="{{old('call_date') ? old('call_date') : $model->formatDate()}}"/>
         </div>
         <div class="form-group">
             <label>Nội Dung</label>

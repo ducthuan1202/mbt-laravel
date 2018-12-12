@@ -17,7 +17,7 @@ class CreateCompanies extends Migration
             $table->increments('id');
             $table->integer('city_id');
             $table->string('name');
-            $table->text('desc')->default(null);
+            $table->text('desc')->nullable();
             $table->timestamps();
         });
     }

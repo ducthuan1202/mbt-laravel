@@ -181,6 +181,5 @@ class PriceQuotation extends Model
 
     public function extractDate($str, $separator = ' - '){
         return explode($separator, $str);
-
     }
 }

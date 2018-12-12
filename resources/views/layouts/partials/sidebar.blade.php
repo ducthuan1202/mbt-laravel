@@ -86,7 +86,8 @@
             <a data-toggle="tooltip" data-placement="top" title="Lock" onclick="alertSuccess({title: 'Xin chào', text: 'Khóa màn hình đang cập nhật'})">
                 <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
             </a>
-            <a data-toggle="tooltip" data-placement="top" title="Đăng xuất" href="{{route('logout')}}">
+            <a data-toggle="tooltip" data-placement="top" title="Đăng xuất" href="{{route('logout')}}"
+               onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
             </a>
         </div>

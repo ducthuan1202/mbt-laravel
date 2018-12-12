@@ -17,8 +17,6 @@ class CreateCustomerUsers extends Migration
             $table->integer('user_id');
             $table->integer('customer_id');
             $table->timestamps();
-
-//            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

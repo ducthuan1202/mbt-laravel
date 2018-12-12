@@ -25,4 +25,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', 'UserController');
     Route::resource('cares', 'CareController');
     Route::resource('orders', 'ProductSkinController');
+
+    // api
+    Route::get('/care-history/create', 'CareHistoryController@create');
+    Route::post('/care-history/store', 'CareHistoryController@store');
+    Route::get('/care-history', 'CareHistoryController@index');
 });

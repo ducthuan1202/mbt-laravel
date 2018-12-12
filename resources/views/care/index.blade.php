@@ -50,6 +50,7 @@
                             <th>Khách Hàng</th>
                             <th>Nội Dung</th>
                             <th>Trạng Thái</th>
+                            <th>Lịch Sử Chăm Sóc</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -63,15 +64,20 @@
                                     <td>{{$item->formatCustomer()}}</td>
                                     <td>{{$item->content}}</td>
                                     <td>{!! $item->formatStatus() !!}</td>
-                                    <td style="width: 220px">
-                                        <div class="btn-group btn-group-sm">
-                                            <a class="btn btn-default" onclick="alert(1)">
+                                    <td style="width: 300px">
+                                            <a class="btn btn-primary btn-xs" onclick="MBT_Care.getHistories({{$item->id}})">
                                                 <i class="fa fa-eye"></i> Xem
                                             </a>
+                                            <a class="btn btn-warning btn-xs" onclick="MBT_Care.openForm({{$item->id}})">
+                                                <i class="fa fa-plus"></i> Thêm
+                                            </a>
+                                    </td>
+                                    <td style="width: 140px">
+                                        <div class="btn-group btn-group-sm">
                                             <a class="btn btn-default" href="{{route('cares.edit', $item->id)}}">
                                                 <i class="fa fa-edit"></i> Sửa
                                             </a>
-                                            <a class="btn btn-default" onclick="MBT_Customer.delete({{$item->id}})">
+                                            <a class="btn btn-default" onclick="MBT_Care.delete({{$item->id}})">
                                                 <i class="fa fa-trash"></i> Xóa
                                             </a>
                                         </div>
@@ -93,6 +99,8 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade bs-example-modal-lg" id="careModelForm"></div>
 @endsection
 
 @section('script')
