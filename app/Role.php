@@ -61,6 +61,16 @@ class Role extends Model
         return $model->paginate(self::LIMIT);
     }
 
+    public function getDropDownList($addAll = true){
+        $data =  $this->select('id', 'name')->get()->toArray();
+
+        if ($addAll) {
+            $firstItem = ['id' => null, 'name' => 'Tất cả'];
+            array_unshift($data, $firstItem);
+        }
+        return $data;
+    }
+
     public function getListRoles($addAll =  true){
         $data = [];
         if ($addAll) {

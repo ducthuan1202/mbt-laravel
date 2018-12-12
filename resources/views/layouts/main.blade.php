@@ -66,8 +66,9 @@
 
 <!-- general -->
 <script src="{{ asset('/template/build/js/general.js') }}"></script>
-
 @yield('script')
+<!-- general -->
+<script src="{{ asset('/template/build/js/custom.js') }}"></script>
 </body>
 </html>
 

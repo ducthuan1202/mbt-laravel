@@ -1,4 +1,3 @@
-
 @extends('layouts.main')
 
 @section('content')
@@ -8,14 +7,14 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
-                            Khách Hàng
+                            Chăm Sóc Khách Hàng
                             <small>Tạo Mới</small>
                         </h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form action="{{ route('customers.store') }}" method="POST">
-                            @include('customer._form')
+                        <form action="{{ route('cares.store') }}" method="POST">
+                            @include('care._form')
                         </form>
                     </div>
                 </div>
@@ -25,5 +24,5 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('/template/build/js/customer.js') }}"></script>
+    <script src="{{ asset('/template/build/js/care.js') }}"></script>
 @endsection

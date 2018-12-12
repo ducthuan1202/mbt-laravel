@@ -11,24 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return redirect('/home');
-});
-
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
-
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/', 'HomeController@index')->name('home');
     Route::resource('roles', 'RoleController');
     Route::resource('cities', 'CityController');
     Route::resource('companies', 'CompanyController');
     Route::resource('skins', 'ProductSkinController');
     Route::resource('products', 'ProductController');
     Route::resource('customers', 'CustomerController');
-    Route::resource('orders', 'ProductSkinController');
-    Route::resource('users', 'ProductSkinController');
-    Route::resource('cares', 'ProductSkinController');
     Route::resource('quotations', 'PriceQuotationController');
-
+    Route::resource('users', 'UserController');
+    Route::resource('cares', 'CareController');
+    Route::resource('orders', 'ProductSkinController');
 });

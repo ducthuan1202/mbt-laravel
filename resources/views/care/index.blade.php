@@ -1,7 +1,6 @@
-
 @php
     /**
-     * @var $data \App\Customer[]
+     * @var $data \App\Care[]
      */
 @endphp
 
@@ -12,13 +11,13 @@
         <div class="x_panel">
             <div class="x_title">
                 <h2>
-                    Khách Hàng
+                    Chăm Sóc Khách Hàng
                     <small>Danh sách</small>
                 </h2>
 
                 <ul class="nav navbar-right panel_toolbox">
                     <li>
-                        <a class="btn btn-round btn-default btn-xs" href="{{route('customers.create')}}">
+                        <a class="btn btn-round btn-default btn-xs" href="{{route('cares.create')}}">
                             <i class="fa fa-plus"></i> Thêm mới
                         </a>
                     </li>
@@ -30,7 +29,7 @@
             <div class="x_content">
 
                 <div role="Search form">
-                    @include('customer._search')
+                    @include('care._search')
                 </div>
 
                 @if($message = Session::get('success'))
@@ -46,12 +45,10 @@
                         <thead>
                         <tr class="headings">
                             <th>STT</th>
-                            <th>Tên Khách Hàng</th>
-                            <th>Chức Vụ</th>
-                            <th>Công Ty</th>
-                            <th>SĐT, Email</th>
-                            <th>Địa Chỉ</th>
-                            <th>Khu Vực</th>
+                            <th>Ngày Chăm Sóc</th>
+                            <th>Nhân Viên</th>
+                            <th>Khách Hàng</th>
+                            <th>Nội Dung</th>
                             <th>Trạng Thái</th>
                             <th></th>
                         </tr>
@@ -61,19 +58,17 @@
                             @foreach($data as $item)
                                 <tr>
                                     <td style="width: 50px">{{$item->id}}</td>
-                                    <td>{{$item->name}}</td>
-                                    <td>{{$item->position}}</td>
-                                    <td>{{$item->formatCompany()}}</td>
-                                    <td>
-                                        {{$item->mobile}} <br/>
-                                        {{$item->email}}
-                                    </td>
-                                    <td>{{$item->address}}</td>
-                                    <td>{{$item->formatCity()}}</td>
-                                    <td>{!! $item->formatBuyStatus() !!}</td>
-                                    <td style="width: 170px">
-                                        <div class="btn-group">
-                                            <a class="btn btn-default" href="{{route('customers.edit', $item->id)}}">
+                                    <td>{{$item->formatDate()}}</td>
+                                    <td>{{$item->formatUser()}}</td>
+                                    <td>{{$item->formatCustomer()}}</td>
+                                    <td>{{$item->content}}</td>
+                                    <td>{!! $item->formatStatus() !!}</td>
+                                    <td style="width: 220px">
+                                        <div class="btn-group btn-group-sm">
+                                            <a class="btn btn-default" onclick="alert(1)">
+                                                <i class="fa fa-eye"></i> Xem
+                                            </a>
+                                            <a class="btn btn-default" href="{{route('cares.edit', $item->id)}}">
                                                 <i class="fa fa-edit"></i> Sửa
                                             </a>
                                             <a class="btn btn-default" onclick="MBT_Customer.delete({{$item->id}})">
@@ -101,5 +96,5 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('/template/build/js/customer.js') }}"></script>
+    <script src="{{ asset('/template/build/js/care.js') }}"></script>
 @endsection
