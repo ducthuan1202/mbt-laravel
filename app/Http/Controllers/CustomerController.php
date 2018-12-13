@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Company;
 use App\Customer;
+use App\User;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -24,13 +25,16 @@ class CustomerController extends Controller
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
-        // get cities
+        // get dropdown list
+        $userModel = new User();
         $cityModel = new City();
         $companyModel = new Company();
         $model = new Customer();
+
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
+            'users' => $userModel->getDropDownList(),
             'cities' => $cityModel->getDropDownList(),
             'companies' => $companyModel->getDropDownList(),
             'buyStatus' => $model->getBuyStatus()
@@ -45,13 +49,16 @@ class CustomerController extends Controller
      */
     public function create()
     {
+        $userModel = new User();
         $cityModel = new City();
         $companyModel = new Company();
+
         $model = new Customer();
         $model->total_sale = 0;
 
         $shared = [
             "model" => $model,
+            'users' => $userModel->getDropDownList(),
             'cities' => $cityModel->getDropDownList(),
             'companies' => $companyModel->getDropDownList(),
             'buyStatus' => $model->getBuyStatus(),
@@ -69,8 +76,13 @@ class CustomerController extends Controller
         $model = new Customer();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
-        $model->status = Customer::ACTIVATE_STATUS;
-        $model->save();
+        $model->checkBeforeSave();
+
+        if($model->save()){
+            $model->code = $model->generateUniqueCode($model->id);
+            $model->save();
+        }
+
         return redirect()
             ->route('customers.index')
             ->with('success', 'Thêm mới thành công');
@@ -84,11 +96,14 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
+        $userModel = new User();
         $cityModel = new City();
         $companyModel = new Company();
+
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
+            'users' => $userModel->getDropDownList(),
             'cities' => $cityModel->getDropDownList(),
             'companies' => $companyModel->getDropDownList(),
             'buyStatus' => $model->getBuyStatus()
@@ -109,6 +124,8 @@ class CustomerController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
+        $model->checkBeforeSave();
+
         $model->save();
         return redirect()
             ->route('customers.index')

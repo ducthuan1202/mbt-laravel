@@ -1,6 +1,6 @@
 @php
     /**
-     * @var $model \App\PriceQuotation
+     * @var $model \App\Debt
      */
 @endphp
 

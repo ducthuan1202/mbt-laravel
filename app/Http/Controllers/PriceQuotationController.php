@@ -16,6 +16,8 @@ class PriceQuotationController extends Controller
      */
     public function index(Request $request)
     {
+//        $this->authorize('admin');
+
         $searchParams = [
             'customer' => null,
             'product' => null,
@@ -49,11 +51,10 @@ class PriceQuotationController extends Controller
     {
         $productModel = new Product();
         $customerModel = new Customer();
-
         $model = new PriceQuotation();
+        $model->quotations_date = date('Y-m-d');
         $model->amount = 1;
         $model->total_money = 0;
-
         $shared = [
             "model" => $model,
             'products'=>$productModel->getDropDownList(),
@@ -73,8 +74,7 @@ class PriceQuotationController extends Controller
         $model = new PriceQuotation();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
-        $model->total_money = (int) $model->price * (int) $model->amount;
-        $model->status = PriceQuotation::ACTIVATE_STATUS;
+        $model->checkBeforeSave();
         $model->save();
         return redirect()
             ->route('quotations.index')
@@ -115,7 +115,7 @@ class PriceQuotationController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
-        $model->total_money = (int) $model->price * (int) $model->amount;
+        $model->checkBeforeSave();
         $model->save();
         return redirect()
             ->route('quotations.index')

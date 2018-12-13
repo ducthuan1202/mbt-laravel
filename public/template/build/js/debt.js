@@ -1,8 +1,8 @@
-var MBT_User = function () {
+var MBT_Debt = function () {
 
     var deleteItem = function (id) {
         deleteAjax({
-            url: "/users/" + id
+            url: "/debts/" + id
         });
     };
 

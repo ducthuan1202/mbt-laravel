@@ -1,21 +1,10 @@
 var MBT_Customer = function () {
 
     var deleteItem = function (id) {
-        $.ajax({
-            url: "/customers/" + id,
-            method: "POST",
-            data: {_method: "DELETE"},
-            dataType: "json",
-            timeout: 15e3,
-            success: function (response) {
-                if (response.success) {
-                    alertSuccess({title: response.message});
-                    window.location.reload(true);
-                } else {
-                    alertError({title: response.message});
-                }
-            }
+        deleteAjax({
+            url: "/customers/" + id
         });
+
     };
 
     var switchBuyStatus = function(){

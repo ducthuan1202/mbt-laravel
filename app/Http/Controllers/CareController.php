@@ -47,7 +47,7 @@ class CareController extends Controller
     {
         $customerModel = new Customer();
         $model = new Care();
-
+        $model->call_date = date('Y-m-d');
         $shared = [
             "model" => $model,
             'customers'=>$customerModel->getDropDownList(false),

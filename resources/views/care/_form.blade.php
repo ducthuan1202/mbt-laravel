@@ -26,13 +26,15 @@
                 @endforeach
             </select>
         </div>
+
         <div class="form-group">
-            <label>Ngày Gọi</label>
-            <input type="text" class="form-control drp-single" name="call_date" value="{{old('call_date') ? old('call_date') : $model->formatDate()}}"/>
-        </div>
-        <div class="form-group">
-            <label>Nội Dung</label>
-            <input type="text" class="form-control" name="content" value="{{old('content') ? old('content') : $model->content}}"/>
+            <label>Ngày Gọi (click để chọn ngày)</label>
+            <div class="input-group date">
+                <input type="text" class="form-control drp-single" name="call_date" value="{{old('call_date') ? old('call_date') : $model->formatDate()}}" readonly/>
+                <span class="input-group-addon">
+                   <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+            </div>
         </div>
 
         <div class="form-group">
@@ -42,6 +44,13 @@
                     <option value="{{ $key }}" {{ $key == $model->status ? 'selected' : '' }}>{{$val}}</option>
                 @endforeach
             </select>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Nội Dung Cuộc Chăm Sóc</label>
+            <textarea class="form-control" name="content" rows="7">{{old('content') ? old('content') : $model->content}}</textarea>
         </div>
     </div>
 

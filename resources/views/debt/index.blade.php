@@ -1,3 +1,9 @@
+@php
+    /**
+     * @var $data \App\Debt[]
+     */
+@endphp
+
 @extends('layouts.main')
 
 @section('content')
@@ -5,13 +11,13 @@
         <div class="x_panel">
             <div class="x_title">
                 <h2>
-                    Nhóm Quyền
+                    Công Nợ
                     <small>Danh sách</small>
                 </h2>
 
                 <ul class="nav navbar-right panel_toolbox">
                     <li>
-                        <a class="btn btn-round btn-default btn-xs" href="{{route('roles.create')}}">
+                        <a class="btn btn-round btn-default btn-xs" href="{{route('debts.create')}}">
                             <i class="fa fa-plus"></i> Thêm mới
                         </a>
                     </li>
@@ -23,7 +29,7 @@
             <div class="x_content">
 
                 <div role="Search form">
-                    @include('role._search')
+                    @include('debt._search')
                 </div>
 
                 @if($message = Session::get('success'))
@@ -39,9 +45,7 @@
                         <thead>
                             <tr class="headings">
                                 <th>STT</th>
-                                <th>Tên</th>
-                                <th>Nhóm</th>
-                                <th>Mô Tả</th>
+                                <th>Ngày Báo Giá</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -50,15 +54,14 @@
                                 @foreach($data as $item)
                                     <tr>
                                         <td style="width: 50px">{{$item->id}}</td>
-                                        <td>{{$item->name}}</td>
-                                        <td>{!! $item->formatGroupRole() !!}</td>
-                                        <td>{!! $item->desc !!}</td>
-                                        <td style="width: 200px">
+                                        <td>{{$item->content}}</td>
+
+                                        <td style="width: 170px">
                                             <div class="btn-group">
-                                                <a class="btn btn-default" href="{{route('roles.edit', $item->id)}}">
+                                                <a class="btn btn-default" href="{{route('debts.edit', $item->id)}}">
                                                     <i class="fa fa-edit"></i> Sửa
                                                 </a>
-                                                <a class="btn btn-default" onclick="MBT_Role.delete({{$item->id}})">
+                                                <a class="btn btn-default" onclick="MBT_Debt.delete({{$item->id}})">
                                                     <i class="fa fa-trash"></i> Xóa
                                                 </a>
                                             </div>
@@ -83,6 +86,5 @@
 @endsection
 
 @section('script')
-    <!-- FastClick -->
-    <script src="{{ asset('/template/build/js/role.js') }}"></script>
+    <script src="{{ asset('/template/build/js/debt.js') }}"></script>
 @endsection

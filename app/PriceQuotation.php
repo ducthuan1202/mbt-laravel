@@ -59,6 +59,7 @@ class PriceQuotation extends Model
         'setup_at.required' => 'Địa điểm lắp đặt không thể bỏ trống.',
         'delivery_at.required' => 'Nơi giao hàng không thể bỏ trống.',
         'customer_status.required' => 'Trạng thái khách không thể bỏ trống.',
+        'note.required' => 'Ghi chú báo giá không thể bỏ trống.',
     ];
 
     public $validateRules = [
@@ -70,6 +71,7 @@ class PriceQuotation extends Model
         'setup_at' => 'required',
         'delivery_at' => 'required',
         'customer_status' => 'required',
+        'note' => 'required',
     ];
 
     // relationship with city
@@ -78,15 +80,19 @@ class PriceQuotation extends Model
         return $this->hasOne(Customer::class, 'id', 'customer_id');
     }
 
-    public function Product()
+    public function product()
     {
         return $this->hasOne(Product::class, 'id', 'product_id');
+    }
+
+    public static function countNumber(){
+        return self::count();
     }
 
     // search data
     public function search($searchParams = [])
     {
-        $model = $this->with(['city', 'company']);
+        $model = $this->with(['product','customer', 'customer.user']);
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
@@ -136,7 +142,15 @@ class PriceQuotation extends Model
     public function formatCustomer()
     {
         if ($this->customer) {
-            return $this->customer->name;
+            return sprintf('%s<br/>%s', $this->customer->name, $this->customer->mobile);
+        }
+        return 'không xác định';
+    }
+
+    public function formatCustomerUser()
+    {
+        if ($this->customer && $this->customer->user) {
+            return $this->customer->user->name;
         }
         return 'không xác định';
     }
@@ -169,15 +183,35 @@ class PriceQuotation extends Model
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
-    public static function formatMoney($money)
+    public function formatMoney()
     {
-        return number_format($money) . ',000 đ';
+        return number_format($this->price) . ',000 đ';
+    }
+
+    public function checkBeforeSave()
+    {
+        if(empty($this->status)){
+            $this->status = self::ACTIVATE_STATUS;
+        }
+        if (!empty($this->quotations_date)) {
+            $this->quotations_date = $this->dmyToymd($this->quotations_date);
+        }
+
+        $this->total_money = (int) $this->price * (int) $this->amount;
+    }
+
+    public function formatQuotationDate()
+    {
+        return date('d/m/Y', strtotime($this->quotations_date));
     }
 
     public function dmyToymd($date)
     {
-        $date = str_replace('/', '-', $date);
-        return date('Y-m-d', strtotime($date));
+        if(preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $date)){
+            $date = str_replace('/', '-', $date);
+            return date('Y-m-d', strtotime($date));
+        }
+        return $date;
     }
 
     public function extractDate($str, $separator = ' - ')

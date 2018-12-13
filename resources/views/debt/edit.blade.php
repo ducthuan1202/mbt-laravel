@@ -8,19 +8,23 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
-                            Nhóm Quyền
+                            Công Nợ
                             <small>Chỉnh Sửa</small>
                         </h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form action="{{ route('roles.update', $model->id) }}" method="POST">
+                        <form action="{{ route('quotations.update', $model->id) }}" method="POST">
                             @method('PATCH')
-                            @include('role._form')
+                            @include('quotation._form')
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script src="{{ asset('/template/build/js/quotation.js') }}"></script>
 @endsection

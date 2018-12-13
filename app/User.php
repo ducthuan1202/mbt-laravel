@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Hash;
  * @property integer updated_at
  *
  * @property Role role
+ * @property Customer customer
  */
 class User extends Authenticatable
 {
@@ -73,6 +74,10 @@ class User extends Authenticatable
         'mobile' => 'required|unique:users,mobile',
         'password' => ['required', 'string', 'min:6', 'confirmed'],
     ];
+
+    public function customer(){
+        return $this->belongsTo(Customer::class, 'user_id', 'id');
+    }
 
     public function checkBeforeSave()
     {

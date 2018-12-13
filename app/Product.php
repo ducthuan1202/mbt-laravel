@@ -62,11 +62,18 @@ class Product extends Model
         'standard' => 'required|max:255',
     ];
 
+    // relation
     public function skin()
     {
         return $this->hasOne(ProductSkin::class, 'id', 'product_skin_id');
     }
 
+    public function priceQuotation()
+    {
+        return $this->belongsTo(PriceQuotation::class, 'product_id', 'id');
+    }
+
+    // query db
     public function getDropDownList($addAll = true)
     {
         $data = $this->select('id', 'name')->get()->toArray();
@@ -88,6 +95,7 @@ class Product extends Model
     {
         $model = $this->with(['skin']);
         $model = $model->orderBy('id', 'desc');
+
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
@@ -96,9 +104,11 @@ class Product extends Model
         if (isset($searchParams['skin']) && !empty($searchParams['skin'])) {
             $model = $model->where('product_skin_id', $searchParams['skin']);
         }
+
         return $model->paginate(self::LIMIT);
     }
 
+    // format display
     public function formatSkin()
     {
         if ($this->skin) {
@@ -107,8 +117,8 @@ class Product extends Model
         return 'không xác định';
     }
 
-    public static function formatMoney($money)
+    public function formatMoney()
     {
-        return number_format($money) . ',000 đ';
+        return number_format($this->price) . ',000 đ';
     }
 }

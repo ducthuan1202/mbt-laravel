@@ -14,7 +14,9 @@
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
+
     Route::get('/', 'HomeController@index')->name('home');
+
     Route::resource('roles', 'RoleController');
     Route::resource('cities', 'CityController');
     Route::resource('companies', 'CompanyController');
@@ -24,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('quotations', 'PriceQuotationController');
     Route::resource('users', 'UserController');
     Route::resource('cares', 'CareController');
+    Route::resource('debts', 'DebtController');
     Route::resource('orders', 'ProductSkinController');
 
     // api

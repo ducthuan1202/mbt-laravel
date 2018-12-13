@@ -8,18 +8,22 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
-                            Nhóm Quyền
+                            Công Nợ
                             <small>Tạo Mới</small>
                         </h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form action="{{ route('roles.store') }}" method="POST">
-                            @include('role._form')
+                        <form action="{{ route('quotations.store') }}" method="POST">
+                            @include('quotation._form')
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script src="{{ asset('/template/build/js/quotation.js') }}"></script>
 @endsection

@@ -45,9 +45,12 @@
                         <thead>
                             <tr class="headings">
                                 <th>STT</th>
-                                <th>Sản Phẩm</th>
                                 <th>Ngày Báo Giá</th>
-                                <th>Giá Bán</th>
+                                <th>Khách Hàng</th>
+                                <th>Sản Phẩm</th>
+                                <th>Giá Báo</th>
+                                <th>NVKD</th>
+                                <th>Chi Tiết</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -56,9 +59,21 @@
                                 @foreach($data as $item)
                                     <tr>
                                         <td style="width: 50px">{{$item->id}}</td>
+                                        <td>{{$item->formatQuotationDate()}}</td>
+                                        <td>
+                                            <span class="text-success">{!! $item->formatCustomer() !!}</span>
+                                            <p>{!! $item->formatCustomerStatus() !!}</p>
+                                        </td>
                                         <td>{{$item->formatProduct()}}</td>
-                                        <td>{{$item->quotations_date}}</td>
-                                        <td>{{$item::formatMoney($item->price)}}</td>
+                                        <td>{{$item->formatMoney()}}</td>
+                                        <td>
+                                            <p>Lắp đạt tại: {{$item->setup_at}}</p>
+                                            <p>Giao hàng tại: {{$item->delivery_at}}</p>
+                                            <p>Bảo hành: {{$item->guarantee}} (tháng)</p>
+                                        </td>
+                                        <td>
+                                            <b class="text-success">{{$item->formatCustomerUser()}}</b>
+                                        </td>
                                         <td style="width: 170px">
                                             <div class="btn-group">
                                                 <a class="btn btn-default" href="{{route('quotations.edit', $item->id)}}">

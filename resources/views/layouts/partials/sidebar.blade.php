@@ -38,15 +38,11 @@
                         <a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Báo Giá</a>
                     </li>
                     <li>
-                        <a href="{{route('orders.index')}}">
-                            <i class="fa fa-shopping-cart"></i> Đơn Hàng
-                            <span class="label label-success pull-right">12</span>
-                        </a>
+                        <a href="{{route('orders.index')}}"><i class="fa fa-shopping-cart"></i> Đơn Hàng</a>
                     </li>
                     <li>
-                        <a href="{{route('cares.index')}}"><i class="fa fa-slideshare"></i> Công Nợ</a>
+                        <a href="{{route('debts.index')}}"><i class="fa fa-slideshare"></i> Công Nợ</a>
                     </li>
-
                     <li>
                         <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Nhân Sự</a>
                     </li>

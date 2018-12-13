@@ -16,28 +16,20 @@
 
 {{csrf_field()}}
 
-<div class="form-group">
-    <label>Tên</label>
-    <input type="text" class="form-control" name="name" value="{{old('name') ? old('name') : $model->name}}"/>
-</div>
+
 
 <div class="row">
     <div class="col-md-6">
+
         <div class="form-group">
-            <label>Khu Vực</label>
-            <select class="form-control" name="city_id">
-                @foreach($cities as $city)
-                    <option value="{{ $city['id'] }}" {{ $city['id'] == $model->city_id ? 'selected' : '' }}>{{$city['name']}}</option>
-                @endforeach
-            </select>
+            <label>Tên Khách Hàng</label>
+            <input type="text" class="form-control" name="name" value="{{old('name') ? old('name') : $model->name}}"/>
         </div>
+
         <div class="form-group">
-            <label>Công Ty</label>
-            <select class="form-control" name="company_id">
-                @foreach($companies as $company)
-                    <option value="{{ $company['id'] }}" {{ $company['id'] == $model->company_id ? 'selected' : '' }}>{{$company['name']}}</option>
-                @endforeach
-            </select>
+            <label>Số Điện Thoại</label>
+            <input type="text" class="form-control" name="mobile" value="{{old('mobile') ? old('mobile') : $model->mobile}}"/>
+
         </div>
         <div class="form-group">
             <label>Địa Chỉ</label>
@@ -47,19 +39,34 @@
             <label>Chức Vụ</label>
             <input type="text" class="form-control" name="position" value="{{old('position') ? old('position') : $model->position}}"/>
         </div>
+
     </div>
 
     <div class="col-md-6">
         <div class="form-group">
-            <label>Số Điện Thoại</label>
-            <input type="text" class="form-control" name="mobile" value="{{old('mobile') ? old('mobile') : $model->mobile}}"/>
-
+            <label>NVKD chăm sóc</label>
+            <select class="form-control" name="user_id">
+                @foreach($users as $user)
+                    <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id ? 'selected' : '' }}>{{$user['name']}}</option>
+                @endforeach
+            </select>
         </div>
         <div class="form-group">
-            <label>Email (nếu có)</label>
-            <input type="text" class="form-control" name="email" value="{{old('email') ? old('email') : $model->email}}"/>
+            <label>Khu Vực</label>
+            <select class="form-control" name="city_id">
+                @foreach($cities as $city)
+                    <option value="{{ $city['id'] }}" {{ $city['id'] == $model->city_id ? 'selected' : '' }}>{{$city['name']}}</option>
+                @endforeach
+            </select>
         </div>
-
+        <div class="form-group">
+            <label>Chọn Công Ty KH</label>
+            <select class="form-control" name="company_id">
+                @foreach($companies as $company)
+                    <option value="{{ $company['id'] }}" {{ $company['id'] == $model->company_id ? 'selected' : '' }}>{{$company['name']}}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="form-group">
             <label>Trạng Thái Khách</label>
             <select class="form-control" name="buy_status" onchange="MBT_Customer.switchBuyStatus()">
@@ -75,6 +82,7 @@
         </div>
 
     </div>
+
 </div>
 
 <div class="ln_solid"></div>
@@ -84,5 +92,5 @@
     @else
         <button type="submit" class="btn btn-success">Tạo Mới</button>
     @endif
-    <a href="{{route('products.index')}}" class="btn btn-default">Trở Về</a>
+    <a href="{{route('customers.index')}}" class="btn btn-default">Trở Về</a>
 </div>

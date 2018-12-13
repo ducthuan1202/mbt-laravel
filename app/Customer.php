@@ -10,8 +10,10 @@ use Illuminate\Database\Eloquent\Model;
  * -------------------------------------
  * @property integer id
  *
+ * @property string code
  * @property integer company_id
  * @property integer city_id
+ * @property integer user_id
  * @property string name
  * @property string position
  * @property string mobile
@@ -26,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property City city
  * @property Company company
+ * @property User user
  *
  */
 class Customer extends Model
@@ -37,19 +40,21 @@ class Customer extends Model
         DEACTIVATE_STATUS = 'deactivate';
 
     protected $table = 'customers';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'company_id', 'city_id', 'name', 'position', 'mobile', 'email',
+        'code','company_id', 'city_id','user_id', 'name', 'position', 'mobile', 'email',
         'address', 'total_sale', 'buy_status', 'status',
     ];
 
     public $validateMessage = [
         'company_id.required' => 'Chọn công ty của khách hàng.',
         'city_id.required' => 'Chọn khu vực của khách hàng.',
+        'user_id.required' => 'Chọn NVKD chăm sóc.',
         'name.required' => 'Tên không thể bỏ trống.',
         'position.required' => 'Chức vụkhông thể bỏ trống.',
         'mobile.required' => 'Số điện thoại không thể bỏ trống.',
@@ -58,7 +63,9 @@ class Customer extends Model
     ];
 
     public $validateRules = [
+        'company_id' => 'required',
         'city_id' => 'required',
+        'user_id' => 'required',
         'name' => 'required|max:255',
         'position' => 'required|max:255',
         'mobile' => 'required',
@@ -72,6 +79,11 @@ class Customer extends Model
         return $this->hasOne(City::class, 'id', 'city_id');
     }
 
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
     public function company()
     {
         return $this->hasOne(Company::class, 'id', 'company_id');
@@ -81,10 +93,21 @@ class Customer extends Model
         return self::count();
     }
 
+    public function checkBeforeSave()
+    {
+        if (!$this->exists) {
+            $this->status = self::ACTIVATE_STATUS;
+        } else {
+            if(empty($this->code)){
+                $this->code = $this->generateUniqueCode($this->id);
+            }
+        }
+    }
+
     // search data
     public function search($searchParams = [])
     {
-        $model = $this->with(['city', 'company']);
+        $model = $this->with(['city', 'company', 'user']);
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
@@ -153,6 +176,14 @@ class Customer extends Model
         return 'không xác định';
     }
 
+    public function formatUser()
+    {
+        if ($this->user) {
+            return $this->user->name;
+        }
+        return 'không xác định';
+    }
+
     public function formatBuyStatus()
     {
         $arr = $this->getBuyStatus();
@@ -171,5 +202,11 @@ class Customer extends Model
                 break;
         }
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
+    }
+
+    public function generateUniqueCode($number = 1){
+        if(!is_numeric($number) || $number < 1) return '';
+        $len = strlen((string)$number);
+        return substr('MBT-C00000', 0, -$len) . $number;
     }
 }

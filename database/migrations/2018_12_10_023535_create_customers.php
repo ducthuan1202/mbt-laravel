@@ -17,6 +17,8 @@ class CreateCustomers extends Migration
             $table->increments('id');
             $table->integer('company_id');
             $table->integer('city_id');
+            $table->integer('user_id');
+            $table->string('code');
             $table->string('name');
             $table->string('position')->comment('Chức vụ');
             $table->string('mobile');

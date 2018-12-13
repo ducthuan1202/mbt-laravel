@@ -65,7 +65,7 @@
                                             <span>Điện Áp Ra: <code>{{$item->voltage_output}}</code></span>
                                         </td>
                                         <td>{{$item->formatSkin()}}</td>
-                                        <td>{{$item::formatMoney($item->price)}}</td>
+                                        <td>{{$item->formatMoney()}}</td>
                                         <td style="width: 170px">
                                             <div class="btn-group">
                                                 <a class="btn btn-default" href="{{route('products.edit', $item->id)}}">

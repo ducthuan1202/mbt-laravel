@@ -39,11 +39,13 @@ class City extends Model
         'name' => 'required|max:255',
     ];
 
+    // relation
     public function company()
     {
         return $this->belongsTo(Company::class, 'city_id', 'id');
     }
 
+    // query db
     public function search($searchParams = [])
     {
         $model = $this->orderBy('id', 'desc');
