@@ -71,8 +71,6 @@ class Order extends Model
         if (!empty($this->shipped_date)) {
             $this->shipped_date = $this->dmyToymd($this->shipped_date);
         }
-
-
     }
 
     public function user()

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Role;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -38,7 +40,6 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roleModel = new Role();
         $model = new User();
         $shared = [
             "model" => $model,
@@ -95,7 +96,7 @@ class UserController extends Controller
         $model = $this->finById($id);
         $this->validate($request, [
             'name' => 'required|max:255',
-            'role_id' => 'required',
+            'role' => 'required',
         ], $model->validateMessage);
 
         $model->fill($request->all());
@@ -105,6 +106,55 @@ class UserController extends Controller
             ->route('users.index')
             ->with('success', 'Cập nhật thành công');
     }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function changePassword()
+    {
+        $user = Auth::user();
+        $model = $this->finById($user->id);
+
+        $shared = [
+            "model" => $model,
+        ];
+        return view('user.change-password', $shared);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+        $model = $this->finById($user->id);
+
+        $this->validate($request, [
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ], [
+            'password.required' => 'Mật khẩu không thể bỏ trống.',
+            'password.min' => 'Mật khẩu tối thiểu phải chứa 6 ký tự.',
+            'password.confirmed' => 'Mật khẩu và xác nhận mật khẩu không trùng nhau.',
+        ]);
+
+        if (Hash::check($request->get('old_password'), $model->password)) {
+            $model->password = $request->get('password');
+            $model->generatePassword();
+            $model->save();
+            $request->session()->invalidate();
+
+            return redirect()
+                ->route('login')->with('success', 'Đổi mật khẩu thành công, bạn cần đăng nhập lại');
+        } else {
+            return redirect()
+                ->route('users.change_password')
+                ->withErrors(['Mật khẩu hiện tại không đúng.']);
+        }
+    }
+
 
     /**
      * Remove the specified resource from storage.

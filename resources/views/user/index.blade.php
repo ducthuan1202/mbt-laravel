@@ -34,9 +34,7 @@
                 </div>
 
                 @if($message = Session::get('success'))
-                    <div role="show errors">
-                        <div class="alert alert-success">{{$message}}</div>
-                    </div>
+                    <div class="alert alert-success">{{$message}}</div>
                 @endif
 
                 <div class="ln_solid"></div>
@@ -70,7 +68,6 @@
                                                 <a class="btn btn-default" href="{{route('users.edit', $item->id)}}">
                                                     <i class="fa fa-edit"></i> Sửa
                                                 </a>
-
                                                 @if($user->role_id === \App\User::ADMIN_ROLE && $user->id !== $item->id)
                                                     <a class="btn btn-default" onclick="MBT_User.delete({{$item->id}})">
                                                         <i class="fa fa-trash"></i> Xóa

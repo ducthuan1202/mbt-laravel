@@ -85,14 +85,15 @@ class PriceQuotation extends Model
         return $this->hasOne(Product::class, 'id', 'product_id');
     }
 
-    public static function countNumber(){
+    public static function countNumber()
+    {
         return self::count();
     }
 
     // search data
     public function search($searchParams = [])
     {
-        $model = $this->with(['product','customer', 'customer.user']);
+        $model = $this->with(['product', 'customer', 'customer.user']);
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
@@ -190,14 +191,14 @@ class PriceQuotation extends Model
 
     public function checkBeforeSave()
     {
-        if(empty($this->status)){
+        if (empty($this->status)) {
             $this->status = self::ACTIVATE_STATUS;
         }
         if (!empty($this->quotations_date)) {
             $this->quotations_date = $this->dmyToymd($this->quotations_date);
         }
 
-        $this->total_money = (int) $this->price * (int) $this->amount;
+        $this->total_money = (int)$this->price * (int)$this->amount;
     }
 
     public function formatQuotationDate()
@@ -207,7 +208,7 @@ class PriceQuotation extends Model
 
     public function dmyToymd($date)
     {
-        if(preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $date)){
+        if (preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $date)) {
             $date = str_replace('/', '-', $date);
             return date('Y-m-d', strtotime($date));
         }

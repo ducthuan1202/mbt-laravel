@@ -34,9 +34,7 @@
                 </div>
 
                 @if($message = Session::get('success'))
-                    <div role="show errors">
-                        <div class="alert alert-success">{{$message}}</div>
-                    </div>
+                    <div class="alert alert-success">{{$message}}</div>
                 @endif
 
                 <div class="ln_solid"></div>

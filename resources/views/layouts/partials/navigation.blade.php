@@ -15,6 +15,11 @@
                     </a>
                     <ul class="dropdown-menu dropdown-usermenu pull-right">
                         <li>
+                            <a href="{{route('users.change_password')}}">
+                                <i class="fa fa-refresh pull-right"></i> Đổi mật khẩu
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{route('logout')}}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                 <i class="fa fa-sign-out pull-right"></i> Đăng Xuất
                             </a>

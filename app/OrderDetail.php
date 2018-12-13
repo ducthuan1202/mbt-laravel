@@ -54,9 +54,8 @@ class OrderDetail extends Model
 
     public function checkBeforeSave()
     {
-        $this->total_money = (int) $this->amount * (int) $this->product_id;
+        $this->total_money = (int)$this->amount * (int)$this->product_id;
     }
-
 
     public function order()
     {
@@ -74,7 +73,6 @@ class OrderDetail extends Model
         $model = $model->orderBy('id', 'desc');
         return $model->paginate(self::LIMIT);
     }
-
 
     public function formatProduct()
     {

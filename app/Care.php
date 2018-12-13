@@ -59,12 +59,10 @@ class Care extends Model
         }
         if (!$this->exists) {
             if (empty($this->user_id)) {
-                $user = Auth::user();
-                $this->user_id = $user->id;
+                $this->user_id = Auth::user()->id;
             }
         }
     }
-
 
     public function user()
     {

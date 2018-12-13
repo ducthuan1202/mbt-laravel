@@ -8,10 +8,14 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <h1>Đăng Nhập</h1>
+
+                    @if($message = Session::get('success'))
+                        <div class="alert alert-success">{{$message}}</div>
+                    @endif
+
                     <div>
                         <input id="email" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
                                name="email" value="{{ old('email') }}" placeholder="Email hoặc SĐT" required autofocus/>
-
                         @if ($errors->has('email'))
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('email') }}</strong>

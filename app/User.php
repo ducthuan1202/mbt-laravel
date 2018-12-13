@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
  *
  * @property integer id
  *
- * @property integer role_id
+ * @property integer role
  * @property string name
  * @property string mobile
  * @property string email
@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\Hash;
  * @property integer created_at
  * @property integer updated_at
  *
- * @property Role role
  * @property Customer customer
  */
 class User extends Authenticatable
@@ -45,7 +44,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'role_id', 'name', 'mobile', 'email', 'password', 'status'
+        'role', 'name', 'mobile', 'email', 'password', 'status'
     ];
 
     /**
@@ -60,7 +59,7 @@ class User extends Authenticatable
     public $validateMessage = [
         'name.required' => 'Tên không thể bỏ trống.',
         'name.max' => 'Tên tối đa 255 ký tự',
-        'role_id.required' => 'Chọn nhóm quyền.',
+        'role.required' => 'Chọn chức danh.',
         'mobile.required' => 'Số điện thoại không thể bỏ trống.',
         'mobile.unique' => 'Số điện thoại đã tồn tại.',
         'password.required' => 'Mật khẩu không thể bỏ trống.',
@@ -70,31 +69,25 @@ class User extends Authenticatable
 
     public $validateRules = [
         'name' => 'required|max:255',
-        'role_id' => 'required',
+        'role' => 'required',
         'mobile' => 'required|unique:users,mobile',
         'password' => ['required', 'string', 'min:6', 'confirmed'],
     ];
 
-    public function customer(){
+    public function customer()
+    {
         return $this->belongsTo(Customer::class, 'user_id', 'id');
     }
 
     public function checkBeforeSave()
     {
         if (!$this->exists) {
-            $this->password = Hash::make($this->password);
-            if (empty($this->email)) {
-                $this->email = '';
-            }
+            $this->generatePassword();
         }
     }
 
-    public function role()
+    public static function countNumber()
     {
-        return $this->hasOne(Role::class, 'id', 'role_id');
-    }
-
-    public static function countNumber(){
         return self::count();
     }
 
@@ -167,9 +160,9 @@ class User extends Authenticatable
             $data = [null => 'Tất cả'];
         }
         $data = array_merge($data, [
-            self::EMPLOYEE_ROLE => 'Nhân Viên',
-            self::MANAGER_ROLE => 'Quản Lý - Giám Đốc',
-            self::ADMIN_ROLE => 'Quản Trị Viên',
+            self::EMPLOYEE_ROLE => 'Nhân Viên Kinh Doanh',
+            self::MANAGER_ROLE => 'Trợ Lý Giám Đốc Kinh Doanh',
+            self::ADMIN_ROLE => 'Quản Trị Viên Cấp Cao',
         ]);
 
         return $data;
@@ -178,7 +171,7 @@ class User extends Authenticatable
     public function formatRole()
     {
         $arr = $this->getListRoles();
-        switch ($this->role_id) {
+        switch ($this->role) {
             case self::EMPLOYEE_ROLE:
                 $output = $arr[self::EMPLOYEE_ROLE];
                 $cls = 'btn-default';
@@ -196,6 +189,10 @@ class User extends Authenticatable
                 $cls = 'btn-default';
                 break;
         }
-        return sprintf('<span class="btn btn-xs btn-round %s" style="width: 120px">%s</span>', $cls, $output);
+        return sprintf('<span class="btn btn-xs btn-round %s" style="width: 180px">%s</span>', $cls, $output);
+    }
+
+    public function generatePassword(){
+        $this->password = Hash::make($this->password);
     }
 }

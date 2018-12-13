@@ -17,17 +17,20 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/', 'HomeController@index')->name('home');
 
-    Route::resource('roles', 'RoleController');
-    Route::resource('cities', 'CityController');
-    Route::resource('companies', 'CompanyController');
-    Route::resource('skins', 'ProductSkinController');
-    Route::resource('products', 'ProductController');
-    Route::resource('customers', 'CustomerController');
-    Route::resource('quotations', 'PriceQuotationController');
-    Route::resource('users', 'UserController');
-    Route::resource('cares', 'CareController');
-    Route::resource('debts', 'DebtController');
-    Route::resource('orders', 'ProductSkinController');
+    Route::resource('cities', 'CityController')->except(['show']);
+    Route::resource('companies', 'CompanyController')->except(['show']);
+    Route::resource('skins', 'ProductSkinController')->except(['show']);
+    Route::resource('products', 'ProductController')->except(['show']);
+    Route::resource('customers', 'CustomerController')->except(['show']);
+    Route::resource('quotations', 'PriceQuotationController')->except(['show']);
+
+    Route::resource('cares', 'CareController')->except(['show']);
+    Route::resource('debts', 'DebtController')->except(['show']);
+    Route::resource('orders', 'ProductSkinController')->except(['show']);
+    Route::resource('users', 'UserController')->except(['show']);
+
+    Route::get('/users/change-password', 'UserController@changePassword')->name('users.change_password');
+    Route::post('/users/change-password', 'UserController@updatePassword')->name('users.update_password');
 
     // api
     Route::get('/care-history/create', 'CareHistoryController@create');

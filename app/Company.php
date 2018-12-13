@@ -70,7 +70,8 @@ class Company extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public static function countNumber(){
+    public static function countNumber()
+    {
         return self::count();
     }
 

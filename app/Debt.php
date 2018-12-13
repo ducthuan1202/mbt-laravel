@@ -39,7 +39,7 @@ class Debt extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id','customer_id', 'debt_date', 'content', 'amount','price','vat','residual', 'status'];
+    protected $fillable = ['user_id', 'customer_id', 'debt_date', 'content', 'amount', 'price', 'vat', 'residual', 'status'];
 
     public $validateMessage = [
         'user_id.required' => 'Chọn nhân viên kinh daonh.',

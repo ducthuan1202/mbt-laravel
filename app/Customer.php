@@ -47,7 +47,7 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
-        'code','company_id', 'city_id','user_id', 'name', 'position', 'mobile', 'email',
+        'code', 'company_id', 'city_id', 'user_id', 'name', 'position', 'mobile', 'email',
         'address', 'total_sale', 'buy_status', 'status',
     ];
 
@@ -89,7 +89,8 @@ class Customer extends Model
         return $this->hasOne(Company::class, 'id', 'company_id');
     }
 
-    public static function countNumber(){
+    public static function countNumber()
+    {
         return self::count();
     }
 
@@ -98,7 +99,7 @@ class Customer extends Model
         if (!$this->exists) {
             $this->status = self::ACTIVATE_STATUS;
         } else {
-            if(empty($this->code)){
+            if (empty($this->code)) {
                 $this->code = $this->generateUniqueCode($this->id);
             }
         }
@@ -204,8 +205,9 @@ class Customer extends Model
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
-    public function generateUniqueCode($number = 1){
-        if(!is_numeric($number) || $number < 1) return '';
+    public function generateUniqueCode($number = 1)
+    {
+        if (!is_numeric($number) || $number < 1) return '';
         $len = strlen((string)$number);
         return substr('MBT-C00000', 0, -$len) . $number;
     }

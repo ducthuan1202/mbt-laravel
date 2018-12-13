@@ -92,7 +92,6 @@ class CareHistory extends Model
         if (!empty($this->end_date)) {
             $this->end_date = $this->dmyToymd($this->end_date);
         }
-
     }
 
     public function formatDate($time)
