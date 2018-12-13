@@ -52,12 +52,13 @@ class Care extends Model
         'status' => 'required',
     ];
 
-    public function checkBeforeSave(){
-        if(!empty($this->call_date)){
+    public function checkBeforeSave()
+    {
+        if (!empty($this->call_date)) {
             $this->call_date = $this->dmyToymd($this->call_date);
         }
-        if(!$this->exists){
-            if(empty($this->user_id)){
+        if (!$this->exists) {
+            if (empty($this->user_id)) {
                 $user = Auth::user();
                 $this->user_id = $user->id;
             }
@@ -94,6 +95,12 @@ class Care extends Model
             $firstItem = ['id' => null, 'name' => 'Tất cả'];
             array_unshift($data, $firstItem);
         }
+
+        if (!$data) {
+            $firstItem = ['id' => null, 'name' => 'Không có dữ liệu'];
+            array_unshift($data, $firstItem);
+        }
+
         return $data;
     }
 
@@ -131,25 +138,29 @@ class Care extends Model
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
-    public function formatUser(){
-        if($this->user){
+    public function formatUser()
+    {
+        if ($this->user) {
             return $this->user->name;
         }
         return 'không xác định';
     }
 
-    public function formatCustomer(){
-        if($this->customer){
+    public function formatCustomer()
+    {
+        if ($this->customer) {
             return $this->customer->name;
         }
         return 'không xác định';
     }
 
-    public function formatDate(){
+    public function formatDate()
+    {
         return date('d/m/Y', strtotime($this->call_date));
     }
 
-    public function dmyToymd($date){
+    public function dmyToymd($date)
+    {
         $date = str_replace('/', '-', $date);
         return date('Y-m-d', strtotime($date));
     }

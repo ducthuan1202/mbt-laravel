@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\City;
+use App\Company;
+use App\Customer;
+use App\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +27,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('pages/dashboard');
+
+        $shared = [
+            'customerCount' => Customer::countNumber(),
+            'userCount' => User::countNumber(),
+            'cityCount' => City::countNumber(),
+            'companyCount' => Company::countNumber(),
+        ];
+
+        return view('pages/dashboard', $shared);
     }
 }

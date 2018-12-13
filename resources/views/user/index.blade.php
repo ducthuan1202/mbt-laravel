@@ -42,14 +42,14 @@
                 <div class="ln_solid"></div>
 
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table">
                         <thead>
                             <tr class="headings">
                                 <th>STT</th>
                                 <th>Số Điện Thoại</th>
                                 <th>Tên</th>
                                 <th>Email</th>
-                                <th>Nhóm Quyền</th>
+                                <th>Chức Danh</th>
                                 <th>Trạng Thái</th>
                                 <th></th>
                             </tr>
@@ -71,7 +71,7 @@
                                                     <i class="fa fa-edit"></i> Sửa
                                                 </a>
 
-                                                @if($user->id !== $item->id)
+                                                @if($user->role_id === \App\User::ADMIN_ROLE && $user->id !== $item->id)
                                                     <a class="btn btn-default" onclick="MBT_User.delete({{$item->id}})">
                                                         <i class="fa fa-trash"></i> Xóa
                                                     </a>

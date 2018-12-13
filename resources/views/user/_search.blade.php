@@ -2,18 +2,18 @@
 <div class="well" style="overflow: auto">
     <form class="form" action="{{route('users.index')}}" method="GET">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label>Tìm theo Tên hoặc SĐT</label>
                     <input type="text" class="form-control" name="keyword" value="{{$searchParams['keyword'] ? $searchParams['keyword'] : ''}}"/>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-group">
-                    <label>Tìm theo nhóm quyền</label>
+                    <label>Chức Danh</label>
                     <select class="form-control" name="role">
-                        @foreach($roles as $role)
-                            <option value="{{ $role['id'] }}" {{ $role['id'] == $searchParams['role'] ? 'selected' : '' }}>{{$role['name']}}</option>
+                        @foreach($roles as $key => $val)
+                            <option value="{{ $key }}" {{ $key == $searchParams['role'] ? 'selected' : '' }}>{{$val}}</option>
                         @endforeach
                     </select>
                 </div>

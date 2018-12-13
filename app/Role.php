@@ -61,17 +61,25 @@ class Role extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public function getDropDownList($addAll = true){
-        $data =  $this->select('id', 'name')->get()->toArray();
+    public function getDropDownList($addAll = true)
+    {
+        $data = $this->select('id', 'name')->get()->toArray();
 
         if ($addAll) {
             $firstItem = ['id' => null, 'name' => 'Tất cả'];
             array_unshift($data, $firstItem);
         }
+
+        if (!$data) {
+            $firstItem = ['id' => null, 'name' => 'Không có dữ liệu'];
+            array_unshift($data, $firstItem);
+        }
+
         return $data;
     }
 
-    public function getListRoles($addAll =  true){
+    public function getListRoles($addAll = true)
+    {
         $data = [];
         if ($addAll) {
             $data = [null => 'Tất cả'];
@@ -88,7 +96,7 @@ class Role extends Model
     public function formatGroupRole()
     {
         $arr = $this->getListRoles();
-        switch ($this->role_group){
+        switch ($this->role_group) {
             case self::EMPLOYEE_ROLE:
                 $output = $arr[self::EMPLOYEE_ROLE];
                 $cls = 'btn-default';

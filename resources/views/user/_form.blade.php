@@ -19,8 +19,6 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-8">
 
-
-
         <div class="form-group">
             <label>Tên Hiển Thị</label>
             <input type="text" class="form-control" name="name" value="{{old('name') ? old('name') : $model->name}}"/>
@@ -32,7 +30,13 @@
 
         <div class="form-group">
             <label>Số Điện Thoại (dùng để đăng nhập)</label>
+
+        @if (!$model->exists)
             <input type="text" class="form-control" name="mobile" value="{{old('mobile') ? old('mobile') : $model->mobile}}"/>
+        @else
+            <input type="text" class="form-control" readonly value="{{$model->mobile}}"/>
+        @endif
+
         </div>
 
         @if (!$model->exists)
@@ -55,10 +59,10 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6">
                 <div class="form-group">
-                    <label>Nhóm Quyền</label>
+                    <label>Chức Danh</label>
                     <select class="form-control" name="role_id">
-                        @foreach($roles as $role)
-                            <option value="{{ $role['id'] }}" {{ $role['id'] == $model->role_id ? 'selected' : '' }}>{{$role['name']}}</option>
+                        @foreach($roles as $key => $val)
+                            <option value="{{ $key }}" {{ $key == $model->role_id ? 'selected' : '' }}>{{$val}}</option>
                         @endforeach
                     </select>
                 </div>

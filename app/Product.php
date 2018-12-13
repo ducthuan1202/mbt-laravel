@@ -67,13 +67,20 @@ class Product extends Model
         return $this->hasOne(ProductSkin::class, 'id', 'product_skin_id');
     }
 
-    public function getDropDownList($addAll = true){
-        $data =  $this->select('id', 'name')->get()->toArray();
+    public function getDropDownList($addAll = true)
+    {
+        $data = $this->select('id', 'name')->get()->toArray();
 
         if ($addAll) {
             $firstItem = ['id' => null, 'name' => 'Tất cả'];
             array_unshift($data, $firstItem);
         }
+
+        if (!$data) {
+            $firstItem = ['id' => null, 'name' => 'Không có dữ liệu'];
+            array_unshift($data, $firstItem);
+        }
+
         return $data;
     }
 

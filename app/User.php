@@ -30,6 +30,10 @@ class User extends Authenticatable
     use Notifiable;
 
     const LIMIT = 10;
+    const
+        EMPLOYEE_ROLE = 'employees',
+        MANAGER_ROLE = 'manager',
+        ADMIN_ROLE = 'admin';
     const ACTIVATE_STATUS = 'activate',
         DEACTIVATE_STATUS = 'deactivate';
 
@@ -70,10 +74,11 @@ class User extends Authenticatable
         'password' => ['required', 'string', 'min:6', 'confirmed'],
     ];
 
-    public function checkBeforeSave(){
-        if(!$this->exists){
+    public function checkBeforeSave()
+    {
+        if (!$this->exists) {
             $this->password = Hash::make($this->password);
-            if(empty($this->email)){
+            if (empty($this->email)) {
                 $this->email = '';
             }
         }
@@ -82,6 +87,10 @@ class User extends Authenticatable
     public function role()
     {
         return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
+    public static function countNumber(){
+        return self::count();
     }
 
     public function search($searchParams = [])
@@ -101,8 +110,9 @@ class User extends Authenticatable
         return $model->paginate(self::LIMIT);
     }
 
-    public function getDropDownList($addAll = true){
-        $data =  $this->select('id', 'name')->get()->toArray();
+    public function getDropDownList($addAll = true)
+    {
+        $data = $this->select('id', 'name')->get()->toArray();
 
         if ($addAll) {
             $firstItem = ['id' => null, 'name' => 'Tất cả'];
@@ -125,14 +135,6 @@ class User extends Authenticatable
         return $data;
     }
 
-    public function formatRole()
-    {
-        if ($this->role) {
-            return $this->role->name;
-        }
-        return 'không xác định';
-    }
-
     public function formatStatus()
     {
         $arr = $this->getStatus();
@@ -151,5 +153,44 @@ class User extends Authenticatable
                 break;
         }
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
+    }
+
+    public function getListRoles($addAll = true)
+    {
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data = array_merge($data, [
+            self::EMPLOYEE_ROLE => 'Nhân Viên',
+            self::MANAGER_ROLE => 'Quản Lý - Giám Đốc',
+            self::ADMIN_ROLE => 'Quản Trị Viên',
+        ]);
+
+        return $data;
+    }
+
+    public function formatRole()
+    {
+        $arr = $this->getListRoles();
+        switch ($this->role_id) {
+            case self::EMPLOYEE_ROLE:
+                $output = $arr[self::EMPLOYEE_ROLE];
+                $cls = 'btn-default';
+                break;
+            case  self::MANAGER_ROLE:
+                $output = $arr[self::MANAGER_ROLE];
+                $cls = 'btn-info';
+                break;
+            case self::ADMIN_ROLE:
+                $output = $arr[self::ADMIN_ROLE];
+                $cls = 'btn-warning';
+                break;
+            default:
+                $output = 'n/a';
+                $cls = 'btn-default';
+                break;
+        }
+        return sprintf('<span class="btn btn-xs btn-round %s" style="width: 120px">%s</span>', $cls, $output);
     }
 }

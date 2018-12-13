@@ -4,13 +4,13 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label>Tìm theo nội dung</label>
+                    <label>Nội dung</label>
                     <input type="text" class="form-control" name="keyword" value="{{$searchParams['keyword'] ? $searchParams['keyword'] : ''}}"/>
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <label>Tìm theo nhân viên</label>
+                    <label>Nhân viên</label>
                     <select class="form-control" name="city">
                         @foreach($users as $user)
                             <option value="{{ $user['id'] }}" {{ $user['id'] == $searchParams['user'] ? 'selected' : '' }}>{{$user['name']}}</option>
@@ -20,7 +20,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <label>Tìm theo khách hàng</label>
+                    <label>Khách hàng</label>
                     <select class="form-control" name="customer">
                         @foreach($customers as $customer)
                             <option value="{{ $customer['id'] }}" {{ $customer['id'] == $searchParams['customer'] ? 'selected' : '' }}>{{$customer['name']}}</option>
@@ -30,7 +30,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <label>Tìm theo tình trạng</label>
+                    <label>Tình trạng</label>
 
                     <select class="form-control" name="status">
                         @foreach($status as $key => $val)
@@ -39,7 +39,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
                     <a href="{{route('cares.index')}}" class="btn btn-default">Bỏ Lọc</a>
