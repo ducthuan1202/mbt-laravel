@@ -179,6 +179,20 @@ function initDateRangePickerMulti() {
     });
 }
 
+// init select2
+function initSelect2(){
+    $(".chosen-select").select2({
+        noResults: "Không có kết quả phù hợp!",
+        // placeholder: 'chọn dữ liệu',
+        language: 'vi',
+    });
+}
+
 // start init
-initDateRangePickerSingle();
-initDateRangePickerMulti();
+function initialize(){
+    initDateRangePickerSingle();
+    initDateRangePickerMulti();
+    initSelect2();
+}
+
+initialize();

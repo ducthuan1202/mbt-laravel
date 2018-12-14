@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Debt
@@ -70,14 +69,16 @@ class Debt extends Model
         if (!empty($this->debt_date)) {
             $this->debt_date = $this->dmyToymd($this->debt_date);
         }
-        if (!$this->exists) {
-
-        }
     }
 
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function customer()
+    {
+        return $this->hasOne(Customer::class, 'id', 'customer_id');
     }
 
     public function search($searchParams = [])
@@ -100,6 +101,11 @@ class Debt extends Model
         }
 
         return $model->paginate(self::LIMIT);
+    }
+
+    public function checkCustomerExist($id = 0)
+    {
+        return $this->where('customer_id', $id)->count();
     }
 
     public function getStatus($addAll = true)

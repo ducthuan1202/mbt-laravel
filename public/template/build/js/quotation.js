@@ -2,7 +2,7 @@ var MBT_PriceQuotation = function () {
 
     var deleteItem = function (id) {
         deleteAjax({
-            url: "/price-quotations/" + id
+            url: "/quotations/" + id
         });
     };
 

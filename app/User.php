@@ -192,6 +192,15 @@ class User extends Authenticatable
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 180px">%s</span>', $cls, $output);
     }
 
+    public function formatRolesText()
+    {
+        $arr = $this->getListRoles();
+        if(isset($arr[$this->role])){
+            return $arr[$this->role];
+        }
+        return '';
+    }
+
     public function generatePassword(){
         $this->password = Hash::make($this->password);
     }

@@ -12,7 +12,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label>Khách Hàng</label>
-                    <select class="form-control" name="customer">
+                    <select class="form-control chosen-select" name="customer">
                         @foreach($customers as $customer)
                             <option value="{{ $customer['id'] }}" {{ $customer['id'] == $searchParams['customer'] ? 'selected' : '' }}>{{$customer['name']}}</option>
                         @endforeach
@@ -22,7 +22,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label>NVKD</label>
-                    <select class="form-control" name="user">
+                    <select class="form-control chosen-select" name="user">
                         @foreach($users as $user)
                             <option value="{{ $user['id'] }}" {{ $user['id'] == $searchParams['user'] ? 'selected' : '' }}>{{$user['name']}}</option>
                         @endforeach

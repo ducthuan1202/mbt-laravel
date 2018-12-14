@@ -77,7 +77,7 @@
                                                 <a class="btn btn-default" href="{{route('quotations.edit', $item->id)}}">
                                                     <i class="fa fa-edit"></i> Sửa
                                                 </a>
-                                                <a class="btn btn-default" onclick="MBT_Company.delete({{$item->id}})">
+                                                <a class="btn btn-default" onclick="MBT_PriceQuotation.delete({{$item->id}})">
                                                     <i class="fa fa-trash"></i> Xóa
                                                 </a>
                                             </div>

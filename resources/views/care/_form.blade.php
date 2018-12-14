@@ -20,7 +20,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Khách Hàng</label>
-            <select class="form-control" name="customer_id">
+            <select class="form-control chosen-select" name="customer_id">
                 @foreach($customers as $customer)
                     <option value="{{ $customer['id'] }}" {{ $customer['id'] == $model->customer_id ? 'selected' : '' }}>{{$customer['name']}}</option>
                 @endforeach

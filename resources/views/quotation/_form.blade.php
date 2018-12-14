@@ -22,7 +22,7 @@
 
         <div class="form-group">
             <label>Khách Hàng</label>
-            <select class="form-control" name="customer_id">
+            <select class="form-control chosen-select" name="customer_id">
                 @foreach($customers as $customer)
                     <option value="{{ $customer['id'] }}" {{ ($customer['id'] == $model->customer_id || $customer['id'] == old('customer_id')) ? 'selected' : '' }}>{{$customer['name']}}</option>
                 @endforeach
@@ -69,7 +69,7 @@
 
         <div class="form-group">
             <label>Sản Phẩm Báo Giá</label>
-            <select class="form-control" name="product_id">
+            <select class="form-control chosen-select" name="product_id">
                 @foreach($products as $product)
                     <option value="{{ $product['id'] }}" {{ ($product['id'] == $model->product_id || $product['id'] == old('product_id')) ? 'selected' : '' }}>{{$product['name']}}</option>
                 @endforeach

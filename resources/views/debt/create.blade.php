@@ -14,8 +14,8 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form action="{{ route('quotations.store') }}" method="POST">
-                            @include('quotation._form')
+                        <form action="{{ route('debts.store') }}" method="POST">
+                            @include('debt._form')
                         </form>
                     </div>
                 </div>
@@ -25,5 +25,5 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('/template/build/js/quotation.js') }}"></script>
+    <script src="{{ asset('/template/build/js/debt.js') }}"></script>
 @endsection

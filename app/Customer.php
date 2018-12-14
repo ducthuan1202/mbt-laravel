@@ -105,6 +105,16 @@ class Customer extends Model
         }
     }
 
+    public function checkCityExist($id = 0)
+    {
+        return $this->where('city_id', $id)->count();
+    }
+
+    public function checkCompanyExist($id = 0)
+    {
+        return $this->where('company_id', $id)->count();
+    }
+
     // search data
     public function search($searchParams = [])
     {

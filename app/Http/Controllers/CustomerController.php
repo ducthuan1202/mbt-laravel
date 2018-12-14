@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Company;
 use App\Customer;
+use App\Debt;
+use App\PriceQuotation;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -143,6 +145,24 @@ class CustomerController extends Controller
     {
         # find model and delete
         $model = $this->finById($id);
+
+        # check in price quotations
+        $priceQuotationModel = new PriceQuotation();
+        if($priceQuotationModel->checkCustomerExist($model->id)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể xóa do có liên quan tới BÁO GIÁ.',
+            ]);
+        }
+
+        # check in debt
+        $debtModel = new Debt();
+        if($debtModel->checkCustomerExist($model->id)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể xóa do có liên quan tới CÔNG NỢ.',
+            ]);
+        }
 
         if ($model->delete()) {
             $output = [

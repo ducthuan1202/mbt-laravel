@@ -126,6 +126,11 @@ class PriceQuotation extends Model
         return $model->paginate(self::LIMIT);
     }
 
+    public function checkCustomerExist($id = 0)
+    {
+        return $this->where('customer_id', $id)->count();
+    }
+
     public function getCustomerStatus($addAll = true)
     {
         $data = [];

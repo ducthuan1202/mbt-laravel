@@ -11,7 +11,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control" name="city">
+                    <select class="form-control chosen-select" name="city">
                         @foreach($cities as $city)
                             <option value="{{ $city['id'] }}" {{ $city['id'] == $searchParams['city'] ? 'selected' : '' }}>{{$city['name']}}</option>
                         @endforeach

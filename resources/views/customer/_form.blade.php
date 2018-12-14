@@ -45,7 +45,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>NVKD chăm sóc</label>
-            <select class="form-control" name="user_id">
+            <select class="form-control chosen-select" name="user_id">
                 @foreach($users as $user)
                     <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
@@ -53,7 +53,7 @@
         </div>
         <div class="form-group">
             <label>Khu Vực</label>
-            <select class="form-control" name="city_id">
+            <select class="form-control chosen-select" name="city_id">
                 @foreach($cities as $city)
                     <option value="{{ $city['id'] }}" {{ $city['id'] == $model->city_id ? 'selected' : '' }}>{{$city['name']}}</option>
                 @endforeach
@@ -61,7 +61,7 @@
         </div>
         <div class="form-group">
             <label>Chọn Công Ty KH</label>
-            <select class="form-control" name="company_id">
+            <select class="form-control chosen-select" name="company_id">
                 @foreach($companies as $company)
                     <option value="{{ $company['id'] }}" {{ $company['id'] == $model->company_id ? 'selected' : '' }}>{{$company['name']}}</option>
                 @endforeach

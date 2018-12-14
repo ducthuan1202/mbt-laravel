@@ -43,7 +43,14 @@
                         <thead>
                             <tr class="headings">
                                 <th>STT</th>
-                                <th>Ngày Báo Giá</th>
+                                <th>Khách Hàng</th>
+                                <th>NVKD</th>
+                                <th>Ngày Hẹn</th>
+                                <th>Số Lượng</th>
+                                <th>Giá</th>
+                                <th>VAT</th>
+                                <th>Số Dư</th>
+                                <th>Trạng Thái</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -52,7 +59,14 @@
                                 @foreach($data as $item)
                                     <tr>
                                         <td style="width: 50px">{{$item->id}}</td>
-                                        <td>{{$item->content}}</td>
+                                        <td>{{$item->formatCustomer()}}</td>
+                                        <td>{{$item->formatUser()}}</td>
+                                        <td>{{$item->formatDebtDate()}}</td>
+                                        <td>{{$item->amount}}</td>
+                                        <td>{{$item->price}}</td>
+                                        <td>{{$item->vat}}</td>
+                                        <td>{{$item->residual}}</td>
+                                        <td>{!! $item->formatStatus() !!}</td>
 
                                         <td style="width: 170px">
                                             <div class="btn-group">

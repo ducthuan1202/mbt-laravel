@@ -14,9 +14,9 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form action="{{ route('quotations.update', $model->id) }}" method="POST">
+                        <form action="{{ route('debts.update', $model->id) }}" method="POST">
                             @method('PATCH')
-                            @include('quotation._form')
+                            @include('debt._form')
                         </form>
                     </div>
                 </div>
@@ -26,5 +26,5 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('/template/build/js/quotation.js') }}"></script>
+    <script src="{{ asset('/template/build/js/debt.js') }}"></script>
 @endsection

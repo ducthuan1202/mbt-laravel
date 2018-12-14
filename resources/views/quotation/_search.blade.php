@@ -18,7 +18,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label>Sản Phẩm</label>
-                    <select class="form-control" name="product">
+                    <select class="form-control chosen-select" name="product">
                         @foreach($products as $product)
                             <option value="{{ $product['id'] }}" {{ $product['id'] == $searchParams['product'] ? 'selected' : '' }}>{{$product['name']}}</option>
                         @endforeach

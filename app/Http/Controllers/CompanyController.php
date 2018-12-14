@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Company;
+use App\Customer;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -111,6 +112,15 @@ class CompanyController extends Controller
     {
         # find model and delete
         $model = $this->finById($id);
+
+        # check in customer
+        $customerModel = new Customer();
+        if($customerModel->checkCompanyExist($model->id)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể xóa do có liên quan tới KHÁCH HÀNG.',
+            ]);
+        }
 
         if ($model->delete()) {
             $output = [

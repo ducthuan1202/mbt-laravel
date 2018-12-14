@@ -70,7 +70,12 @@ class Company extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public static function countNumber()
+
+    public function checkCityExist($id = 0)
+    {
+        return $this->where('city_id', $id)->count();
+    }
+        public static function countNumber()
     {
         return self::count();
     }

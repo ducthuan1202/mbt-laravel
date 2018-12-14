@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Company;
+use App\Customer;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
@@ -102,6 +104,24 @@ class CityController extends Controller
     {
         # find model and delete
         $model = $this->finById($id);
+
+        # check in debt
+        $customerModel = new Customer();
+        if ($customerModel->checkCityExist($model->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể xóa do có liên quan tới KHÁCH HÀNG.',
+            ]);
+        }
+
+        # check in Company
+        $companyModel = new Company();
+        if ($companyModel->checkCityExist($model->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể xóa do có liên quan tới CÔNG TY.',
+            ]);
+        }
 
         if ($model->delete()) {
             $output = [

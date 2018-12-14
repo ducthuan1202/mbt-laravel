@@ -18,7 +18,7 @@
 
 <div class="form-group">
     <label>Khu Vực</label>
-    <select class="form-control" name="city_id">
+    <select class="form-control chosen-select" name="city_id">
         @foreach($cities as $city)
             <option value="{{ $city['id'] }}" {{ $city['id'] == $model->city_id ? 'selected' : '' }}>{{$city['name']}}</option>
         @endforeach

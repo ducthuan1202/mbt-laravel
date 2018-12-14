@@ -9,10 +9,10 @@
         <!-- menu profile quick info -->
         <div class="profile clearfix">
             <div class="profile_pic">
-                <img src="/template/production/images/img.jpg" alt="..." class="img-circle profile_img">
+                <img src="/template/production/images/picture.jpg" alt="..." class="img-circle profile_img">
             </div>
             <div class="profile_info">
-                <span>Xin Chào,</span>
+                <div class="text-center" style="font-size: 11px">({!! $user ? $user->formatRolesText() : '' !!})</div>
                 <h2>{{$user ? $user->name : ''}}</h2>
             </div>
         </div>

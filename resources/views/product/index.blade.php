@@ -69,7 +69,7 @@
                                                 <a class="btn btn-default" href="{{route('products.edit', $item->id)}}">
                                                     <i class="fa fa-edit"></i> Sửa
                                                 </a>
-                                                <a class="btn btn-default" onclick="MBT_Company.delete({{$item->id}})">
+                                                <a class="btn btn-default" onclick="MBT_Product.delete({{$item->id}})">
                                                     <i class="fa fa-trash"></i> Xóa
                                                 </a>
                                             </div>

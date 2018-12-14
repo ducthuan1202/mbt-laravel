@@ -51,7 +51,7 @@ class DebtController extends Controller
         $customerModel = new Customer();
 
         $model = new Debt();
-
+        $model->debt_date = date('Y-m-d');
         $shared = [
             "model" => $model,
             'users' => $userModel->getDropDownList(),
@@ -68,15 +68,13 @@ class DebtController extends Controller
      */
     public function store(Request $request)
     {
-        $model = new Customer();
+        $model = new Debt();
         $this->validate($request, $model->validateRules, $model->validateMessage);
+
         $model->fill($request->all());
         $model->checkBeforeSave();
 
-        if($model->save()){
-            $model->code = $model->generateUniqueCode($model->id);
-            $model->save();
-        }
+        $model->save();
 
         return redirect()
             ->route('debts.index')
