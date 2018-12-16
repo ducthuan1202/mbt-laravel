@@ -12,7 +12,7 @@
                 <img src="/template/production/images/picture.jpg" alt="..." class="img-circle profile_img">
             </div>
             <div class="profile_info">
-                <div class="text-center" style="font-size: 11px">({!! $user ? $user->formatRolesText() : '' !!})</div>
+                <p class="text-center" style="font-size: 11px">{!! $user ? $user->formatRolesText() : '' !!}</p>
                 <h2>{{$user ? $user->name : ''}}</h2>
             </div>
         </div>
@@ -23,10 +23,16 @@
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
-                <h3>Quản Lý</h3>
+                {{--<h3>DANH SÁCH MENU CHÍNH</h3>--}}
                 <ul class="nav side-menu">
                     <li>
                         <a href="{{route('home')}}"><i class="fa fa-home"></i> Bảng Tin</a>
+                    </li>
+                    <li>
+                        <a href="{{route('cities.index')}}"><i class="fa fa-map-marker"></i> Khu Vực</a>
+                    </li>
+                    <li>
+                        <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Nhân Sự</a>
                     </li>
                     <li>
                         <a href="{{route('customers.index')}}"><i class="fa fa-users"></i> Khách Hàng</a>
@@ -43,27 +49,7 @@
                     <li>
                         <a href="{{route('debts.index')}}"><i class="fa fa-slideshare"></i> Công Nợ</a>
                     </li>
-                    <li>
-                        <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Nhân Sự</a>
-                    </li>
-                </ul>
-            </div>
 
-            <div class="menu_section">
-                <h3>Tổng Hợp </h3>
-                <ul class="nav side-menu">
-                    <li>
-                        <a href="{{route('cities.index')}}"><i class="fa fa-map-marker"></i> Khu Vực</a>
-                    </li>
-                    <li>
-                        <a href="{{route('companies.index')}}"><i class="fa fa-briefcase"></i> Công Ty</a>
-                    </li>
-                    <li>
-                        <a href="{{route('products.index')}}"><i class="fa fa-cube"></i> Máy Biến Thế</a>
-                    </li>
-                    <li>
-                        <a href="{{route('skins.index')}}"><i class="fa fa-language"></i> Ngoại Hình Máy</a>
-                    </li>
                 </ul>
             </div>
 

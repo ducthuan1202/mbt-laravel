@@ -15,18 +15,16 @@ class CreateCustomers extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('company_id');
-            $table->integer('city_id');
+            $table->string('code', 11)->nullable()->comment('mã KH');
             $table->integer('user_id');
-            $table->string('code');
-            $table->string('name');
-            $table->string('position')->comment('Chức vụ');
-            $table->string('mobile');
-            $table->string('email')->nullable();
-            $table->string('address');
-            $table->integer('total_sale')->nullable()->comment('tổng tiền đã giao dịch');
-            $table->string('buy_status');
-            $table->string('status');
+            $table->integer('city_id');
+            $table->string('company')->nullable(); // 1 KH có thể ko thuộc 1 cty nào
+            $table->string('address')->nullable()->comment('địa chỉ chi tiết');
+            $table->string('name', 63);
+            $table->string('position',63)->nullable()->comment('Chức vụ');
+            $table->string('mobile',15);
+            $table->integer('average_sale')->nullable()->comment('doanh số trung bình');
+            $table->boolean('status')->comment('[1: đã mua, 2: chưa mua]');
             $table->timestamps();
         });
     }

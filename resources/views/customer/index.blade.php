@@ -13,16 +13,12 @@
             <div class="x_title">
                 <h2>
                     Khách Hàng
-                    <small>Danh sách</small>
+                    <small>Tổng số <b>{{$data->total()}}</b></small>
                 </h2>
 
-                <ul class="nav navbar-right panel_toolbox">
-                    <li>
-                        <a class="btn btn-round btn-default btn-xs" href="{{route('customers.create')}}">
-                            <i class="fa fa-plus"></i> Thêm mới
-                        </a>
-                    </li>
-                </ul>
+                <a class="btn btn-success pull-right" href="{{route('customers.create')}}">
+                    <i class="fa fa-plus"></i> Thêm mới
+                </a>
 
                 <div class="clearfix"></div>
             </div>
@@ -40,17 +36,17 @@
                 <div class="ln_solid"></div>
 
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped jambo_table bulk_action">
                         <thead>
                         <tr class="headings">
-                            <th>STT</th>
-                            <th>Khách Hàng</th>
-                            <th>SĐT</th>
-                            <th>Chức Vụ</th>
-                            <th>Công Ty</th>
-                            <th>Khu Vực</th>
+                            <th>No.</th>
+                            <th>Họ tên</th>
+                            <th>Số điện thoại</th>
+                            <th>Chức vụ</th>
+                            <th>Công ty</th>
+                            <th>Khu vực</th>
                             <th>NVKD chăm sóc</th>
-                            <th>Trạng Thái</th>
+                            <th>Trạng thái</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -63,21 +59,22 @@
                                         <b class="text-success">{{$item->name}}</b>
                                         <p style="font-size: 11px">{{$item->code}}</p>
                                     </td>
-                                    <td>{{$item->mobile}}</td>
-                                    <td>{{$item->position}}</td>
-                                    <td>{{$item->formatCompany()}}</td>
-                                    <td>{{$item->address}} - {{$item->formatCity()}}</td>
+                                    <td><a class="text-primary" href="tel:{{$item->mobile}}"><b>{{$item->mobile}}</b></a></td>
+                                    <td><span class="text-primary">{{$item->position}}</span></td>
+                                    <td><span class="text-primary">{{$item->company}}</span></td>
+                                    <td>{{$item->formatCity()}}</td>
                                     <td><b class="text-success">{{$item->formatUser()}}</b></td>
-                                    <td>{!! $item->formatBuyStatus() !!}</td>
-                                    <td style="width: 170px">
-                                        <div class="btn-group">
-                                            <a class="btn btn-default" href="{{route('customers.edit', $item->id)}}">
-                                                <i class="fa fa-edit"></i> Sửa
-                                            </a>
-                                            <a class="btn btn-default" onclick="MBT_Customer.delete({{$item->id}})">
-                                                <i class="fa fa-trash"></i> Xóa
-                                            </a>
-                                        </div>
+                                    <td>{!! $item->formatStatus() !!}</td>
+                                    <td class="text-right" style="min-width: 220px">
+                                        <a href="{{route('customers.edit', $item->id)}}" class="btn btn-primary btn-xs">
+                                            <i class="fa fa-folder"></i> Xem
+                                        </a>
+                                        <a href="{{route('customers.edit', $item->id)}}" class="btn btn-info btn-xs">
+                                            <i class="fa fa-pencil"></i> Sửa
+                                        </a>
+                                        <a onclick="MBT_Customer.delete({{$item->id}})" class="btn btn-danger btn-xs">
+                                            <i class="fa fa-trash-o"></i> Xóa
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

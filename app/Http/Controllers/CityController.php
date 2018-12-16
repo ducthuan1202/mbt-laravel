@@ -114,15 +114,6 @@ class CityController extends Controller
             ]);
         }
 
-        # check in Company
-        $companyModel = new Company();
-        if ($companyModel->checkCityExist($model->id)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Không thể xóa do có liên quan tới CÔNG TY.',
-            ]);
-        }
-
         if ($model->delete()) {
             $output = [
                 'success' => true,
@@ -145,4 +136,5 @@ class CityController extends Controller
     {
         return City::findOrFail($id);
     }
+
 }

@@ -32,7 +32,7 @@ class HomeController extends Controller
             'customerCount' => Customer::countNumber(),
             'userCount' => User::countNumber(),
             'cityCount' => City::countNumber(),
-            'companyCount' => Company::countNumber(),
+            'companyCount' => 0,
         ];
 
         return view('pages/dashboard', $shared);

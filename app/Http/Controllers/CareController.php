@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Care;
+use App\City;
 use App\Customer;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CareController extends Controller
 {
@@ -17,24 +19,30 @@ class CareController extends Controller
     public function index(Request $request)
     {
         $searchParams = [
+            'city' => null,
             'user' => null,
             'customer' => null,
             'keyword' => null,
             'status' => null,
+            'buy' => null,
+            'date' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
-        // get cities
+        $cityModel = new City();
         $userModel = new User();
         $customerModel = new Customer();
         $model = new Care();
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'users'=>$userModel->getDropDownList(),
-            'customers'=>$customerModel->getDropDownList(),
-            'status' => $model->getStatus()
+            'users'=>$userModel->getDropDownList(true),
+            'cities'=>$cityModel->getDropDownList(true),
+            'customers'=>$customerModel->getDropDownList(true),
+            'status' => $model->listStatus(),
+            'buyStatus' => $customerModel->getStatus(true),
         ];
+
         return view('care.index', $shared);
     }
 
@@ -45,13 +53,23 @@ class CareController extends Controller
      */
     public function create()
     {
-        $customerModel = new Customer();
+        $userModel = new User();
+        $cityModel = new City();
+
         $model = new Care();
-        $model->call_date = date('Y-m-d');
+        $model->start_date = date('Y-m-d');
+        $model->end_date = date('Y-m-d');
+
+        $userLogin = Auth::user();
+        if($userLogin && isset($userLogin->id)){
+            $model->user_id = $userLogin->id;
+        }
+
         $shared = [
             "model" => $model,
-            'customers'=>$customerModel->getDropDownList(false),
-            'status' => $model->getStatus(false)
+            'users'=>$userModel->getDropDownList(),
+            'cities'=>$cityModel->getDropDownList(),
+            'status' => $model->listStatus()
         ];
         return view('care.create', $shared);
     }
@@ -81,14 +99,17 @@ class CareController extends Controller
      */
     public function edit($id)
     {
-        $customerModel = new Customer();
+        $userModel = new User();
+        $cityModel = new City();
 
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
-            'customers'=>$customerModel->getDropDownList(false),
-            'status' => $model->getStatus(false)
+            'cities'=>$cityModel->getDropDownList(),
+            'users'=>$userModel->getDropDownList(),
+            'status' => $model->listStatus()
         ];
+
         return view('care.edit', $shared);
     }
 

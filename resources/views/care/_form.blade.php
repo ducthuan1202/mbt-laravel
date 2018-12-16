@@ -19,41 +19,83 @@
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
-            <label>Khách Hàng</label>
-            <select class="form-control chosen-select" name="customer_id">
-                @foreach($customers as $customer)
-                    <option value="{{ $customer['id'] }}" {{ $customer['id'] == $model->customer_id ? 'selected' : '' }}>{{$customer['name']}}</option>
+            <label>Nhân viên kinh doanh</label>
+            <select class="form-control chosen-select" name="user_id">
+                @foreach($users as $user)
+                    <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
             </select>
         </div>
 
-        <div class="form-group">
-            <label>Ngày Gọi (click để chọn ngày)</label>
-            <div class="input-group date">
-                <input type="text" class="form-control drp-single" name="call_date" value="{{old('call_date') ? old('call_date') : $model->formatDate()}}" readonly/>
-                <span class="input-group-addon">
-                   <i class="glyphicon glyphicon-calendar"></i>
-                </span>
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <label>Khu vực</label>
+                    <select class="form-control chosen-select" onchange="MBT_Care.getCustomerByCity({{ $model->customer_id ? $model->customer_id : old('customer_id')  }})" id="city_id">
+                        @foreach($cities as $city)
+                            <option value="{{ $city['id'] }}"
+                                    {{ isset($model->customer) && $city['id'] == $model->customer->city_id ? 'selected' : '' }}>
+                                {{$city['name']}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <label>Khách hàng</label>
+                    <select class="form-control chosen-select" name="customer_id" id="customer_id">
+                        <option>đang tải dữ liệu...</option>
+                    </select>
+                </div>
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <label>Ngày gọi</label>
+                    <div class="input-group date">
+                        <span class="input-group-addon">
+                           <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        <input type="text" class="form-control drp-single" name="start_date"
+                               value="{{old('start_date') ? old('start_date') : $model->formatStartDate()}}" readonly/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <label>Ngày hẹn gọi lại</label>
+                    <div class="input-group date">
+                        <span class="input-group-addon">
+                           <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        <input type="text" class="form-control drp-single" name="end_date"
+                               value="{{old('end_date') ? old('end_date') : $model->formatEndDate()}}" readonly/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+
         <div class="form-group">
-            <label>Trạng Thái Khách</label>
-            <select class="form-control" name="status">
+            <label>Nội dung chăm sóc</label>
+            <select class="form-control chosen-select" name="status">
                 @foreach($status as $key => $val)
                     <option value="{{ $key }}" {{ $key == $model->status ? 'selected' : '' }}>{{$val}}</option>
                 @endforeach
             </select>
         </div>
 
-    </div>
-    <div class="col-md-6">
         <div class="form-group">
-            <label>Nội Dung Cuộc Chăm Sóc</label>
-            <textarea class="form-control" name="content" rows="7">{{old('content') ? old('content') : $model->content}}</textarea>
+            <label>Mô tả khách hàng</label>
+            <textarea class="form-control" name="customer_note" rows="5">{{$model->customer_note}}</textarea>
         </div>
     </div>
-
 </div>
 
 <div class="ln_solid"></div>

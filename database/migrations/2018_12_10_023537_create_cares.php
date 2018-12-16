@@ -17,8 +17,10 @@ class CreateCares extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('customer_id');
-            $table->text('content');
-            $table->string('status');
+            $table->date('start_date')->nullable()->comment('ngày gọi chăm sóc');
+            $table->date('end_date')->nullable()->comment('ngày hẹn gọi lại');
+            $table->text('customer_note')->comment('mô tả về KH');
+            $table->integer('status')->comment('[1: báo giá, 2: xin viêc, ..., 13: cmsn]');
             $table->timestamps();
         });
     }

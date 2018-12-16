@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Auth;
  *
  * @property string user_id
  * @property string customer_id
- * @property string content
- * @property string call_date
+ * @property string start_date
+ * @property string end_date
+ * @property string customer_note
  * @property string status
  *
  * @property string created_at
@@ -27,8 +28,6 @@ use Illuminate\Support\Facades\Auth;
 class Care extends Model
 {
     const LIMIT = 10;
-    const ACTIVATE_STATUS = 'activate',
-        DEACTIVATE_STATUS = 'deactivate';
 
     protected $table = 'cares';
     /**
@@ -36,34 +35,38 @@ class Care extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'customer_id', 'content', 'call_date', 'status'];
+    protected $fillable = [
+        'user_id', 'customer_id', 'start_date', 'end_date', 'customer_note', 'status'
+    ];
 
     public $validateMessage = [
-        'customer_id.required' => 'Chọn khách hàng không thể bỏ trống.',
-        'content.required' => 'Nội dung cuộc chăm sóc không thể bỏ trống.',
+        'user_id.required' => 'Chọn nhân viên chăm sóc.',
+        'customer_id.required' => 'Chọn khách hàng.',
+        'customer_note.required' => 'Nội dung cuộc chăm sóc không thể bỏ trống.',
         'call_date.required' => 'Chọn ngày chăm sóc.',
         'status.required' => 'Trạng thái không thể bỏ trống.',
     ];
 
     public $validateRules = [
+        'user_id' => 'required',
         'customer_id' => 'required',
-        'content' => 'required',
-        'call_date' => 'required',
+        'customer_note' => 'required',
+        'start_date' => 'required',
+        'end_date' => 'required',
         'status' => 'required',
     ];
 
     public function checkBeforeSave()
     {
-        if (!empty($this->call_date)) {
-            $this->call_date = $this->dmyToymd($this->call_date);
+        if (!empty($this->start_date)) {
+            $this->start_date = $this->dmyToymd($this->start_date);
         }
-        if (!$this->exists) {
-            if (empty($this->user_id)) {
-                $this->user_id = Auth::user()->id;
-            }
+        if (!empty($this->end_date)) {
+            $this->end_date = $this->dmyToymd($this->end_date);
         }
     }
 
+    // TODO:  RELATIONSHIP =====
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
@@ -74,66 +77,91 @@ class Care extends Model
         return $this->hasOne(Customer::class, 'id', 'customer_id');
     }
 
+    // TODO:  QUERY TO DATABASE =====
     public function search($searchParams = [])
     {
-        $model = $this->with(['user', 'customer']);
-        $model = $model->orderBy('id', 'desc');
+
+        $model = $this->with(['user', 'customer', 'customer.city']);
+
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
         }
+
+        // filter by user
+        if (isset($searchParams['user']) && !empty($searchParams['user'])) {
+            $model = $model->where('user_id', $searchParams['user']);
+        }
+
+        // filter by customer
+        if (isset($searchParams['customer']) && !empty($searchParams['customer'])) {
+            $model = $model->where('customer_id', $searchParams['customer']);
+        }
+
+        // filter by status
+        if (isset($searchParams['status']) && !empty($searchParams['status'])) {
+            $model = $model->where('status', $searchParams['status']);
+        }
+
+        // filter by customer city
+        if (isset($searchParams['city']) && !empty($searchParams['city'])) {
+            $model = $model->whereHas('customer', function ($query) use ($searchParams) {
+                $query->where('city_id', $searchParams['city']);
+            });
+        }
+
+        // filter by customer buy status
+        if (isset($searchParams['buy']) && !empty($searchParams['buy'])) {
+            $model = $model->whereHas('customer', function ($query) use ($searchParams) {
+                $query->where('status', $searchParams['buy']);
+            });
+        }
+
+        // filter by quotations_date
+        if (isset($searchParams['date']) && !empty($searchParams['date'])) {
+            $d = $this->extractDate($searchParams['date']);
+
+            $startDate = $this->dmyToymd($d[0]);
+            $endDate = $this->dmyToymd($d[1]);
+            if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $startDate) && preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $endDate)) {
+                $model = $model->whereBetween('start_date', [$startDate, $endDate]);
+            }
+        }
+
+        $model = $model->orderBy('id', 'desc');
+
         return $model->paginate(self::LIMIT);
     }
 
-    public function getDropDownList($addAll = true)
+    // TODO:  LIST DATA =====
+    public function listStatus()
     {
-        $data = $this->select('id', 'name')->get()->toArray();
-
-        if ($addAll) {
-            $firstItem = ['id' => null, 'name' => 'Tất cả'];
-            array_unshift($data, $firstItem);
-        }
-
-        if (!$data) {
-            $firstItem = ['id' => null, 'name' => 'Không có dữ liệu'];
-            array_unshift($data, $firstItem);
-        }
-
-        return $data;
+        return [
+            null => 'Tất cả',
+            1 => 'Chăm sóc lại báo giá đã báo',
+            2 => 'Xin việc',
+            3 => 'Để báo giá',
+            4 => 'Tư vấn về sản phẩm',
+            5 => 'Chốt đơn hàng',
+            6 => 'Làm hợp đồng',
+            7 => 'Giục lấy hàng',
+            8 => 'Giục tạm ứng',
+            9 => 'Đòi nợ',
+            10 => 'Đòi hợp đồng',
+            11 => 'Xin đối chiếu công nợ',
+            12 => 'Giới thiệu sản phẩm (khách mới)',
+            13 => 'Chúc mừng sinh nhật khách hàng',
+        ];
     }
 
-    public function getStatus($addAll = true)
-    {
-        $data = [];
-        if ($addAll) {
-            $data = [null => 'Tất cả'];
-        }
-        $data = array_merge($data, [
-            self::ACTIVATE_STATUS => 'Kích Hoạt',
-            self::DEACTIVATE_STATUS => 'Tạm Hoãn',
-        ]);
-
-        return $data;
-    }
-
+    // TODO:  FORMAT =====
     public function formatStatus()
     {
-        $arr = $this->getStatus();
-        switch ($this->status) {
-            case self::ACTIVATE_STATUS:
-                $output = $arr[self::ACTIVATE_STATUS];
-                $cls = 'btn-info';
-                break;
-            case  self::DEACTIVATE_STATUS:
-                $output = $arr[self::DEACTIVATE_STATUS];
-                $cls = 'btn-default';
-                break;
-            default:
-                $output = 'n/a';
-                $cls = 'btn-default';
-                break;
+        $listStatus = $this->listStatus();
+        if (isset($listStatus[$this->status])) {
+            return $listStatus[$this->status];
         }
-        return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
+        return 'không xác định';
     }
 
     public function formatUser()
@@ -147,19 +175,40 @@ class Care extends Model
     public function formatCustomer()
     {
         if ($this->customer) {
-            return $this->customer->name;
+            return sprintf('%s<br/><small>%s</small>', $this->customer->name, $this->customer->mobile);
         }
         return 'không xác định';
     }
 
-    public function formatDate()
+    public function formatCustomerCity()
     {
-        return date('d/m/Y', strtotime($this->call_date));
+        if ($this->customer && isset($this->customer->city)) {
+            return $this->customer->city->name;
+        }
+        return 'không xác định';
+    }
+
+    public function formatEndDate()
+    {
+        return date('d/m/Y', strtotime($this->end_date));
+    }
+
+    public function formatStartDate()
+    {
+        return date('d/m/Y', strtotime($this->start_date));
     }
 
     public function dmyToymd($date)
     {
-        $date = str_replace('/', '-', $date);
-        return date('Y-m-d', strtotime($date));
+        if (preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $date)) {
+            $date = str_replace('/', '-', $date);
+            return date('Y-m-d', strtotime($date));
+        }
+        return $date;
+    }
+
+    public function extractDate($str, $separator = ' - ')
+    {
+        return explode($separator, $str);
     }
 }

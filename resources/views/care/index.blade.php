@@ -1,7 +1,7 @@
 @php
-    /**
-     * @var $data \App\Care[]
-     */
+/**
+ * @var $data \App\Care[]
+ */
 @endphp
 
 @extends('layouts.main')
@@ -12,25 +12,19 @@
             <div class="x_title">
                 <h2>
                     Chăm Sóc Khách Hàng
-                    <small>Danh sách</small>
+                    <small>Tổng số <b>{{$data->count()}}</b></small>
                 </h2>
 
-                <ul class="nav navbar-right panel_toolbox">
-                    <li>
-                        <a class="btn btn-round btn-default btn-xs" href="{{route('cares.create')}}">
-                            <i class="fa fa-plus"></i> Thêm mới
-                        </a>
-                    </li>
-                </ul>
+                <a class="btn btn-success pull-right" href="{{route('cares.create')}}">
+                    <i class="fa fa-plus"></i> Thêm mới
+                </a>
 
                 <div class="clearfix"></div>
             </div>
 
             <div class="x_content">
 
-                <div role="Search form">
-                    @include('care._search')
-                </div>
+                @include('care._search')
 
                 @if($message = Session::get('success'))
                     <div class="alert alert-success">{{$message}}</div>
@@ -39,47 +33,42 @@
                 <div class="ln_solid"></div>
 
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped jambo_table bulk_action">
                         <thead>
                         <tr class="headings">
-                            <th>STT</th>
-                            <th>Ngày Chăm Sóc</th>
-                            <th>Nhân Viên</th>
-                            <th>Khách Hàng</th>
-                            <th>Nội Dung</th>
-                            <th>Trạng Thái</th>
-                            <th>Lịch Sử Chăm Sóc</th>
+                            <th>No.</th>
+                            <th>Khách hàng</th>
+                            <th>Khu vực</th>
+                            <th>Ngày gọi - Ngày hẹn</th>
+                            <th>Nội dung chăm sóc</th>
+                            <th>Ghi chú</th>
+                            <th>Nhân viên</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         @if(count($data))
-                            @foreach($data as $item)
+                            @foreach($data as $index => $item)
                                 <tr>
-                                    <td style="width: 50px">{{$item->id}}</td>
-                                    <td>{{$item->formatDate()}}</td>
-                                    <td>{{$item->formatUser()}}</td>
-                                    <td>{{$item->formatCustomer()}}</td>
-                                    <td>{{$item->content}}</td>
+                                    <td style="width: 50px">{{$index + 1}}</td>
+                                    <td>{!! $item->formatCustomer() !!}</td>
+                                    <td>{!! $item->formatCustomerCity() !!}</td>
+
+                                    <td>{{$item->formatStartDate()}} - {{$item->formatEndDate()}}</td>
                                     <td>{!! $item->formatStatus() !!}</td>
-                                    <td style="width: 300px">
-                                            <a class="btn btn-primary btn-xs" onclick="MBT_Care.getHistories({{$item->id}})">
-                                                <i class="fa fa-eye"></i> Xem
+                                    <td>{!! $item->customer_note !!}</td>
+                                    <td>{!! $item->formatUser() !!}</td>
+                                    <td class="text-right" style="min-width: 150px">
+                                        <a href="{{route('cares.edit', $item->id)}}" class="btn btn-info btn-xs">
+                                            <i class="fa fa-pencil"></i> Sửa
+                                        </a>
+                                        @can('admin')
+                                            <a onclick="MBT_Care.delete({{$item->id}})" class="btn btn-danger btn-xs">
+                                                <i class="fa fa-trash-o"></i> Xóa
                                             </a>
-                                            <a class="btn btn-warning btn-xs" onclick="MBT_Care.openForm({{$item->id}})">
-                                                <i class="fa fa-plus"></i> Thêm
-                                            </a>
+                                        @endcan
                                     </td>
-                                    <td style="width: 140px">
-                                        <div class="btn-group btn-group-sm">
-                                            <a class="btn btn-default" href="{{route('cares.edit', $item->id)}}">
-                                                <i class="fa fa-edit"></i> Sửa
-                                            </a>
-                                            <a class="btn btn-default" onclick="MBT_Care.delete({{$item->id}})">
-                                                <i class="fa fa-trash"></i> Xóa
-                                            </a>
-                                        </div>
-                                    </td>
+
                                 </tr>
                             @endforeach
                         @else
@@ -103,4 +92,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/care.js') }}"></script>
+    <script>MBT_Care.getCustomerByCityIndex()</script>
 @endsection

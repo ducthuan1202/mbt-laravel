@@ -8,19 +8,26 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
-                            Công Ty
-                            <small>Chỉnh Sửa</small>
+                            Đơn hàng
+                            <small>Tạo Mới</small>
                         </h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form action="{{ route('companies.update', $model->id) }}" method="POST">
-                            @method('PATCH')
-                            @include('company._form')
+                        <form action="{{ route('orders.store') }}" method="POST">
+                            @include('order._form')
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script src="{{ asset('/template/build/js/order.js') }}"></script>
+    <script>
+        MBT_Order.getCustomerByCity('{{$model->customer_id}}');
+        MBT_Order.priceOrAmountOnchange()
+    </script>
 @endsection

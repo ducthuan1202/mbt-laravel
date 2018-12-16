@@ -11,33 +11,29 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer id
  *
  * @property string code
- * @property integer company_id
  * @property integer city_id
  * @property integer user_id
+ * @property string company
+ * @property string address
  * @property string name
  * @property string position
  * @property string mobile
- * @property string email
- * @property string address
- * @property integer total_sale
- * @property string buy_status
+ * @property integer average_sale
  * @property string status
  *
  * @property string created_at
  * @property string updated_at
  *
  * @property City city
- * @property Company company
  * @property User user
  *
  */
 class Customer extends Model
 {
     const LIMIT = 10;
-    const HAS_BUY_STATUS = 'yes',
-        NEVER_BUY_STATUS = 'no';
-    const ACTIVATE_STATUS = 'activate',
-        DEACTIVATE_STATUS = 'deactivate';
+    const
+        BUY_STATUS = 1,
+        NO_BUY_STATUS = 2;
 
     protected $table = 'customers';
 
@@ -47,30 +43,24 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'company_id', 'city_id', 'user_id', 'name', 'position', 'mobile', 'email',
-        'address', 'total_sale', 'buy_status', 'status',
+        'code', 'city_id', 'user_id', 'company', 'address',
+        'name', 'position', 'mobile', 'average_sale', 'status'
     ];
 
     public $validateMessage = [
-        'company_id.required' => 'Chọn công ty của khách hàng.',
         'city_id.required' => 'Chọn khu vực của khách hàng.',
         'user_id.required' => 'Chọn NVKD chăm sóc.',
         'name.required' => 'Tên không thể bỏ trống.',
-        'position.required' => 'Chức vụkhông thể bỏ trống.',
         'mobile.required' => 'Số điện thoại không thể bỏ trống.',
-        'address.required' => 'Địa chỉ không thể bỏ trống.',
-        'buy_status.required' => 'Chọn trạng thái khách.',
+        'status.required' => 'Chọn trạng thái khách.',
     ];
 
     public $validateRules = [
-        'company_id' => 'required',
         'city_id' => 'required',
         'user_id' => 'required',
         'name' => 'required|max:255',
-        'position' => 'required|max:255',
         'mobile' => 'required',
-        'address' => 'required|max:255',
-        'buy_status' => 'required',
+        'status' => 'required',
     ];
 
     // relationship with city
@@ -84,11 +74,6 @@ class Customer extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function company()
-    {
-        return $this->hasOne(Company::class, 'id', 'company_id');
-    }
-
     public static function countNumber()
     {
         return self::count();
@@ -97,11 +82,9 @@ class Customer extends Model
     public function checkBeforeSave()
     {
         if (!$this->exists) {
-            $this->status = self::ACTIVATE_STATUS;
+            $this->status = self::BUY_STATUS;
         } else {
-            if (empty($this->code)) {
-                $this->code = $this->generateUniqueCode($this->id);
-            }
+            $this->code = $this->generateUniqueCode($this->id);
         }
     }
 
@@ -110,15 +93,10 @@ class Customer extends Model
         return $this->where('city_id', $id)->count();
     }
 
-    public function checkCompanyExist($id = 0)
-    {
-        return $this->where('company_id', $id)->count();
-    }
-
     // search data
     public function search($searchParams = [])
     {
-        $model = $this->with(['city', 'company', 'user']);
+        $model = $this->with(['city', 'user']);
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
@@ -127,28 +105,32 @@ class Customer extends Model
         if (isset($searchParams['city']) && !empty($searchParams['city'])) {
             $model = $model->where('city_id', $searchParams['city']);
         }
+
         // filter by company
-        if (isset($searchParams['company']) && !empty($searchParams['company'])) {
-            $model = $model->where('company_id', $searchParams['company']);
+        if (isset($searchParams['status']) && !empty($searchParams['status'])) {
+            $model = $model->where('status', $searchParams['status']);
         }
-        // filter by company
-        if (isset($searchParams['buy']) && !empty($searchParams['buy'])) {
-            $model = $model->where('buy_status', $searchParams['buy']);
-        }
+
         // order by id desc
         $model = $model->orderBy('id', 'desc');
 
         return $model->paginate(self::LIMIT);
     }
 
-    public function getDropDownList($addAll = true)
+    public function getDropDownList($addAll = false)
     {
-        $data = $this->select('id', 'name')->get()->toArray();
+        $data = $this->select('id', 'name', 'mobile');
+
+        if(!empty($this->city_id)){
+            $data = $data->where('city_id', $this->city_id);
+        }
+        $data = $data->get()->toArray();
 
         if ($addAll) {
             $firstItem = ['id' => null, 'name' => 'Tất cả'];
             array_unshift($data, $firstItem);
         }
+
         if (!$data) {
             $firstItem = ['id' => null, 'name' => 'Không có dữ liệu'];
             array_unshift($data, $firstItem);
@@ -157,34 +139,34 @@ class Customer extends Model
         return $data;
     }
 
-    public function getBuyStatus($addAll = true)
+    public function getStatus($addAll = false)
     {
         $data = [];
         if ($addAll) {
             $data = [null => 'Tất cả'];
         }
-        $data = array_merge($data, [
-            self::HAS_BUY_STATUS => 'Đã Mua',
-            self::NEVER_BUY_STATUS => 'Chưa Mua',
-        ]);
 
+        $data[self::BUY_STATUS] = 'Đã Mua';
+        $data[self::NO_BUY_STATUS] = 'Chưa Mua';
         return $data;
     }
 
     public function formatCity()
     {
-        if ($this->city) {
-            return $this->city->name;
+        $location = '';
+        if (!empty($this->address)) {
+            $location = $this->address;
         }
-        return 'không xác định';
-    }
 
-    public function formatCompany()
-    {
-        if ($this->company) {
-            return $this->company->name;
+        if ($this->city) {
+            if (empty($location)) {
+                $location = $this->city->name;
+            } else {
+                $location .= ' - ' . $this->city->name;
+
+            }
         }
-        return 'không xác định';
+        return $location;
     }
 
     public function formatUser()
@@ -195,16 +177,16 @@ class Customer extends Model
         return 'không xác định';
     }
 
-    public function formatBuyStatus()
+    public function formatStatus()
     {
-        $arr = $this->getBuyStatus();
-        switch ($this->buy_status) {
-            case self::HAS_BUY_STATUS:
-                $output = $arr[self::HAS_BUY_STATUS];
+        $arr = $this->getStatus();
+        switch ($this->status) {
+            case self::BUY_STATUS:
+                $output = $arr[self::BUY_STATUS];
                 $cls = 'btn-info';
                 break;
-            case  self::NEVER_BUY_STATUS:
-                $output = $arr[self::NEVER_BUY_STATUS];
+            case  self::NO_BUY_STATUS:
+                $output = $arr[self::NO_BUY_STATUS];
                 $cls = 'btn-default';
                 break;
             default:
@@ -219,6 +201,6 @@ class Customer extends Model
     {
         if (!is_numeric($number) || $number < 1) return '';
         $len = strlen((string)$number);
-        return substr('MBT-C00000', 0, -$len) . $number;
+        return substr('MBT-KH00000', 0, -$len) . $number;
     }
 }

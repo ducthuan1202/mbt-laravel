@@ -5,7 +5,7 @@
 @endphp
 
 <div class="well" style="overflow: auto">
-    <form class="form" action="{{route('quotations.index')}}" method="GET">
+    <form class="form" action="{{route('orders.index')}}" method="GET">
         <div class="row">
 
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
@@ -21,7 +21,7 @@
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control chosen-select" name="city" id="sCity" onchange="MBT_PriceQuotation.getCustomerByCityIndex()">
+                    <select class="form-control chosen-select" name="city" id="sCity" onchange="MBT_Order.getCustomerByCityIndex()">
                         @foreach($cities as $city)
                             <option value="{{ $city['id'] }}" {{ $city['id'] == $searchParams['city'] ? 'selected' : '' }}>{{$city['name']}}</option>
                         @endforeach
@@ -41,7 +41,7 @@
 
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
-                    <label>Trạng thái KH</label>
+                    <label>Trạng thái đơn hàng</label>
                     <select class="form-control chosen-select" name="status">
                         @foreach($model->listStatus() as $key => $val)
                             <option value="{{ $key }}" {{ $key == $searchParams['status'] ? 'selected' : '' }}>{!! $val !!}</option>
@@ -65,7 +65,7 @@
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
-                    <a href="{{route('quotations.index')}}" class="btn btn-default">Bỏ Lọc</a>
+                    <a href="{{route('orders.index')}}" class="btn btn-default">Bỏ Lọc</a>
                 </div>
             </div>
         </div>

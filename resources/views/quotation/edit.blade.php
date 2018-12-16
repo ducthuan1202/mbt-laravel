@@ -27,4 +27,8 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/quotation.js') }}"></script>
+    <script>
+        MBT_PriceQuotation.getCustomerByCity('{{$model->customer_id}}');
+        MBT_PriceQuotation.priceOrAmountOnchange();
+    </script>
 @endsection

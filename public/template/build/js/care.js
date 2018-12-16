@@ -65,7 +65,6 @@ var MBT_Care = function () {
         });
     };
 
-
     var getHistories = function (id) {
         $.ajax({
             url: "/care-history",
@@ -87,6 +86,56 @@ var MBT_Care = function () {
         });
     };
 
+    var getCustomerByCity = function(customerId){
+        var cityId = $("#city_id").val();
+        cityId = parseInt(cityId);
+        if(isNaN(cityId)){
+            alertError({title: 'Khu vực không hợp lê.'});
+            return;
+        }
+        sendAjax({
+            url: "/customers/by-city",
+            method: "GET",
+            data: {cityId: cityId, customerId: customerId},
+            beforeSend: function(){
+                $('#customer_id').html('<option>đang tải dữ liệu...</option>');
+            },
+            fnSuccess: function (response) {
+                if (response.success) {
+                    $('#customer_id').html(response.message);
+                } else {
+                    alertError({title: response.message});
+                }
+            },
+            fnFail: function () {
+                alertError({title: 'Không thể tải lịch sử.'});
+            }
+        });
+    };
+
+    var getCustomerByCityIndex = function(){
+        var cityId = $("#sCity").val();
+        cityId = parseInt(cityId);
+        sendAjax({
+            url: "/customers/by-city",
+            method: "GET",
+            data: {cityId: cityId},
+            beforeSend: function(){
+                $('#sCustomer').html('<option>đang tải dữ liệu...</option>');
+            },
+            fnSuccess: function (response) {
+                if (response.success) {
+                    $('#sCustomer').html(response.message);
+                } else {
+                    alertError({title: response.message});
+                }
+            },
+            fnFail: function () {
+                alertError({title: 'Không thể tải lịch sử.'});
+            }
+        });
+    };
+
     return {
         delete: function (id) {
             alertConfirm({
@@ -95,14 +144,11 @@ var MBT_Care = function () {
                 }
             });
         },
-        openForm: function (id) {
-            openForm(id);
+        getCustomerByCity: function (customerId) {
+            getCustomerByCity(customerId);
         },
-        saveForm: function () {
-            saveForm();
-        },
-        getHistories: function () {
-            getHistories();
+        getCustomerByCityIndex: function () {
+            getCustomerByCityIndex();
         }
     };
 

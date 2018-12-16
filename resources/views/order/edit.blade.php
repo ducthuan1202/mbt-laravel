@@ -8,19 +8,27 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
-                            Loại Hình Sản Phẩm
+                            Đơn hàng
                             <small>Chỉnh Sửa</small>
                         </h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form action="{{ route('skins.update', $model->id) }}" method="POST">
+                        <form action="{{ route('orders.update', $model->id) }}" method="POST">
                             @method('PATCH')
-                            @include('skin._form')
+                            @include('order._form')
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script src="{{ asset('/template/build/js/order.js') }}"></script>
+    <script>
+        MBT_Order.getCustomerByCity('{{$model->customer_id}}');
+        MBT_Order.priceOrAmountOnchange()
+    </script>
 @endsection

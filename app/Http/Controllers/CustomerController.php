@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\City;
-use App\Company;
 use App\Customer;
 use App\Debt;
 use App\PriceQuotation;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -21,25 +21,22 @@ class CustomerController extends Controller
     {
         $searchParams = [
             'city' => null,
-            'company' => null,
             'keyword' => null,
-            'buy' => null,
+            'status' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
         // get dropdown list
         $userModel = new User();
         $cityModel = new City();
-        $companyModel = new Company();
         $model = new Customer();
 
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'users' => $userModel->getDropDownList(),
-            'cities' => $cityModel->getDropDownList(),
-            'companies' => $companyModel->getDropDownList(),
-            'buyStatus' => $model->getBuyStatus()
+            'users' => $userModel->getDropDownList(true),
+            'cities' => $cityModel->getDropDownList(true),
+            'status' => $model->getStatus(true)
         ];
         return view('customer.index', $shared);
     }
@@ -53,17 +50,20 @@ class CustomerController extends Controller
     {
         $userModel = new User();
         $cityModel = new City();
-        $companyModel = new Company();
 
         $model = new Customer();
-        $model->total_sale = 0;
+        $model->average_sale = 0;
+
+        $userLogin = Auth::user();
+        if ($userLogin && isset($userLogin->id)) {
+            $model->user_id = $userLogin->id;
+        }
 
         $shared = [
             "model" => $model,
             'users' => $userModel->getDropDownList(),
             'cities' => $cityModel->getDropDownList(),
-            'companies' => $companyModel->getDropDownList(),
-            'buyStatus' => $model->getBuyStatus(),
+            'status' => $model->getStatus()
         ];
         return view('customer.create', $shared);
     }
@@ -80,7 +80,7 @@ class CustomerController extends Controller
         $model->fill($request->all());
         $model->checkBeforeSave();
 
-        if($model->save()){
+        if ($model->save()) {
             $model->code = $model->generateUniqueCode($model->id);
             $model->save();
         }
@@ -100,15 +100,13 @@ class CustomerController extends Controller
     {
         $userModel = new User();
         $cityModel = new City();
-        $companyModel = new Company();
 
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
             'users' => $userModel->getDropDownList(),
             'cities' => $cityModel->getDropDownList(),
-            'companies' => $companyModel->getDropDownList(),
-            'buyStatus' => $model->getBuyStatus()
+            'status' => $model->getStatus()
         ];
         return view('customer.edit', $shared);
     }
@@ -148,7 +146,7 @@ class CustomerController extends Controller
 
         # check in price quotations
         $priceQuotationModel = new PriceQuotation();
-        if($priceQuotationModel->checkCustomerExist($model->id)){
+        if ($priceQuotationModel->checkCustomerExist($model->id)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không thể xóa do có liên quan tới BÁO GIÁ.',
@@ -157,7 +155,7 @@ class CustomerController extends Controller
 
         # check in debt
         $debtModel = new Debt();
-        if($debtModel->checkCustomerExist($model->id)){
+        if ($debtModel->checkCustomerExist($model->id)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không thể xóa do có liên quan tới CÔNG NỢ.',
@@ -185,5 +183,27 @@ class CustomerController extends Controller
     protected function finById($id)
     {
         return Customer::findOrFail($id);
+    }
+
+    // TODO: api
+    public function getByCity(Request $request)
+    {
+        $model = new Customer();
+        $cityId = (int)$request->get('cityId');
+
+        if (!empty($cityId) && $cityId > 0) {
+            $model->city_id = $cityId;
+        }
+
+        $shared = [
+            'model' => $model,
+            'customers' => $model->getDropDownList(true),
+            'customerId' => (int)$request->get('customerId')
+        ];
+        $output = [
+            'success' => true,
+            'message' => view('customer.ajax.by_city', $shared)->render()
+        ];
+        return response()->json($output);
     }
 }

@@ -1,5 +1,11 @@
 var __FORMAT_DATE__ = 'DD/MM/YYYY';
 
+function numFormat(amount, dec) {
+    dec = (dec||2)
+    if (isNaN(amount)) return amount;
+    return amount.toFixed(dec).replace(/\d(?=(\d{3})+\.)/g, "$&,").substr(dec);
+}
+
 function alertSuccess(setting) {
 
     var title = 'Thành công.',
@@ -49,8 +55,8 @@ function alertConfirm(setting) {
         title: title,
         text: text,
         icon: "warning",
-        buttons: true,
         dangerMode: true,
+        buttons: ["Hủy bỏ", "Đồng ý"]
     })
         .then((willDelete) => {
             if (willDelete) {
@@ -67,6 +73,7 @@ function sendAjax(options) {
         timeout: 10e3,
         method: 'DELETE',
         dataType: 'JSON',
+        data: {},
         fnSuccess: null,
         fnFail: null
     };
@@ -79,7 +86,13 @@ function sendAjax(options) {
         url: setting.url,
         method: setting.method,
         dataType: setting.dataType,
+        data: setting.data,
         timeout: setting.timeout,
+        beforeSend: function () {
+            if (typeof setting.beforeSend === 'function') {
+                setting.beforeSend();
+            }
+        },
         success: function (response) {
             if (typeof setting.fnSuccess === 'function') {
                 setting.fnSuccess(response);
@@ -145,9 +158,14 @@ function initDateRangePickerSingle() {
     }
 
     $('.drp-single').daterangepicker({
+        autoUpdateInput: false,
         singleDatePicker: true,
         singleClasses: "picker_4",
         locale: _generateLocale(),
+    });
+
+    $('.drp-single').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format(__FORMAT_DATE__));
     });
 
 }
@@ -161,9 +179,7 @@ function initDateRangePickerMulti() {
         // endDate: moment(),
         // minDate: '01/01/2012',
         maxDate: moment(),
-        dateLimit: {
-            days: 60
-        },
+        dateLimit: {days: 60},
         showDropdowns: false,
         showWeekNumbers: false,
         timePicker: false,
@@ -174,22 +190,31 @@ function initDateRangePickerMulti() {
         buttonClasses: ['btn btn-xs btn-default'],
         applyClass: 'btn-dark',
         cancelClass: 'pull-right',
-        separator: ' - ',
+        autoUpdateInput: false,
         locale: _generateLocale()
+    });
+
+
+    $('.drp-multi').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format(__FORMAT_DATE__) + ' - ' + picker.endDate.format(__FORMAT_DATE__));
     });
 }
 
+
 // init select2
-function initSelect2(){
+function initSelect2() {
     $(".chosen-select").select2({
-        noResults: "Không có kết quả phù hợp!",
-        // placeholder: 'chọn dữ liệu',
-        language: 'vi',
+        width: "100%",
+        language: {
+            noResults: function () {
+                return "Không có kết quả phù hợp!";
+            }
+        }
     });
 }
 
 // start init
-function initialize(){
+function initialize() {
     initDateRangePickerSingle();
     initDateRangePickerMulti();
     initSelect2();

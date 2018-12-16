@@ -10,34 +10,48 @@ use Illuminate\Database\Eloquent\Model;
  * -------------------------------------
  * @property integer id
  *
+ * @property integer user_id
  * @property integer customer_id
- * @property integer product_id
- * @property string quotations_date
- * @property string amount
+ * @property integer amount
  * @property string price
  * @property string total_money
+ * @property string quotations_date
+ * @property string power
+ * @property string voltage_input
+ * @property string voltage_output
+ * @property string standard_output
+ * @property string guarantee
+ * @property string product_skin
+ * @property string product_type
  * @property string setup_at
  * @property integer delivery_at
- * @property string customer_status
- * @property string guarantee
+ * @property string order_status
  * @property string note
+ * @property string reason
  * @property string status
  *
  * @property string created_at
  * @property string updated_at
  *
  * @property Customer customer
- * @property Product product
+ * @property User user
  *
  */
 class PriceQuotation extends Model
 {
     const LIMIT = 10;
 
-    const SIGNED_CUSTOMER_STATUS = 'signed',
-        UNSIGNED_CUSTOMER_STATUS = 'unsigned';
-    const ACTIVATE_STATUS = 'activate',
-        DEACTIVATE_STATUS = 'deactivate';
+    const
+        SIGNED_ORDER_STATUS = 1,
+        UNSIGNED_ORDER_STATUS = 2;
+    const
+        SUCCESS_STATUS = 1,
+        FAIL_STATUS = 2,
+        PENDING_STATUS = 3;
+
+    const
+        MACHINE_SKIN = 1,
+        CABIN_SKIN = 2;
 
     protected $table = 'price_quotations';
     /**
@@ -46,62 +60,96 @@ class PriceQuotation extends Model
      * @var array
      */
     protected $fillable = [
-        'customer_id', 'product_id', 'quotations_date', 'amount', 'price', 'total_money',
-        'setup_at', 'delivery_at', 'customer_status', 'guarantee', 'note', 'status',
+        'user_id', 'customer_id', 'amount', 'price', 'quotations_date', 'power', 'voltage_input', 'voltage_output','standard_output',
+        'guarantee', 'product_skin', 'product_type', 'setup_at', 'delivery_at', 'order_status', 'note', 'reason', 'status',
     ];
 
     public $validateMessage = [
+        'user_id.required' => 'Chọn nhân viên kinh doanh.',
         'customer_id.required' => 'Chọn khách hàng.',
-        'product_id.required' => 'Chọn sản phẩm.',
-        'quotations_date.required' => 'Ngày báo giá không thể bỏ trống.',
-        'amount.required' => 'Số lượng SP không thể bỏ trống.',
+        'amount.required' => 'Số lượng sản phẩm không thể bỏ trống.',
         'price.required' => 'Giá báo không thể bỏ trống.',
-        'setup_at.required' => 'Địa điểm lắp đặt không thể bỏ trống.',
-        'delivery_at.required' => 'Nơi giao hàng không thể bỏ trống.',
-        'customer_status.required' => 'Trạng thái khách không thể bỏ trống.',
-        'note.required' => 'Ghi chú báo giá không thể bỏ trống.',
+        'quotations_date.required' => 'Ngày báo giá không thể bỏ trống.',
+        'power.required' => 'Công suất sản phẩm không thể bỏ trống.',
+        'voltage_input.required' => 'Điện áp đầu vào không thể bỏ trống.',
+        'voltage_output.required' => 'Điện áp đầu ra không thể bỏ trống.',
+        'standard_output.required' => 'Tiêu chuẩn không thể bỏ trống.',
+        'guarantee.required' => 'thời gian bảo hành không thể bỏ trống.',
+        'product_skin.required' => 'Chọn ngoại hình máy.',
+        'product_type.required' => 'Chọn kiểu máy.',
+        'setup_at.required' => 'Địa chỉ lắp đặt không thể bỏ trống.',
+        'delivery_at.required' => 'Địa chỉ giao hàng không thể bỏ trống.',
+        'order_status.required' => 'Chọn trạng thái đơn hàng.',
+        'status.required' => 'Chọn trạng thái khách hàng.',
     ];
 
     public $validateRules = [
+        'user_id' => 'required',
         'customer_id' => 'required',
-        'product_id' => 'required',
+        'amount' => 'required',
+        'price' => 'required',
         'quotations_date' => 'required',
-        'amount' => 'required|max:6',
-        'price' => 'required|max:11',
+        'power' => 'required',
+        'voltage_input' => 'required',
+        'voltage_output' => 'required',
+        'standard_output' => 'required',
+        'guarantee' => 'required',
+        'product_skin' => 'required',
+        'product_type' => 'required',
         'setup_at' => 'required',
         'delivery_at' => 'required',
-        'customer_status' => 'required',
-        'note' => 'required',
+        'order_status' => 'required',
+        'status' => 'required',
     ];
 
-    // relationship with city
+    public function checkBeforeSave()
+    {
+
+        if (!empty($this->quotations_date)) {
+            $this->quotations_date = $this->dmyToymd($this->quotations_date);
+        }
+
+        if(empty($this->reason)){
+            $this->reason = '';
+        }
+        if(empty($this->note)){
+            $this->note = '';
+        }
+
+        $this->total_money = (int)$this->price * (int)$this->amount;
+    }
+
+    // TODO:  RELATIONSHIP =====
     public function customer()
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');
     }
 
-    public function product()
+    public function user()
     {
-        return $this->hasOne(Product::class, 'id', 'product_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    // TODO:  QUERY TO DATABASE =====
     public static function countNumber()
     {
         return self::count();
     }
 
-    // search data
     public function search($searchParams = [])
     {
-        $model = $this->with(['product', 'customer', 'customer.user']);
+        $model = $this->with(['customer', 'user', 'customer.city']);
+
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
         }
+
         // filter by customer
         if (isset($searchParams['customer']) && !empty($searchParams['customer'])) {
             $model = $model->where('customer_id', $searchParams['customer']);
         }
+
         // filter by quotations_date
         if (isset($searchParams['date']) && !empty($searchParams['date'])) {
             $d = $this->extractDate($searchParams['date']);
@@ -112,14 +160,19 @@ class PriceQuotation extends Model
                 $model = $model->whereBetween('quotations_date', [$startDate, $endDate]);
             }
         }
-        // filter by product
-        if (isset($searchParams['product']) && !empty($searchParams['product'])) {
-            $model = $model->where('product_id', $searchParams['product']);
+
+        // filter by customer city
+        if (isset($searchParams['city']) && !empty($searchParams['city'])) {
+            $model = $model->whereHas('customer', function ($query) use ($searchParams) {
+                $query->where('city_id', $searchParams['city']);
+            });
         }
+
         // filter by status
         if (isset($searchParams['status']) && !empty($searchParams['status'])) {
             $model = $model->where('customer_status', $searchParams['status']);
         }
+
         // order by id desc
         $model = $model->orderBy('id', 'desc');
 
@@ -131,18 +184,76 @@ class PriceQuotation extends Model
         return $this->where('customer_id', $id)->count();
     }
 
-    public function getCustomerStatus($addAll = true)
+    // TODO:  LIST DATA =====
+    public function listStandard()
+    {
+        return [
+            null => 'Tất cả',
+            '1011' => '&#9733; Tiêu chẩn 1011',
+            '8525-2010' => '&#9733; Tiêu chẩn 8525-2010',
+            '8525-2015' => '&#9733; Tiêu chẩn 8525-2015',
+            '3079' => '&#9733; Tiêu chẩn 3079',
+            '2608' => '&#9733; Tiêu chẩn 2608',
+            'qđ62' => '&#9733; Tiêu chẩn qđ 62',
+        ];
+    }
+
+    public function listSkin()
+    {
+        return [
+            null => 'Tất cả',
+            '1' => '&#9671; Kiểu hở sứ thường',
+            '2' => '&#9649; Kiểu hở sứ elbow',
+            '3' => '&#9670; Kiểu kín sứ thường',
+            '4' => '&#9648; Kiểu kín sứ elbow',
+        ];
+    }
+
+    public function listType()
+    {
+        return [
+            null => 'Tất cả',
+            self::MACHINE_SKIN => '&#9744; Máy',
+            self::CABIN_SKIN => '&#9750; Tủ - Trạm',
+        ];
+    }
+
+    public function listStatus()
+    {
+        return [
+            null => 'Tất cả',
+            self::SUCCESS_STATUS => '&#10004; Thành công',
+            self::PENDING_STATUS => '&#9990; Đang theo',
+            self::FAIL_STATUS => '&#10006; Thất bại',
+        ];
+    }
+
+    public function listOrderStatus($addAll = true)
     {
         $data = [];
         if ($addAll) {
             $data = [null => 'Tất cả'];
         }
-        $data = array_merge($data, [
-            self::SIGNED_CUSTOMER_STATUS => 'Đã Ký HĐ',
-            self::UNSIGNED_CUSTOMER_STATUS => 'Chưa Ký HĐ',
-        ]);
-
+        $data[self::SIGNED_ORDER_STATUS] = 'Đã Ký HĐ';
+        $data[self::UNSIGNED_ORDER_STATUS] = 'Chưa Ký HĐ';
         return $data;
+    }
+
+    // TODO:  FORMAT =====
+    public function formatSkin(){
+        $list = $this->listSkin();
+        if(isset($list[$this->product_skin])){
+            return $list[$this->product_skin];
+        }
+        return 'kiểu máy khác';
+    }
+
+    public function formatType(){
+        $list = $this->listType();
+        if(isset($list[$this->product_type])){
+            return $list[$this->product_type];
+        }
+        return 'kiểu máy khác';
     }
 
     public function formatCustomer()
@@ -153,32 +264,32 @@ class PriceQuotation extends Model
         return 'không xác định';
     }
 
-    public function formatCustomerUser()
+    public function formatCustomerCity()
     {
-        if ($this->customer && $this->customer->user) {
-            return $this->customer->user->name;
+        if ($this->customer && isset($this->customer->city)) {
+            return $this->customer->city->name;
         }
         return 'không xác định';
     }
 
-    public function formatProduct()
+    public function formatUser()
     {
-        if ($this->product) {
-            return $this->product->name;
+        if ($this->user) {
+            return $this->user->name;
         }
         return 'không xác định';
     }
 
-    public function formatCustomerStatus()
+    public function formatOrderStatus()
     {
-        $arr = $this->getCustomerStatus();
-        switch ($this->customer_status) {
-            case self::SIGNED_CUSTOMER_STATUS:
-                $output = $arr[self::SIGNED_CUSTOMER_STATUS];
+        $arr = $this->listOrderStatus();
+        switch ($this->order_status) {
+            case self::SIGNED_ORDER_STATUS:
+                $output = $arr[self::SIGNED_ORDER_STATUS];
                 $cls = 'btn-info';
                 break;
-            case  self::UNSIGNED_CUSTOMER_STATUS:
-                $output = $arr[self::UNSIGNED_CUSTOMER_STATUS];
+            case  self::UNSIGNED_ORDER_STATUS:
+                $output = $arr[self::UNSIGNED_ORDER_STATUS];
                 $cls = 'btn-default';
                 break;
             default:
@@ -189,21 +300,33 @@ class PriceQuotation extends Model
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
-    public function formatMoney()
-    {
-        return number_format($this->price) . ',000 đ';
+    public function formatStatus(){
+        $list = $this->listStatus();
+        if(isset($list[$this->status])){
+            return $list[$this->status];
+        }
+        return 'n/a';
     }
 
-    public function checkBeforeSave()
-    {
-        if (empty($this->status)) {
-            $this->status = self::ACTIVATE_STATUS;
-        }
-        if (!empty($this->quotations_date)) {
-            $this->quotations_date = $this->dmyToymd($this->quotations_date);
-        }
+    public function formatPrice(){
+        return $this->formatMoney($this->price);
+    }
 
-        $this->total_money = (int)$this->price * (int)$this->amount;
+    public function formatTotalMoney(){
+        return $this->formatMoney($this->total_money);
+    }
+
+    private function formatMoney($money)
+    {
+        return number_format($money) . ',000 đ';
+    }
+
+    public function formatStandard(){
+        $list = $this->listStandard();
+        if(isset($list[$this->standard_output])){
+            return $list[$this->standard_output];
+        }
+        return 'kiểu máy khác';
     }
 
     public function formatQuotationDate()

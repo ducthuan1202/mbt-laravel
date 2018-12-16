@@ -1,3 +1,9 @@
+@php
+    /**
+     * @var $data \App\City[]
+     */
+@endphp
+
 @extends('layouts.main')
 
 @section('content')
@@ -6,25 +12,18 @@
             <div class="x_title">
                 <h2>
                     Khu Vực
-                    <small>Danh sách</small>
+                    <small>Tổng số <b>{{$data->total()}}</b></small>
                 </h2>
-
-                <ul class="nav navbar-right panel_toolbox">
-                    <li>
-                        <a class="btn btn-round btn-default btn-xs" href="{{route('cities.create')}}">
-                            <i class="fa fa-plus"></i> Thêm mới
-                        </a>
-                    </li>
-                </ul>
+                <a class="btn btn-success pull-right" href="{{route('cities.create')}}">
+                    <i class="fa fa-plus"></i> Thêm mới
+                </a>
 
                 <div class="clearfix"></div>
             </div>
 
             <div class="x_content">
 
-                <div role="Search form">
-                    @include('city._search')
-                </div>
+                @include('city._search')
 
                 @if($message = Session::get('success'))
                     <div class="alert alert-success">{{$message}}</div>
@@ -33,37 +32,37 @@
                 <div class="ln_solid"></div>
 
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped jambo_table bulk_action">
                         <thead>
-                            <tr class="headings">
-                                <th>STT</th>
-                                <th>Tên Khu Vực</th>
-                                <th></th>
-                            </tr>
+                        <tr class="headings">
+                            <th>No.</th>
+                            <th>Tên khu vực (tỉnh)</th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @if(count($data))
-                                @foreach($data as $item)
-                                    <tr>
-                                        <td style="width: 50px">{{$item->id}}</td>
-                                        <td>{{$item->name}}</td>
-                                        <td style="width: 200px">
-                                            <div class="btn-group">
-                                                <a class="btn btn-default" href="{{route('cities.edit', $item->id)}}">
-                                                    <i class="fa fa-edit"></i> Sửa
-                                                </a>
-                                                <a class="btn btn-default" onclick="MBT_City.delete({{$item->id}})">
-                                                    <i class="fa fa-trash"></i> Xóa
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
+                        @if(count($data))
+                            @foreach($data as $item)
                                 <tr>
-                                    <td colspan="100%">Không có dữ liệu.</td>
+                                    <td style="width: 50px">{{$item->id}}</td>
+                                    <td>{{$item->name}}</td>
+                                    <td class="text-right" style="min-width: 150px">
+                                        <a href="{{route('cities.edit', $item->id)}}" class="btn btn-info btn-xs">
+                                            <i class="fa fa-pencil"></i> Sửa
+                                        </a>
+                                        @can('admin')
+                                            <a onclick="MBT_City.delete({{$item->id}})" class="btn btn-danger btn-xs">
+                                                <i class="fa fa-trash-o"></i> Xóa
+                                            </a>
+                                        @endcan
+                                    </td>
                                 </tr>
-                            @endif
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="100%">Không có dữ liệu.</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                 </div>

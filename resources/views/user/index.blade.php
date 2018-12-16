@@ -1,8 +1,8 @@
 @php
-/**
- * @var $data \App\User[]
- */
- $user = \Illuminate\Support\Facades\Auth::user();
+    /**
+     * @var $data \App\User[]
+     */
+     $user = \Illuminate\Support\Facades\Auth::user();
 @endphp
 
 @extends('layouts.main')
@@ -13,79 +13,70 @@
             <div class="x_title">
                 <h2>
                     Nhân Sự
-                    <small>Danh sách</small>
+                    <small>Tổng số <b>{{$data->total()}}</b></small>
                 </h2>
 
-                <ul class="nav navbar-right panel_toolbox">
-                    <li>
-                        <a class="btn btn-round btn-default btn-xs" href="{{route('users.create')}}">
-                            <i class="fa fa-plus"></i> Thêm mới
-                        </a>
-                    </li>
-                </ul>
+                <a class="btn btn-success pull-right" href="{{route('users.create')}}">
+                    <i class="fa fa-plus"></i> Thêm mới
+                </a>
 
                 <div class="clearfix"></div>
             </div>
 
             <div class="x_content">
 
-                <div role="Search form">
-                    @include('user._search')
-                </div>
+                @include('user._search')
 
                 @if($message = Session::get('success'))
                     <div class="alert alert-success">{{$message}}</div>
                 @endif
 
-                <div class="ln_solid"></div>
-
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table table-striped jambo_table bulk_action">
                         <thead>
-                            <tr class="headings">
-                                <th>STT</th>
-                                <th>Số Điện Thoại</th>
-                                <th>Tên</th>
-                                <th>Email</th>
-                                <th>Chức Danh</th>
-                                <th>Trạng Thái</th>
-                                <th></th>
-                            </tr>
+                        <tr class="headings">
+                            <th>No.</th>
+                            <th>Họ tên</th>
+                            <th>Số điện thoại - email</th>
+                            <th>Chức danh</th>
+                            <th>Trạng thái</th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @if(count($data))
-                                @foreach($data as $key => $item)
-                                    <tr>
-                                        <td style="width: 50px">{{$key + 1}}</td>
-                                        <td>{{$item->mobile}}</td>
-                                        <td>{{$item->name}}</td>
-                                        <td>{{$item->email}}</td>
-                                        <td>{!! $item->formatRole() !!}</td>
-                                        <td>{!! $item->formatStatus() !!}</td>
-                                        <td style="width: 160px">
-
-                                            <div class="btn-group">
-                                                <a class="btn btn-default" href="{{route('users.edit', $item->id)}}">
-                                                    <i class="fa fa-edit"></i> Sửa
-                                                </a>
-                                                @if($user->role_id === \App\User::ADMIN_ROLE && $user->id !== $item->id)
-                                                    <a class="btn btn-default" onclick="MBT_User.delete({{$item->id}})">
-                                                        <i class="fa fa-trash"></i> Xóa
-                                                    </a>
-                                                @else
-                                                    <a class="btn btn-dark" onclick="alertError({text: 'Bạn không thể thực hiện thao tác này.'})">
-                                                        <i class="fa fa-trash"></i> Xóa
-                                                    </a>
-                                                @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
+                        @if(count($data))
+                            @foreach($data as $key => $item)
                                 <tr>
-                                    <td colspan="100%">Không có dữ liệu.</td>
+                                    <td style="width: 50px">{{$key + 1}}</td>
+                                    <td><b class="text-success">{{$item->name}}</b></td>
+                                    <td>
+                                        <a href="tel:{{$item->mobile}}"><b>{{$item->mobile}}</b></a>
+                                        @if(!empty($item->email))
+                                            <br/>
+                                            <a href="mailto:{{$item->email}}">
+                                                <small>{{$item->email}}</small>
+                                            </a>
+                                        @endif
+                                    </td>
+                                    <td>{!! $item->formatRolesText() !!}</td>
+                                    <td>{!! $item->formatStatus() !!}</td>
+                                    <td class="text-right" style="min-width: 150px">
+                                        <a href="{{route('users.edit', $item->id)}}" class="btn btn-info btn-xs">
+                                            <i class="fa fa-pencil"></i> Sửa
+                                        </a>
+                                        @if($user->role === \App\User::ADMIN_ROLE)
+                                            <a onclick="MBT_User.delete({{$item->id}})" class="btn btn-danger btn-xs">
+                                                <i class="fa fa-trash-o"></i> Xóa
+                                            </a>
+                                        @endif
+                                    </td>
                                 </tr>
-                            @endif
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="100%">Không có dữ liệu.</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                 </div>

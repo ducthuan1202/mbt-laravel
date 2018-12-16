@@ -56,12 +56,15 @@ class City extends Model
         return $model->paginate(self::LIMIT);
     }
 
+    public function findById($id){
+        return $this->find($id);
+    }
     public static function countNumber()
     {
         return self::count();
     }
 
-    public function getDropDownList($addAll = true)
+    public function getDropDownList($addAll = false)
     {
         $data = $this->select('id', 'name')->get()->toArray();
 

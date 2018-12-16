@@ -16,13 +16,15 @@ class CreateDebts extends Migration
         Schema::create('debts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
+            $table->integer('customer_id');
+            $table->integer('order_id');
             $table->timestamp('debt_date')->nullable()->comment('ngày công nợ');
             $table->text('content')->nullable();
             $table->integer('amount');
             $table->integer('price');
-            $table->integer('vat')->comment('% VAT');
+            $table->integer('total_money');
             $table->integer('residual')->comment('số dư');
-            $table->string('status');
+            $table->boolean('status')->comment('[1: ???, 2: ???]');
             $table->timestamps();
         });
     }

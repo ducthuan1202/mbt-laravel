@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\City;
-use App\Company;
 use App\Customer;
+use App\Order;
+use App\PriceQuotation;
+use App\User;
 use Illuminate\Http\Request;
 
-class CompanyController extends Controller
+class OrderController extends Controller
 {
 
     /**
@@ -17,20 +19,31 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         $searchParams = [
+            'customer' => null,
+            'user' => null,
             'city' => null,
             'keyword' => null,
+            'date' => null,
+            'status' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
-        // get cities
+        // get relation
         $cityModel = new City();
-        $model = new Company();
+        $userModel = new User();
+        $customerModel = new Customer();
+
+        $model = new Order();
         $shared = [
+            'model' => $model,
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'cities'=>$cityModel->getDropDownList()
+            'users'=>$userModel->getDropDownList(true),
+            'cities'=>$cityModel->getDropDownList(true),
+            'customers'=>$customerModel->getDropDownList(true),
         ];
-        return view('company.index', $shared);
+
+        return view('order.index', $shared);
     }
 
     /**
@@ -40,13 +53,20 @@ class CompanyController extends Controller
      */
     public function create()
     {
+        $userModel = new User();
         $cityModel = new City();
-        $model = new Company();
+        $customerModel = new Customer();
+        $model = new Order();
+        $model->start_date = date('Y-m-d');
+        $model->shipped_date = date('Y-m-d', strtotime("+1 month"));
+        $model->amount = 1;
         $shared = [
             "model" => $model,
-            'cities'=>$cityModel->getDropDownList()
+            'users'=>$userModel->getDropDownList(),
+            'cities'=>$cityModel->getDropDownList(),
+            'customers'=>$customerModel->getDropDownList(),
         ];
-        return view('company.create', $shared);
+        return view('order.create', $shared);
     }
 
     /**
@@ -56,12 +76,16 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        $model = new Company();
+        $model = new Order();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
-        $model->save();
+        $model->checkBeforeSave();
+        if($model->save()){
+            $model->code = $model->generateUniqueCode();
+            $model->save();
+        }
         return redirect()
-            ->route('companies.index')
+            ->route('orders.index')
             ->with('success', 'Thêm mới thành công');
     }
 
@@ -73,13 +97,18 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
+        $userModel = new User();
         $cityModel = new City();
+        $customerModel = new Customer();
+
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
-            'cities'=>$cityModel->getDropDownList()
+            'users'=>$userModel->getDropDownList(),
+            'cities'=>$cityModel->getDropDownList(),
+            'customers'=>$customerModel->getDropDownList(),
         ];
-        return view('company.edit', $shared);
+        return view('order.edit', $shared);
     }
 
     /**
@@ -95,9 +124,10 @@ class CompanyController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
+        $model->checkBeforeSave();
         $model->save();
         return redirect()
-            ->route('companies.index')
+            ->route('orders.index')
             ->with('success', 'Cập nhật thành công');
     }
 
@@ -112,15 +142,6 @@ class CompanyController extends Controller
     {
         # find model and delete
         $model = $this->finById($id);
-
-        # check in customer
-        $customerModel = new Customer();
-        if($customerModel->checkCompanyExist($model->id)){
-            return response()->json([
-                'success' => false,
-                'message' => 'Không thể xóa do có liên quan tới KHÁCH HÀNG.',
-            ]);
-        }
 
         if ($model->delete()) {
             $output = [
@@ -138,10 +159,24 @@ class CompanyController extends Controller
 
     /**
      * @param $id
-     * @return Company
+     * @return Order
      */
     protected function finById($id)
     {
-        return Company::findOrFail($id);
+        return Order::findOrFail($id);
+    }
+
+    public function detail(Request $request){
+        $id = $request->get('id');
+        $model = $this->finById($id);
+
+        $shared = [
+            'model' => $model,
+        ];
+        $output = [
+            'success' => true,
+            'message' => view('order.ajax.detail', $shared)->render()
+        ];
+        return response()->json($output);
     }
 }

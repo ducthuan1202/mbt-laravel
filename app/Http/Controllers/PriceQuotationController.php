@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\City;
 use App\Customer;
 use App\PriceQuotation;
-use App\Product;
+use App\User;
 use Illuminate\Http\Request;
 
 class PriceQuotationController extends Controller
@@ -20,7 +21,8 @@ class PriceQuotationController extends Controller
 
         $searchParams = [
             'customer' => null,
-            'product' => null,
+            'user' => null,
+            'city' => null,
             'keyword' => null,
             'date' => null,
             'status' => null,
@@ -28,17 +30,20 @@ class PriceQuotationController extends Controller
         $searchParams = array_merge($searchParams, $request->all());
 
         // get relation
-        $productModel = new Product();
+        $cityModel = new City();
+        $userModel = new User();
         $customerModel = new Customer();
 
         $model = new PriceQuotation();
         $shared = [
+            'model' => $model,
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'products'=>$productModel->getDropDownList(),
-            'customers'=>$customerModel->getDropDownList(),
-            'customerStatus'=>$model->getCustomerStatus(),
+            'users'=>$userModel->getDropDownList(true),
+            'cities'=>$cityModel->getDropDownList(true),
+            'customers'=>$customerModel->getDropDownList(true),
         ];
+
         return view('quotation.index', $shared);
     }
 
@@ -49,7 +54,8 @@ class PriceQuotationController extends Controller
      */
     public function create()
     {
-        $productModel = new Product();
+        $userModel = new User();
+        $cityModel = new City();
         $customerModel = new Customer();
         $model = new PriceQuotation();
         $model->quotations_date = date('Y-m-d');
@@ -57,9 +63,9 @@ class PriceQuotationController extends Controller
         $model->total_money = 0;
         $shared = [
             "model" => $model,
-            'products'=>$productModel->getDropDownList(),
+            'users'=>$userModel->getDropDownList(),
+            'cities'=>$cityModel->getDropDownList(),
             'customers'=>$customerModel->getDropDownList(),
-            'customerStatus'=>$model->getCustomerStatus(),
         ];
         return view('quotation.create', $shared);
     }
@@ -89,15 +95,16 @@ class PriceQuotationController extends Controller
      */
     public function edit($id)
     {
-        $productModel = new Product();
+        $userModel = new User();
+        $cityModel = new City();
         $customerModel = new Customer();
 
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
-            'products'=>$productModel->getDropDownList(),
+            'users'=>$userModel->getDropDownList(),
+            'cities'=>$cityModel->getDropDownList(),
             'customers'=>$customerModel->getDropDownList(),
-            'customerStatus'=>$model->getCustomerStatus(),
         ];
         return view('quotation.edit', $shared);
     }
@@ -155,5 +162,19 @@ class PriceQuotationController extends Controller
     protected function finById($id)
     {
         return PriceQuotation::findOrFail($id);
+    }
+
+    public function detail(Request $request){
+        $id = $request->get('id');
+        $model = $this->finById($id);
+
+        $shared = [
+            'model' => $model,
+        ];
+        $output = [
+            'success' => true,
+            'message' => view('quotation.ajax.detail', $shared)->render()
+        ];
+        return response()->json($output);
     }
 }

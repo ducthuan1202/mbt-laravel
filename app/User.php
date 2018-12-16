@@ -31,11 +31,12 @@ class User extends Authenticatable
 
     const LIMIT = 10;
     const
-        EMPLOYEE_ROLE = 'employees',
-        MANAGER_ROLE = 'manager',
-        ADMIN_ROLE = 'admin';
-    const ACTIVATE_STATUS = 'activate',
-        DEACTIVATE_STATUS = 'deactivate';
+        EMPLOYEE_ROLE = 3,
+        MANAGER_ROLE = 2,
+        ADMIN_ROLE = 1;
+    const
+        ACTIVATE_STATUS = 1,
+        DEACTIVATE_STATUS = 2;
 
     protected $table = 'users';
     /**
@@ -74,11 +75,13 @@ class User extends Authenticatable
         'password' => ['required', 'string', 'min:6', 'confirmed'],
     ];
 
+    // TODO:  RELATIONSHIP =====
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'user_id', 'id');
     }
 
+    // TODO:  QUERY TO DATABASE =====
     public function checkBeforeSave()
     {
         if (!$this->exists) {
@@ -101,14 +104,11 @@ class User extends Authenticatable
                     ->orWhere('mobile', 'like', "%{$searchParams['keyword']}%");
             });
         }
-        if (isset($searchParams['role']) && !empty($searchParams['role'])) {
-            $model = $model->where('role_id', $searchParams['role']);
-        }
 
         return $model->paginate(self::LIMIT);
     }
 
-    public function getDropDownList($addAll = true)
+    public function getDropDownList($addAll = false)
     {
         $data = $this->select('id', 'name')->get()->toArray();
 
@@ -119,27 +119,45 @@ class User extends Authenticatable
         return $data;
     }
 
-    public function getStatus($addAll = true)
+    // TODO:  LIST DATA =====
+    public function getStatus($addAll = false)
     {
         $data = [];
+
         if ($addAll) {
-            $data = [null => 'Tất cả'];
+            $data = ['0'=>'Tất cả'];
         }
-        $data = array_merge($data, [
-            self::ACTIVATE_STATUS => 'Hoạt Động',
-            self::DEACTIVATE_STATUS => 'Tạm Khóa',
-        ]);
+
+        $data[self::ACTIVATE_STATUS] = 'Hoạt Động';
+        $data[self::DEACTIVATE_STATUS] = 'Tạm Khóa';
 
         return $data;
     }
 
+    public function getListRoles($addAll = false)
+    {
+        $data = [];
+
+        if ($addAll) {
+            $data = ['0'=>'Tất cả'];
+        }
+
+        $data[self::ADMIN_ROLE] = 'Quản Trị Viên Cấp Cao';
+        $data[self::MANAGER_ROLE] = 'Giám Đốc - Quản Lý';
+        $data[self::EMPLOYEE_ROLE] = 'Nhân Viên Kinh Doanh';
+
+        return $data;
+    }
+
+    // TODO:  FORMAT =====
     public function formatStatus()
     {
         $arr = $this->getStatus();
+
         switch ($this->status) {
             case self::ACTIVATE_STATUS:
                 $output = $arr[self::ACTIVATE_STATUS];
-                $cls = 'btn-info';
+                $cls = 'btn-success';
                 break;
             case  self::DEACTIVATE_STATUS:
                 $output = $arr[self::DEACTIVATE_STATUS];
@@ -153,48 +171,9 @@ class User extends Authenticatable
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
-    public function getListRoles($addAll = true)
-    {
-        $data = [];
-        if ($addAll) {
-            $data = [null => 'Tất cả'];
-        }
-        $data = array_merge($data, [
-            self::EMPLOYEE_ROLE => 'Nhân Viên Kinh Doanh',
-            self::MANAGER_ROLE => 'Trợ Lý Giám Đốc Kinh Doanh',
-            self::ADMIN_ROLE => 'Quản Trị Viên Cấp Cao',
-        ]);
-
-        return $data;
-    }
-
-    public function formatRole()
-    {
-        $arr = $this->getListRoles();
-        switch ($this->role) {
-            case self::EMPLOYEE_ROLE:
-                $output = $arr[self::EMPLOYEE_ROLE];
-                $cls = 'btn-default';
-                break;
-            case  self::MANAGER_ROLE:
-                $output = $arr[self::MANAGER_ROLE];
-                $cls = 'btn-info';
-                break;
-            case self::ADMIN_ROLE:
-                $output = $arr[self::ADMIN_ROLE];
-                $cls = 'btn-warning';
-                break;
-            default:
-                $output = 'n/a';
-                $cls = 'btn-default';
-                break;
-        }
-        return sprintf('<span class="btn btn-xs btn-round %s" style="width: 180px">%s</span>', $cls, $output);
-    }
-
     public function formatRolesText()
     {
-        $arr = $this->getListRoles();
+        $arr = $this->getListRoles(false);
         if(isset($arr[$this->role])){
             return $arr[$this->role];
         }
