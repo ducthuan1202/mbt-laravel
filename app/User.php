@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -39,14 +40,13 @@ class User extends Authenticatable
         DEACTIVATE_STATUS = 2;
 
     protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'role', 'name', 'mobile', 'email', 'password', 'status'
-    ];
+    protected $fillable = ['role', 'name', 'mobile', 'email', 'password', 'status'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -94,6 +94,18 @@ class User extends Authenticatable
         return self::count();
     }
 
+    public function countCustomerByUser()
+    {
+        $data = DB::table('users')
+            ->rightJoin('customers', 'users.id', '=', 'customers.user_id')
+            ->select('users.name as name', DB::raw("count(customers.id) as value"))
+            ->groupBy('customers.user_id')
+            ->get();
+
+
+        return $data;
+    }
+
     public function search($searchParams = [])
     {
         $model = $this->orderBy('id', 'desc');
@@ -125,7 +137,7 @@ class User extends Authenticatable
         $data = [];
 
         if ($addAll) {
-            $data = ['0'=>'Tất cả'];
+            $data = ['0' => 'Tất cả'];
         }
 
         $data[self::ACTIVATE_STATUS] = 'Hoạt Động';
@@ -139,7 +151,7 @@ class User extends Authenticatable
         $data = [];
 
         if ($addAll) {
-            $data = ['0'=>'Tất cả'];
+            $data = ['0' => 'Tất cả'];
         }
 
         $data[self::ADMIN_ROLE] = 'Quản Trị Viên Cấp Cao';
@@ -174,13 +186,26 @@ class User extends Authenticatable
     public function formatRolesText()
     {
         $arr = $this->getListRoles(false);
-        if(isset($arr[$this->role])){
+        if (isset($arr[$this->role])) {
             return $arr[$this->role];
         }
         return '';
     }
 
-    public function generatePassword(){
+    public function generatePassword()
+    {
         $this->password = Hash::make($this->password);
+    }
+
+    public function eChartGenerateData($data)
+    {
+        $label = [];
+        foreach ($data as $item):
+            $label[] = $item->name;
+        endforeach;
+        return \GuzzleHttp\json_encode([
+            'label' => $label,
+            'data' => $data,
+        ]);
     }
 }

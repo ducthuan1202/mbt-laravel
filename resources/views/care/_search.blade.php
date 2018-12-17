@@ -6,7 +6,7 @@
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Nhân viên</label>
-                    <select class="form-control chosen-select" name="user">
+                    <select class="form-control chosen-select" name="user" id="sUser" onchange="MBT_Care.getCustomerByCityIndex()">
                         @foreach($users as $user)
                             <option value="{{ $user['id'] }}" {{ $user['id'] == $searchParams['user'] ? 'selected' : '' }}>{{$user['name']}}</option>
                         @endforeach

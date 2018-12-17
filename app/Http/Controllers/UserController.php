@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Messages;
 use App\Role;
 use App\User;
 use Illuminate\Http\Request;
@@ -63,7 +64,7 @@ class UserController extends Controller
         $model->save();
         return redirect()
             ->route('users.index')
-            ->with('success', 'Thêm mới thành công');
+            ->with('success', Messages::INSERT_SUCCESS);
     }
 
     /**
@@ -104,7 +105,7 @@ class UserController extends Controller
         $model->save();
         return redirect()
             ->route('users.index')
-            ->with('success', 'Cập nhật thành công');
+            ->with('success', Messages::UPDATE_SUCCESS);
     }
 
     /**
@@ -170,12 +171,12 @@ class UserController extends Controller
         if ($model->delete()) {
             $output = [
                 'success' => true,
-                'message' => 'Xóa thành công.'
+                'message' => Messages::DELETE_SUCCESS
             ];
         } else {
             $output = [
                 'success' => false,
-                'message' => 'Xóa thất bại',
+                'message' => Messages::DELETE_ERROR
             ];
         }
         return response()->json($output);

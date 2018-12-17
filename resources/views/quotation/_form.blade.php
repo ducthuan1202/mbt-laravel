@@ -48,7 +48,7 @@ $model->customer_id = old('customer_id');
                 <div class="form-group">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer_id" id="customer_id">
-                        <option>đang tải dữ liệu...</option>
+                        <option value="{{$model->customer_id}}">{{$model->customer_id}}</option>
                     </select>
                 </div>
             </div>

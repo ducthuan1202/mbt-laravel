@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Care;
 use App\City;
 use App\Customer;
 use App\Debt;
+use App\Helpers\Common;
+use App\Helpers\Messages;
+use App\Order;
 use App\PriceQuotation;
 use App\User;
 use Illuminate\Http\Request;
@@ -78,16 +82,15 @@ class CustomerController extends Controller
         $model = new Customer();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
-        $model->checkBeforeSave();
 
         if ($model->save()) {
-            $model->code = $model->generateUniqueCode($model->id);
+            $model->code = $model->generateUniqueCode();
             $model->save();
         }
 
         return redirect()
             ->route('customers.index')
-            ->with('success', 'Thêm mới thành công');
+            ->with('success', Messages::INSERT_SUCCESS);
     }
 
     /**
@@ -124,12 +127,10 @@ class CustomerController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
-        $model->checkBeforeSave();
-
         $model->save();
         return redirect()
             ->route('customers.index')
-            ->with('success', 'Cập nhật thành công');
+            ->with('success', Messages::UPDATE_SUCCESS);
     }
 
     /**
@@ -149,7 +150,7 @@ class CustomerController extends Controller
         if ($priceQuotationModel->checkCustomerExist($model->id)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Không thể xóa do có liên quan tới BÁO GIÁ.',
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH.' BÁO GIÁ.',
             ]);
         }
 
@@ -158,19 +159,37 @@ class CustomerController extends Controller
         if ($debtModel->checkCustomerExist($model->id)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Không thể xóa do có liên quan tới CÔNG NỢ.',
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH.' CÔNG NỢ.',
+            ]);
+        }
+
+        # check in order
+        $orderModel = new Order();
+        if ($orderModel->checkCustomerExist($model->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH.' ĐƠN HÀNG.',
+            ]);
+        }
+
+        # check in care
+        $careModel = new Care();
+        if ($careModel->checkCustomerExist($model->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH.' CSKH.',
             ]);
         }
 
         if ($model->delete()) {
             $output = [
                 'success' => true,
-                'message' => 'Xóa thành công.'
+                'message' => Messages::DELETE_SUCCESS
             ];
         } else {
             $output = [
                 'success' => false,
-                'message' => 'Xóa thất bại',
+                'message' => Messages::DELETE_ERROR
             ];
         }
         return response()->json($output);
@@ -203,24 +222,6 @@ class CustomerController extends Controller
         $output = [
             'success' => true,
             'message' => view('customer.ajax.by_city', $shared)->render()
-        ];
-        return response()->json($output);
-    }
-
-    public function getByUser(Request $request)
-    {
-        $model = new Customer();
-        $userId = (int)$request->get('userId');
-        $model->user_id = $userId;
-
-        $shared = [
-            'model' => $model,
-            'customers' => $model->getDropDownList(true),
-        ];
-        $output = [
-            'success' => true,
-            'cityHtml' => view('customer.ajax.city_html', $shared)->render(),
-            'customerHtml' => view('customer.ajax.customer_html', $shared)->render(),
         ];
         return response()->json($output);
     }

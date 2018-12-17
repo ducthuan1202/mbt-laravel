@@ -15,6 +15,11 @@ var MBT_Care = function () {
         userId = parseInt(userId);
         customerId = parseInt(customerId);
 
+        console.log({
+            userId: userId,
+            cityId: cityId,
+            customerId: customerId
+        });
         sendAjax({
             url: "/customers/by-city",
             method: "GET",
@@ -44,13 +49,14 @@ var MBT_Care = function () {
         cityId = parseInt(cityId);
         userId = parseInt(userId);
         customerId = parseInt(customerId);
+
         sendAjax({
             url: "/customers/by-city",
             method: "GET",
             data: {
-                userId: userId,
                 cityId: cityId,
-                customerId: customerId
+                userId: userId,
+                customerId: customerId,
             },
             beforeSend: function(){
                 $('#sCustomer').html('<option>đang tải dữ liệu...</option>');

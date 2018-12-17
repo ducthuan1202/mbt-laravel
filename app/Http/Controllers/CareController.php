@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Care;
 use App\City;
 use App\Customer;
+use App\Helpers\Messages;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -88,7 +89,7 @@ class CareController extends Controller
         $model->save();
         return redirect()
             ->route('cares.index')
-            ->with('success', 'Thêm mới thành công');
+            ->with('success', Messages::INSERT_SUCCESS);
     }
 
     /**
@@ -130,7 +131,7 @@ class CareController extends Controller
         $model->save();
         return redirect()
             ->route('cares.index')
-            ->with('success', 'Cập nhật thành công');
+            ->with('success', Messages::UPDATE_SUCCESS);
     }
 
     /**
@@ -148,12 +149,12 @@ class CareController extends Controller
         if ($model->delete()) {
             $output = [
                 'success' => true,
-                'message' => 'Xóa thành công.'
+                'message' => Messages::DELETE_SUCCESS
             ];
         } else {
             $output = [
                 'success' => false,
-                'message' => 'Xóa thất bại',
+                'message' => Messages::DELETE_ERROR
             ];
         }
         return response()->json($output);

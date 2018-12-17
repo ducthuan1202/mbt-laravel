@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App\Helpers\Common;
+use App\Helpers\Messages;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Customer
@@ -63,7 +66,7 @@ class Customer extends Model
         'status' => 'required',
     ];
 
-    // relationship with city
+    // TODO:  RELATIONSHIP =====
     public function city()
     {
         return $this->hasOne(City::class, 'id', 'city_id');
@@ -74,26 +77,21 @@ class Customer extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public static function countNumber()
-    {
-        return self::count();
-    }
-
-    public function checkBeforeSave()
-    {
-        if (!$this->exists) {
-            $this->status = self::BUY_STATUS;
-        } else {
-            $this->code = $this->generateUniqueCode($this->id);
-        }
-    }
-
     public function checkCityExist($id = 0)
     {
         return $this->where('city_id', $id)->count();
     }
 
-    // search data
+    public function countCustomerByStatus()
+    {
+        $data = DB::table('customers')
+            ->select('status AS name', DB::raw("COUNT(status) AS value"))
+            ->groupBy('status')
+            ->get();
+        return $data;
+    }
+
+    // TODO:  QUERY TO DATABASE =====
     public function search($searchParams = [])
     {
         $model = $this->with(['city', 'user']);
@@ -115,6 +113,11 @@ class Customer extends Model
         $model = $model->orderBy('id', 'desc');
 
         return $model->paginate(self::LIMIT);
+    }
+
+    public static function countNumber()
+    {
+        return self::count();
     }
 
     public function getDropDownList($addAll = false)
@@ -142,6 +145,7 @@ class Customer extends Model
         return $data;
     }
 
+    // TODO:  LIST DATA =====
     public function getStatus($addAll = false)
     {
         $data = [];
@@ -154,6 +158,7 @@ class Customer extends Model
         return $data;
     }
 
+    // TODO:  FORMAT =====
     public function formatCity()
     {
         $location = '';
@@ -161,12 +166,11 @@ class Customer extends Model
             $location = $this->address;
         }
 
-        if ($this->city) {
+        if (isset($this->city)) {
             if (empty($location)) {
                 $location = $this->city->name;
             } else {
                 $location .= ' - ' . $this->city->name;
-
             }
         }
         return $location;
@@ -174,10 +178,10 @@ class Customer extends Model
 
     public function formatUser()
     {
-        if ($this->user) {
+        if (isset($this->user)) {
             return $this->user->name;
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatStatus()
@@ -200,10 +204,41 @@ class Customer extends Model
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
-    public function generateUniqueCode($number = 1)
+    public function generateUniqueCode()
     {
-        if (!is_numeric($number) || $number < 1) return '';
-        $len = strlen((string)$number);
-        return substr('MBT-KH00000', 0, -$len) . $number;
+        return Common::generateUniqueCode('MBT-KH00000', $this->id);
+    }
+
+    public function eChartGenerateData($data)
+    {
+        $list = $this->getStatus();
+        $label = [];
+        $value = [];
+        foreach ($data as $item):
+            if($item->name === self::BUY_STATUS){
+                $label[] = $list[self::BUY_STATUS];
+                $value[] = [
+                    'name'=>$list[self::BUY_STATUS],
+                    'value'=>$item->value
+                ];
+            } elseif($item->name === self::NO_BUY_STATUS){
+                $label[] = $list[self::NO_BUY_STATUS];
+                $value[] = [
+                    'name'=>$list[self::NO_BUY_STATUS],
+                    'value'=>$item->value
+                ];
+            } else {
+                $label[] = Messages::UNKNOWN_TEXT;
+                $value[] = [
+                    'name'=>$list[Messages::UNKNOWN_TEXT],
+                    'value'=>$item->value
+                ];
+            }
+        endforeach;
+
+        return \GuzzleHttp\json_encode([
+            'label' => $label,
+            'data' => $value,
+        ]);
     }
 }

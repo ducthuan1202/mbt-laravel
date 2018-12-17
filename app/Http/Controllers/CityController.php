@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Company;
 use App\Customer;
+use App\Helpers\Messages;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
@@ -56,7 +57,7 @@ class CityController extends Controller
         $model->save();
         return redirect()
             ->route('cities.index')
-            ->with('success', 'Thêm mới thành công');
+            ->with('success', Messages::INSERT_SUCCESS);
     }
 
     /**
@@ -90,7 +91,7 @@ class CityController extends Controller
         $model->save();
         return redirect()
             ->route('cities.index')
-            ->with('success', 'Cập nhật thành công');
+            ->with('success', Messages::UPDATE_SUCCESS);
     }
 
     /**
@@ -110,19 +111,19 @@ class CityController extends Controller
         if ($customerModel->checkCityExist($model->id)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Không thể xóa do có liên quan tới KHÁCH HÀNG.',
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH.' KHÁCH HÀNG.',
             ]);
         }
 
         if ($model->delete()) {
             $output = [
                 'success' => true,
-                'message' => 'Xóa thành công.'
+                'message' => Messages::DELETE_SUCCESS
             ];
         } else {
             $output = [
                 'success' => false,
-                'message' => 'Xóa thất bại',
+                'message' => Messages::DELETE_ERROR
             ];
         }
         return response()->json($output);

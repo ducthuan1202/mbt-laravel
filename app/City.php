@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string created_at
  * @property string updated_at
  *
- * @property Company company
  *
  */
 class City extends Model
@@ -39,13 +38,7 @@ class City extends Model
         'name' => 'required|max:255',
     ];
 
-    // relation
-    public function company()
-    {
-        return $this->belongsTo(Company::class, 'city_id', 'id');
-    }
-
-    // query db
+    // TODO:  QUERY TO DATABASE =====
     public function search($searchParams = [])
     {
         $model = $this->orderBy('id', 'desc');
@@ -59,6 +52,7 @@ class City extends Model
     public function findById($id){
         return $this->find($id);
     }
+
     public static function countNumber()
     {
         return self::count();

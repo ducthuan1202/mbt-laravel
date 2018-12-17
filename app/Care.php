@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helpers\Common;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -59,10 +60,10 @@ class Care extends Model
     public function checkBeforeSave()
     {
         if (!empty($this->start_date)) {
-            $this->start_date = $this->dmyToymd($this->start_date);
+            $this->start_date = Common::dmY2Ymd($this->start_date);
         }
         if (!empty($this->end_date)) {
-            $this->end_date = $this->dmyToymd($this->end_date);
+            $this->end_date = Common::dmY2Ymd($this->end_date);
         }
     }
 
@@ -119,10 +120,10 @@ class Care extends Model
 
         // filter by quotations_date
         if (isset($searchParams['date']) && !empty($searchParams['date'])) {
-            $d = $this->extractDate($searchParams['date']);
+            $d = Common::extractDate($searchParams['date']);
 
-            $startDate = $this->dmyToymd($d[0]);
-            $endDate = $this->dmyToymd($d[1]);
+            $startDate = Common::dmY2Ymd($d[0]);
+            $endDate = Common::dmY2Ymd($d[1]);
             if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $startDate) && preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $endDate)) {
                 $model = $model->whereBetween('start_date', [$startDate, $endDate]);
             }
@@ -131,6 +132,16 @@ class Care extends Model
         $model = $model->orderBy('id', 'desc');
 
         return $model->paginate(self::LIMIT);
+    }
+
+    public function checkCustomerExist($id = 0)
+    {
+        return $this->where('customer_id', $id)->count();
+    }
+
+    public static function countNumber()
+    {
+        return self::count();
     }
 
     // TODO:  LIST DATA =====
@@ -161,7 +172,7 @@ class Care extends Model
         if (isset($listStatus[$this->status])) {
             return $listStatus[$this->status];
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatUser()
@@ -169,7 +180,7 @@ class Care extends Model
         if ($this->user) {
             return $this->user->name;
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatCustomer()
@@ -177,7 +188,7 @@ class Care extends Model
         if ($this->customer) {
             return sprintf('%s<br/><small>%s</small>', $this->customer->name, $this->customer->mobile);
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatCustomerCity()
@@ -185,30 +196,17 @@ class Care extends Model
         if ($this->customer && isset($this->customer->city)) {
             return $this->customer->city->name;
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatEndDate()
     {
-        return date('d/m/Y', strtotime($this->end_date));
+        return Common::formatDate($this->end_date);
     }
 
     public function formatStartDate()
     {
-        return date('d/m/Y', strtotime($this->start_date));
+        return Common::formatDate($this->start_date);
     }
 
-    public function dmyToymd($date)
-    {
-        if (preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $date)) {
-            $date = str_replace('/', '-', $date);
-            return date('Y-m-d', strtotime($date));
-        }
-        return $date;
-    }
-
-    public function extractDate($str, $separator = ' - ')
-    {
-        return explode($separator, $str);
-    }
 }

@@ -2,8 +2,9 @@
 
 namespace App;
 
+use App\Helpers\Common;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Order
@@ -48,7 +49,6 @@ class Order extends Model
         SHIPPED_STATUS = 1,
         NOT_SHIPPED_STATUS = 2,
         CANCEL_STATUS = 3;
-
     const
         MACHINE_SKIN = 1,
         CABIN_SKIN = 2;
@@ -110,10 +110,10 @@ class Order extends Model
     public function checkBeforeSave()
     {
         if (!empty($this->start_date)) {
-            $this->start_date = $this->dmyToymd($this->start_date);
+            $this->start_date = Common::dmY2Ymd($this->start_date);
         }
         if (!empty($this->shipped_date)) {
-            $this->shipped_date = $this->dmyToymd($this->shipped_date);
+            $this->shipped_date = Common::dmY2Ymd($this->shipped_date);
         }
 
         if (!$this->exists) {
@@ -164,10 +164,10 @@ class Order extends Model
 
         // filter by quotations_date
         if (isset($searchParams['date']) && !empty($searchParams['date'])) {
-            $d = $this->extractDate($searchParams['date']);
+            $d = Common::extractDate($searchParams['date']);
+            $startDate = Common::dmY2Ymd($d[0]);
+            $endDate = Common::dmY2Ymd($d[1]);
 
-            $startDate = $this->dmyToymd($d[0]);
-            $endDate = $this->dmyToymd($d[1]);
             if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $startDate) && preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $endDate)) {
                 $model = $model->whereBetween('start_date', [$startDate, $endDate]);
             }
@@ -183,6 +183,29 @@ class Order extends Model
 
         return $model->paginate(self::LIMIT);
     }
+
+    public function checkCustomerExist($id = 0)
+    {
+        return $this->where('customer_id', $id)->count();
+    }
+
+    public static function countNumber()
+    {
+        return self::count();
+    }
+
+    public function sumTotalMoney()
+    {
+        $data = DB::table("orders")
+            ->select(DB::raw("SUM(total_money) as count"))
+            ->get();
+
+        if ($data) {
+            return Common::formatMoney($data[0]->count);
+        }
+        return 0;
+    }
+
 
     // TODO:  LIST DATA =====
     public function listStandard()
@@ -229,28 +252,31 @@ class Order extends Model
     }
 
     // TODO:  FORMAT =====
-    public function formatSkin(){
+    public function formatSkin()
+    {
         $list = $this->listSkin();
-        if(isset($list[$this->product_skin])){
+        if (isset($list[$this->product_skin])) {
             return $list[$this->product_skin];
         }
-        return 'kiểu máy khác';
+        return Common::UNKNOWN_TEXT;
     }
 
-    public function formatType(){
+    public function formatType()
+    {
         $list = $this->listType();
-        if(isset($list[$this->product_type])){
+        if (isset($list[$this->product_type])) {
             return $list[$this->product_type];
         }
-        return 'kiểu máy khác';
+        return Common::UNKNOWN_TEXT;
     }
 
-    public function formatStandard(){
+    public function formatStandard()
+    {
         $list = $this->listStandard();
-        if(isset($list[$this->standard_output])){
+        if (isset($list[$this->standard_output])) {
             return $list[$this->standard_output];
         }
-        return 'kiểu máy khác';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatStatus()
@@ -282,7 +308,7 @@ class Order extends Model
         if ($this->user) {
             return $this->user->name;
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatCustomer()
@@ -290,7 +316,7 @@ class Order extends Model
         if ($this->customer) {
             return sprintf('%s<br/>%s', $this->customer->name, $this->customer->mobile);
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatCustomerCity()
@@ -298,67 +324,37 @@ class Order extends Model
         if ($this->customer && isset($this->customer->city)) {
             return $this->customer->city->name;
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatStartDate()
     {
-        return $this->formatDate($this->start_date);
+        return Common::formatDate($this->start_date);
     }
 
     public function formatShippedDate()
     {
-        return $this->formatDate($this->shipped_date);
+        return Common::formatDate($this->shipped_date);
     }
 
     public function formatShippedDateReal()
     {
-        return $this->formatDate($this->shipped_date_real);
-    }
-
-    private function formatDate($date)
-    {
-        if (empty($date)) {
-            return '';
-        }
-        return date('d/m/Y', strtotime($date));
+        return Common::formatDate($this->shipped_date_real);
     }
 
     public function formatPrice()
     {
-        return $this->formatMoney($this->price);
+        return Common::formatMoney($this->price);
     }
 
     public function formatTotalMoney()
     {
-        return $this->formatMoney($this->total_money);
-    }
-
-    private function formatMoney($money)
-    {
-        return number_format($money) . ',000 đ';
-    }
-
-    public function dmyToymd($date)
-    {
-        if (preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $date)) {
-            $date = str_replace('/', '-', $date);
-            return date('Y-m-d', strtotime($date));
-        }
-        return $date;
-    }
-
-    public function extractDate($str, $separator = ' - ')
-    {
-        return explode($separator, $str);
+        return Common::formatMoney($this->total_money);
     }
 
     public function generateUniqueCode()
     {
-        $number = $this->id;
-        if (!is_numeric($number) || $number < 1) return '';
-        $len = strlen((string)$number);
-        return substr('MBT-DH00000', 0, -$len) . $number;
+        return Common::generateUniqueCode('MBT-DH00000', $this->id);
     }
 
 }

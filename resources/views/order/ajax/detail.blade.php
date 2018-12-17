@@ -16,87 +16,90 @@
         <div class="modal-body" style="padding: 0;">
             <table class="table table-striped" style="margin-bottom: 0">
                 <tbody>
-
                 <tr>
-                    <td class="text-right">Khách hàng</td>
+                    <td>Nhân viên</td>
+                    <td>{!! $model->formatUser()!!}</td>
+                </tr>
+                <tr>
+                    <td>Khách hàng</td>
                     <td>{!! $model->formatCustomer() !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Khu vực</td>
+                    <td>Khu vực</td>
                     <td>{!! $model->formatCustomerCity() !!}</td>
                 </tr>
 
                 <tr>
-                    <td class="text-right">Ngày vào sản xuất</td>
+                    <td>Ngày vào sản xuất</td>
                     <td>{!! $model->formatStartDate() !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Ngày giao hàng dự tính</td>
+                    <td>Ngày giao hàng dự tính</td>
                     <td>{!! $model->formatShippedDate() !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Ngày giao hàng thực tế</td>
+                    <td>Ngày giao hàng thực tế</td>
                     <td>{!! $model->formatShippedDateReal() !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Địa chỉ lắp đặt</td>
+                    <td>Địa chỉ lắp đặt</td>
                     <td>{!! $model->setup_at !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Địa chỉ giao hàng</td>
+                    <td>Địa chỉ giao hàng</td>
                     <td>{!! $model->delivery_at !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Số lượng x đơn giá = thành tiền </td>
+                    <td>Số lượng x đơn giá = thành tiền </td>
                     <td>{!!  sprintf('%s x %s = <code>%s</code>', $model->amount, $model->formatPrice(), $model->formatTotalMoney()) !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Giá báo</td>
+                    <td>Giá báo</td>
                     <td>{{ $model->formatPrice() }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Thành tiền</td>
+                    <td>Thành tiền</td>
                     <td>
                         {!!  sprintf('%s x %s = <code>%s</code>', $model->amount, $model->formatPrice(), $model->formatTotalMoney()) !!}
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-right">Công suất</td>
+                    <td>Công suất</td>
                     <td>{{ $model->power }} kvA</td>
                 </tr>
 
                 <tr>
-                    <td class="text-right">Điện áp vào</td>
+                    <td>Điện áp vào</td>
                     <td>{{ $model->voltage_input }} kv</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Điện áp ra</td>
+                    <td>Điện áp ra</td>
                     <td>{{ $model->voltage_output}} kv</td>
                 </tr>
 
                 <tr>
-                    <td class="text-right">Kiểu máy</td>
+                    <td>Kiểu máy</td>
                     <td>{!! $model->formatType() !!}</td>
                 </tr>
 
                 <tr>
-                    <td class="text-right">Ngoại hình máy</td>
+                    <td>Ngoại hình máy</td>
                     <td>{!! $model->formatSkin() !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Bảo hành</td>
+                    <td>Bảo hành</td>
                     <td>{{$model->guarantee}} tháng</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Tiêu chuẩn</td>
+                    <td>Tiêu chuẩn</td>
                     <td>{!! $model->formatStandard() !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Trạng thái đơn hàng</td>
+                    <td>Trạng thái đơn hàng</td>
                     <td>{!! $model->formatStatus() !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Ghi chú đơn hàng</td>
+                    <td>Ghi chú đơn hàng</td>
                     <td>{!! $model->note !!}</td>
                 </tr>
                 </tbody>

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helpers\Common;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -54,13 +55,14 @@ class PriceQuotation extends Model
         CABIN_SKIN = 2;
 
     protected $table = 'price_quotations';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'user_id', 'customer_id', 'amount', 'price', 'quotations_date', 'power', 'voltage_input', 'voltage_output','standard_output',
+        'user_id', 'customer_id', 'amount', 'price', 'quotations_date', 'power', 'voltage_input', 'voltage_output', 'standard_output',
         'guarantee', 'product_skin', 'product_type', 'setup_at', 'delivery_at', 'order_status', 'note', 'reason', 'status',
     ];
 
@@ -106,13 +108,13 @@ class PriceQuotation extends Model
     {
 
         if (!empty($this->quotations_date)) {
-            $this->quotations_date = $this->dmyToymd($this->quotations_date);
+            $this->quotations_date = Common::dmY2Ymd($this->quotations_date);
         }
 
-        if(empty($this->reason)){
+        if (empty($this->reason)) {
             $this->reason = '';
         }
-        if(empty($this->note)){
+        if (empty($this->note)) {
             $this->note = '';
         }
 
@@ -152,10 +154,10 @@ class PriceQuotation extends Model
 
         // filter by quotations_date
         if (isset($searchParams['date']) && !empty($searchParams['date'])) {
-            $d = $this->extractDate($searchParams['date']);
+            $d = Common::extractDate($searchParams['date']);
+            $startDate = Common::dmY2Ymd($d[0]);
+            $endDate = Common::dmY2Ymd($d[1]);
 
-            $startDate = $this->dmyToymd($d[0]);
-            $endDate = $this->dmyToymd($d[1]);
             if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $startDate) && preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $endDate)) {
                 $model = $model->whereBetween('quotations_date', [$startDate, $endDate]);
             }
@@ -240,20 +242,22 @@ class PriceQuotation extends Model
     }
 
     // TODO:  FORMAT =====
-    public function formatSkin(){
+    public function formatSkin()
+    {
         $list = $this->listSkin();
-        if(isset($list[$this->product_skin])){
+        if (isset($list[$this->product_skin])) {
             return $list[$this->product_skin];
         }
-        return 'kiểu máy khác';
+        return Common::UNKNOWN_TEXT;
     }
 
-    public function formatType(){
+    public function formatType()
+    {
         $list = $this->listType();
-        if(isset($list[$this->product_type])){
+        if (isset($list[$this->product_type])) {
             return $list[$this->product_type];
         }
-        return 'kiểu máy khác';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatCustomer()
@@ -261,7 +265,7 @@ class PriceQuotation extends Model
         if ($this->customer) {
             return sprintf('%s<br/>%s', $this->customer->name, $this->customer->mobile);
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatCustomerCity()
@@ -269,7 +273,7 @@ class PriceQuotation extends Model
         if ($this->customer && isset($this->customer->city)) {
             return $this->customer->city->name;
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatUser()
@@ -277,7 +281,7 @@ class PriceQuotation extends Model
         if ($this->user) {
             return $this->user->name;
         }
-        return 'không xác định';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatOrderStatus()
@@ -300,51 +304,38 @@ class PriceQuotation extends Model
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
-    public function formatStatus(){
+    public function formatStatus()
+    {
         $list = $this->listStatus();
-        if(isset($list[$this->status])){
+        if (isset($list[$this->status])) {
             return $list[$this->status];
         }
-        return 'n/a';
+        return Common::UNKNOWN_TEXT;
     }
 
-    public function formatPrice(){
-        return $this->formatMoney($this->price);
-    }
-
-    public function formatTotalMoney(){
-        return $this->formatMoney($this->total_money);
-    }
-
-    private function formatMoney($money)
+    public function formatPrice()
     {
-        return number_format($money) . ',000 đ';
+        return Common::formatMoney($this->price);
     }
 
-    public function formatStandard(){
+    public function formatTotalMoney()
+    {
+        return Common::formatMoney($this->total_money);
+    }
+
+
+    public function formatStandard()
+    {
         $list = $this->listStandard();
-        if(isset($list[$this->standard_output])){
+        if (isset($list[$this->standard_output])) {
             return $list[$this->standard_output];
         }
-        return 'kiểu máy khác';
+        return Common::UNKNOWN_TEXT;
     }
 
     public function formatQuotationDate()
     {
-        return date('d/m/Y', strtotime($this->quotations_date));
+        return Common::formatMoney($this->quotations_date);
     }
 
-    public function dmyToymd($date)
-    {
-        if (preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $date)) {
-            $date = str_replace('/', '-', $date);
-            return date('Y-m-d', strtotime($date));
-        }
-        return $date;
-    }
-
-    public function extractDate($str, $separator = ' - ')
-    {
-        return explode($separator, $str);
-    }
 }
