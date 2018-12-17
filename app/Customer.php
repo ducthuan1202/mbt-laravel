@@ -119,12 +119,15 @@ class Customer extends Model
 
     public function getDropDownList($addAll = false)
     {
-        $data = $this->select('id', 'name', 'mobile');
+        $model = $this->select('id', 'name', 'mobile');
 
         if(!empty($this->city_id)){
-            $data = $data->where('city_id', $this->city_id);
+            $model = $model->where('city_id', $this->city_id);
         }
-        $data = $data->get()->toArray();
+        if(!empty($this->user_id)){
+            $model = $model->where('user_id', $this->user_id);
+        }
+        $data = $model->get()->toArray();
 
         if ($addAll) {
             $firstItem = ['id' => null, 'name' => 'Tất cả'];

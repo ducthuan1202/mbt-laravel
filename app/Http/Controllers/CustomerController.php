@@ -190,19 +190,37 @@ class CustomerController extends Controller
     {
         $model = new Customer();
         $cityId = (int)$request->get('cityId');
-
-        if (!empty($cityId) && $cityId > 0) {
-            $model->city_id = $cityId;
-        }
+        $userId = (int)$request->get('userId');
+        $customerId = (int)$request->get('customerId');
+        $model->city_id = $cityId;
+        $model->user_id = $userId;
 
         $shared = [
             'model' => $model,
             'customers' => $model->getDropDownList(true),
-            'customerId' => (int)$request->get('customerId')
+            'customerId' => $customerId,
         ];
         $output = [
             'success' => true,
             'message' => view('customer.ajax.by_city', $shared)->render()
+        ];
+        return response()->json($output);
+    }
+
+    public function getByUser(Request $request)
+    {
+        $model = new Customer();
+        $userId = (int)$request->get('userId');
+        $model->user_id = $userId;
+
+        $shared = [
+            'model' => $model,
+            'customers' => $model->getDropDownList(true),
+        ];
+        $output = [
+            'success' => true,
+            'cityHtml' => view('customer.ajax.city_html', $shared)->render(),
+            'customerHtml' => view('customer.ajax.customer_html', $shared)->render(),
         ];
         return response()->json($output);
     }

@@ -14,3 +14,5 @@
 - Xóa thư mục trống: `rmdir picture`
 - Xóa file: `rm demo.txt`
 - Xóa thư mục có chứa dữ liệu: `rm -rf picture` (cần chắc chắn để vì có thể mất hết dữ liệu)
+
+- set quyền cho thư mục: `chmode 777 -R storage` (storage là tên thư mục)

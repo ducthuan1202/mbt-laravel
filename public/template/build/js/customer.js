@@ -13,9 +13,12 @@ var MBT_Customer = function () {
         var status = selectStatus.val().toLowerCase().trim();
         switch (status) {
             case '2':
+            case 2:
                 inputTotalSal.prop("disabled", true);
+                inputTotalSal.val(0);
                 break;
             case '1':
+            case 1:
                 inputTotalSal.prop("disabled", false);
                 break;
             default:

@@ -20,9 +20,9 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Nhân viên kinh doanh</label>
-            <select class="form-control chosen-select" name="user_id">
+            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="MBT_Care.getCustomerByCity()">
                 @foreach($users as $user)
-                    <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id ? 'selected' : '' }}>{{$user['name']}}</option>
+                    <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id || $user['id'] == old('user_id') ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
             </select>
         </div>
@@ -31,7 +31,7 @@
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control chosen-select" onchange="MBT_Care.getCustomerByCity({{ $model->customer_id ? $model->customer_id : old('customer_id')  }})" id="city_id">
+                    <select class="form-control chosen-select" onchange="MBT_Care.getCustomerByCity()" id="city_id">
                         @foreach($cities as $city)
                             <option value="{{ $city['id'] }}"
                                     {{ isset($model->customer) && $city['id'] == $model->customer->city_id ? 'selected' : '' }}>
@@ -86,7 +86,7 @@
             <label>Nội dung chăm sóc</label>
             <select class="form-control chosen-select" name="status">
                 @foreach($status as $key => $val)
-                    <option value="{{ $key }}" {{ $key == $model->status ? 'selected' : '' }}>{{$val}}</option>
+                    <option value="{{ $key }}" {{ $key == $model->status || $key == old('status') ? 'selected' : '' }}>{{$val}}</option>
                 @endforeach
             </select>
         </div>

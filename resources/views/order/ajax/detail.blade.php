@@ -1,6 +1,6 @@
 @php
 /**
-* @var $model \App\PriceQuotation
+* @var $model \App\Order
 */
 @endphp
 <div class="modal-dialog modal-md">
@@ -10,13 +10,13 @@
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
             </button>
             <h4 class="modal-title">
-                Báo giá của <span class="text-danger">{{$model->formatUser()}}</span>
-                ngày <span class="text-warning">{{$model->formatQuotationDate()}}</span>
+                Đơn hàng <span class="text-danger">{{$model->code}}</span>
             </h4>
         </div>
         <div class="modal-body" style="padding: 0;">
             <table class="table table-striped" style="margin-bottom: 0">
                 <tbody>
+
                 <tr>
                     <td class="text-right">Khách hàng</td>
                     <td>{!! $model->formatCustomer() !!}</td>
@@ -24,6 +24,19 @@
                 <tr>
                     <td class="text-right">Khu vực</td>
                     <td>{!! $model->formatCustomerCity() !!}</td>
+                </tr>
+
+                <tr>
+                    <td class="text-right">Ngày vào sản xuất</td>
+                    <td>{!! $model->formatStartDate() !!}</td>
+                </tr>
+                <tr>
+                    <td class="text-right">Ngày giao hàng dự tính</td>
+                    <td>{!! $model->formatShippedDate() !!}</td>
+                </tr>
+                <tr>
+                    <td class="text-right">Ngày giao hàng thực tế</td>
+                    <td>{!! $model->formatShippedDateReal() !!}</td>
                 </tr>
                 <tr>
                     <td class="text-right">Địa chỉ lắp đặt</td>
@@ -34,8 +47,8 @@
                     <td>{!! $model->delivery_at !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Số lượng</td>
-                    <td>{{ $model->amount }}</td>
+                    <td class="text-right">Số lượng x đơn giá = thành tiền </td>
+                    <td>{!!  sprintf('%s x %s = <code>%s</code>', $model->amount, $model->formatPrice(), $model->formatTotalMoney()) !!}</td>
                 </tr>
                 <tr>
                     <td class="text-right">Giá báo</td>
@@ -47,7 +60,6 @@
                         {!!  sprintf('%s x %s = <code>%s</code>', $model->amount, $model->formatPrice(), $model->formatTotalMoney()) !!}
                     </td>
                 </tr>
-
                 <tr>
                     <td class="text-right">Công suất</td>
                     <td>{{ $model->power }} kvA</td>
@@ -71,18 +83,21 @@
                     <td class="text-right">Ngoại hình máy</td>
                     <td>{!! $model->formatSkin() !!}</td>
                 </tr>
-
+                <tr>
+                    <td class="text-right">Bảo hành</td>
+                    <td>{{$model->guarantee}} tháng</td>
+                </tr>
                 <tr>
                     <td class="text-right">Tiêu chuẩn</td>
                     <td>{!! $model->formatStandard() !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Trạng thái báo giá</td>
+                    <td class="text-right">Trạng thái đơn hàng</td>
                     <td>{!! $model->formatStatus() !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Trạng thái khách hàng</td>
-                    <td>{!! $model->formatOrderStatus() !!}</td>
+                    <td class="text-right">Ghi chú đơn hàng</td>
+                    <td>{!! $model->note !!}</td>
                 </tr>
                 </tbody>
             </table>

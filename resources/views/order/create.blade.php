@@ -27,7 +27,7 @@
 @section('script')
     <script src="{{ asset('/template/build/js/order.js') }}"></script>
     <script>
-        MBT_Order.getCustomerByCity('{{$model->customer_id}}');
+        MBT_Order.getCustomerByCity();
         MBT_Order.priceOrAmountOnchange()
     </script>
 @endsection

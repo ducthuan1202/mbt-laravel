@@ -50,41 +50,41 @@
             <label>NVKD chăm sóc</label>
             <select class="form-control chosen-select" name="user_id">
                 @foreach($users as $user)
-                    <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id ? 'selected' : '' }}>{{$user['name']}}</option>
+                    <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id || $user['id'] == old('user_id') ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
             </select>
         </div>
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <label>Địa chỉ</label>
-                    <input type="text" class="form-control" name="address" value="{{old('address') ? old('address') : $model->address}}"/>
-                </div>
+
                 <div class="form-group">
                     <label>Khu vực</label>
                     <select class="form-control chosen-select" name="city_id">
                         @foreach($cities as $city)
-                            <option value="{{ $city['id'] }}" {{ $city['id'] == $model->city_id ? 'selected' : '' }}>{{$city['name']}}</option>
+                            <option value="{{ $city['id'] }}" {{ $city['id'] == $model->city_id || $city['id'] == old('city_id') ? 'selected' : '' }}>{{$city['name']}}</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Địa chỉ</label>
+                    <input type="text" class="form-control" name="address" value="{{old('address') ? old('address') : $model->address}}"/>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6">
 
                 <div class="form-group">
-                    <label>Doanh số trung bình</label>
-                    <input type="text" class="form-control" name="average_sale"
-                           value="{{old('average_sale') ? old('average_sale') : $model->average_sale}}"/>
-                </div>
-
-                <div class="form-group">
                     <label>Trạng thái</label>
                     <select class="form-control chosen-select" name="status" onchange="MBT_Customer.switchBuyStatus()">
                         @foreach($status as $key => $val)
-                            <option value="{{ $key }}" {{ $key == $model->status ? 'selected' : '' }}>{{$val}}</option>
+                            <option value="{{ $key }}" {{ $key == $model->status || $key == old('status') ? 'selected' : '' }}>{{$val}}</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Doanh số trung bình</label>
+                    <input type="text" class="form-control" name="average_sale"
+                           value="{{old('average_sale') ? old('average_sale') : $model->average_sale}}"/>
                 </div>
             </div>
         </div>

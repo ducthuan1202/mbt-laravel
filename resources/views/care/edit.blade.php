@@ -27,5 +27,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/care.js') }}"></script>
-    <script>MBT_Care.getCustomerByCity('{{$model->customer_id}}')</script>
+    <script>MBT_Care.getCustomerByCity()</script>
 @endsection

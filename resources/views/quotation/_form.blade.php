@@ -23,7 +23,7 @@ $model->customer_id = old('customer_id');
 
         <div class="form-group">
             <label>Nhân viên kinh doanh</label>
-            <select class="form-control chosen-select" name="user_id">
+            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="MBT_PriceQuotation.getCustomerByCity()">
                 @foreach($users as $user)
                     <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
@@ -34,7 +34,7 @@ $model->customer_id = old('customer_id');
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control chosen-select" onchange="MBT_PriceQuotation.getCustomerByCity({{ $model->customer_id ? $model->customer_id : old('customer_id')  }})" id="city_id">
+                    <select class="form-control chosen-select" id="city_id" onchange="MBT_PriceQuotation.getCustomerByCity()">
                         @foreach($cities as $city)
                             <option value="{{ $city['id'] }}"
                                     {{ isset($model->customer) && $city['id'] == $model->customer->city_id ? 'selected' : '' }}>

@@ -1,10 +1,9 @@
 var __FORMAT_DATE__ = 'DD/MM/YYYY';
 
-function numFormat(amount, dec) {
-    dec = (dec||2)
-    if (isNaN(amount)) return amount;
-    return amount.toFixed(dec).replace(/\d(?=(\d{3})+\.)/g, "$&,").substr(dec);
-}
+var formatMoney = function(number){
+    number = number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    return number.substr(0, number.length - 3);
+};
 
 function alertSuccess(setting) {
 
@@ -75,7 +74,6 @@ function sendAjax(options) {
         dataType: 'JSON',
         data: {},
         fnSuccess: null,
-        fnFail: null
     };
     Object.assign(setting, options);
     if (!setting.url) {
@@ -98,10 +96,8 @@ function sendAjax(options) {
                 setting.fnSuccess(response);
             }
         },
-        error: function (response) {
-            if (typeof setting.fnFail === 'function') {
-                setting.fnFail(response);
-            }
+        error: function () {
+            alertError({title: 'Quá trình truyền tải dữ liệu thất bại.'});
         }
     });
 }
@@ -115,11 +111,6 @@ function deleteAjax(options) {
         } else {
             alertError({title: response.message});
         }
-    };
-
-    options.fnFail = function () {
-        console.log(response);
-        alertError({title: 'Quá trình truyền tải dữ liệu thất bại.'});
     };
 
     sendAjax(options);
@@ -200,8 +191,6 @@ function initDateRangePickerMulti() {
     });
 }
 
-
-// init select2
 function initSelect2() {
     $(".chosen-select").select2({
         width: "100%",

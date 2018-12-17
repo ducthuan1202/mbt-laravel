@@ -229,6 +229,30 @@ class Order extends Model
     }
 
     // TODO:  FORMAT =====
+    public function formatSkin(){
+        $list = $this->listSkin();
+        if(isset($list[$this->product_skin])){
+            return $list[$this->product_skin];
+        }
+        return 'kiểu máy khác';
+    }
+
+    public function formatType(){
+        $list = $this->listType();
+        if(isset($list[$this->product_type])){
+            return $list[$this->product_type];
+        }
+        return 'kiểu máy khác';
+    }
+
+    public function formatStandard(){
+        $list = $this->listStandard();
+        if(isset($list[$this->standard_output])){
+            return $list[$this->standard_output];
+        }
+        return 'kiểu máy khác';
+    }
+
     public function formatStatus()
     {
         $arr = $this->listStatus();

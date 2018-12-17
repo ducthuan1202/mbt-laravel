@@ -11,9 +11,16 @@
 |
 */
 
-Auth::routes();
+//Auth::routes();
+
+Route::namespace('Auth')->group(function () {
+    Route::get('login', 'LoginController@showLoginForm')->name('login');
+    Route::post('login', 'LoginController@login');
+    Route::post('logout', 'LoginController@logout')->name('logout')->middleware('auth');
+});
 
 Route::middleware(['auth'])->group(function () {
+
 
     Route::get('/', 'HomeController@index')->name('home');
 
@@ -33,4 +40,5 @@ Route::middleware(['auth'])->group(function () {
     // api
     Route::get('/customers/by-city', 'CustomerController@getByCity');
     Route::get('/quotations/detail', 'PriceQuotationController@detail');
+    Route::get('/orders/detail', 'OrderController@detail');
 });

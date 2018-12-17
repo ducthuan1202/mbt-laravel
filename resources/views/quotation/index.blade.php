@@ -96,7 +96,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="quotationModel"></div>
+    <div class="modal fade" id="quotationModal"></div>
 @endsection
 
 @section('script')

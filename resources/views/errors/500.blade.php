@@ -1,17 +1,14 @@
-@extends('layouts.main')
+@extends('layouts.error')
 
 @section('content')
-    <div class="right_col" role="main">
-        <div class="x_panel">
-            <div class="x_title">
-                <h2 class="text-danger">
-                    Lỗi 500
-                </h2>
-                <div class="clearfix"></div>
-            </div>
-
-            <div class="x_content">
-                <h2>Lỗi máy chủ nội bộ</h2>
+    <div class="col-md-12">
+        <div class="col-middle">
+            <div class="text-center text-center">
+                <h1 class="error-number">500</h1>
+                <h2>Lỗi máy chủ nội bộ.</h2>
+                <div class="mid_center">
+                    <h4>Đi tới <a href="/" style="color: yellow">Bảng Tin</a></h4>
+                </div>
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 @php
-    $user = \Illuminate\Support\Facades\Auth::user();
+    $user = Auth::user();
+    // $user = \Illuminate\Support\Facades\Auth::user();
 @endphp
 <!DOCTYPE html>
 <html lang="vi">
@@ -68,7 +69,9 @@
 <script src="{{ asset('/template/vendors/select2/dist/js/select2.min.js') }}"></script>
 <!-- general -->
 <script src="{{ asset('/template/build/js/general.js') }}"></script>
+
 @yield('script')
+
 <!-- general -->
 <script src="{{ asset('/template/build/js/custom.js') }}"></script>
 </body>

@@ -1,25 +1,29 @@
 var MBT_Order = function () {
 
-
-
     var deleteItem = function (id) {
         deleteAjax({
             url: "/orders/" + id
         });
     };
 
-    var getCustomerByCity = function (customerId) {
+    var getCustomerByCity = function(){
         var cityId = $("#city_id").val();
+        var userId = $("#user_id").val();
+        var customerId = $("#customer_id").val();
+
         cityId = parseInt(cityId);
-        if (isNaN(cityId)) {
-            alertError({title: 'Khu vực không hợp lê.'});
-            return;
-        }
+        userId = parseInt(userId);
+        customerId = parseInt(customerId);
+
         sendAjax({
             url: "/customers/by-city",
             method: "GET",
-            data: {cityId: cityId, customerId: customerId},
-            beforeSend: function () {
+            data: {
+                userId: userId,
+                cityId: cityId,
+                customerId: customerId
+            },
+            beforeSend: function(){
                 $('#customer_id').html('<option>đang tải dữ liệu...</option>');
             },
             fnSuccess: function (response) {
@@ -28,21 +32,28 @@ var MBT_Order = function () {
                 } else {
                     alertError({title: response.message});
                 }
-            },
-            fnFail: function () {
-                alertError({title: 'Không thể tải dữ liệu.'});
             }
         });
     };
 
-    var getCustomerByCityIndex = function () {
+    var getCustomerByCityIndex = function(){
         var cityId = $("#sCity").val();
+        var userId = $("#sUser").val();
+        var customerId = $("#sCustomer").val();
+
         cityId = parseInt(cityId);
+        userId = parseInt(userId);
+        customerId = parseInt(customerId);
+
         sendAjax({
             url: "/customers/by-city",
             method: "GET",
-            data: {cityId: cityId},
-            beforeSend: function () {
+            data: {
+                cityId: cityId,
+                userId: userId,
+                customerId: customerId,
+            },
+            beforeSend: function(){
                 $('#sCustomer').html('<option>đang tải dữ liệu...</option>');
             },
             fnSuccess: function (response) {
@@ -51,39 +62,24 @@ var MBT_Order = function () {
                 } else {
                     alertError({title: response.message});
                 }
-            },
-            fnFail: function () {
-                alertError({title: 'Không thể tải dữ liệu.'});
             }
         });
     };
 
     var getDetail = function (id) {
-        $("#quotationModel").modal('show');
-
         sendAjax({
             url: "/orders/detail",
             method: "GET",
             data: {id: id},
-            beforeSend: function () {
-                $('#quotationModel').show('đang tải dữ liệu');
-            },
             fnSuccess: function (response) {
                 if (response.success) {
-                    $('#quotationModel').html(response.message);
+                    $('#orderModal').html(response.message);
+                    $('#orderModal').modal('show');
                 } else {
                     alertError({title: response.message});
                 }
-            },
-            fnFail: function () {
-                alertError({title: 'Không thể tải dữ liệu.'});
             }
         });
-    };
-
-    var formatMoney = function(number){
-        number = number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-        return number.substr(0, number.length - 3);
     };
 
     var priceOrAmountOnchange = function () {
@@ -105,8 +101,8 @@ var MBT_Order = function () {
                 }
             });
         },
-        getCustomerByCity: function (customerId) {
-            getCustomerByCity(customerId);
+        getCustomerByCity: function () {
+            getCustomerByCity();
         },
         getCustomerByCityIndex: function () {
             getCustomerByCityIndex();

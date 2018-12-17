@@ -27,4 +27,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/customer.js') }}"></script>
+    <script>MBT_Customer.switchBuyStatus()</script>
 @endsection
