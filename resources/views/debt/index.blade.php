@@ -12,25 +12,19 @@
             <div class="x_title">
                 <h2>
                     Công Nợ
-                    <small>Danh sách</small>
+                    <small>Tổng số <b>{{$data->total()}}</b></small>
                 </h2>
 
-                <ul class="nav navbar-right panel_toolbox">
-                    <li>
-                        <a class="btn btn-round btn-default btn-xs" href="{{route('debts.create')}}">
-                            <i class="fa fa-plus"></i> Thêm mới
-                        </a>
-                    </li>
-                </ul>
+                <a class="btn btn-success pull-right" href="{{route('debts.create')}}">
+                    <i class="fa fa-plus"></i> Thêm mới
+                </a>
 
                 <div class="clearfix"></div>
             </div>
 
             <div class="x_content">
 
-                <div role="Search form">
-                    @include('debt._search')
-                </div>
+                @include('debt._search')
 
                 @if($message = Session::get('success'))
                     <div class="alert alert-success">{{$message}}</div>
@@ -39,52 +33,43 @@
                 <div class="ln_solid"></div>
 
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped jambo_table bulk_action">
                         <thead>
-                            <tr class="headings">
-                                <th>STT</th>
-                                <th>Khách Hàng</th>
-                                <th>NVKD</th>
-                                <th>Ngày Hẹn</th>
-                                <th>Số Lượng</th>
-                                <th>Giá</th>
-                                <th>VAT</th>
-                                <th>Số Dư</th>
-                                <th>Trạng Thái</th>
-                                <th></th>
-                            </tr>
+                        <tr class="headings">
+                            <th>No.</th>
+
+                            <th>Khách hàng</th>
+                            <th>Đơn hàng</th>
+                            <th>Số nợ</th>
+                            <th>Nhân viên KD</th>
+                            <th>Trạng Thái</th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @if(count($data))
-                                @foreach($data as $item)
-                                    <tr>
-                                        <td style="width: 50px">{{$item->id}}</td>
-                                        <td>{{$item->formatCustomer()}}</td>
-                                        <td>{{$item->formatUser()}}</td>
-                                        <td>{{$item->formatDebtDate()}}</td>
-                                        <td>{{$item->amount}}</td>
-                                        <td>{{$item->price}}</td>
-                                        <td>{{$item->vat}}</td>
-                                        <td>{{$item->residual}}</td>
-                                        <td>{!! $item->formatStatus() !!}</td>
-
-                                        <td style="width: 170px">
-                                            <div class="btn-group">
-                                                <a class="btn btn-default" href="{{route('debts.edit', $item->id)}}">
-                                                    <i class="fa fa-edit"></i> Sửa
-                                                </a>
-                                                <a class="btn btn-default" onclick="MBT_Debt.delete({{$item->id}})">
-                                                    <i class="fa fa-trash"></i> Xóa
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
+                        @if(count($data))
+                            @foreach($data as $item)
                                 <tr>
-                                    <td colspan="100%">Không có dữ liệu.</td>
+                                    <td style="width: 50px">{{$item->id}}</td>
+                                    <td>{{$item->formatCustomer()}}</td>
+                                    <td>{{$item->formatOrder()}}</td>
+                                    <td>{{$item->formatMoney()}}</td>
+                                    <td>{{$item->formatCustomerUser()}}</td>
+                                    <td>{!! $item->formatStatus() !!}</td>
+                                    <td class="text-right">
+                                        @can('admin')
+                                            <a href="{{route('debts.edit', $item->id)}}" class="btn btn-info btn-xs">
+                                                <i class="fa fa-pencil"></i> Sửa
+                                            </a>
+                                        @endcan
+                                    </td>
                                 </tr>
-                            @endif
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="100%">Không có dữ liệu.</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                 </div>

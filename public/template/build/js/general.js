@@ -96,7 +96,9 @@ function sendAjax(options) {
                 setting.fnSuccess(response);
             }
         },
-        error: function () {
+        error: function (response) {
+            console.log(response);
+
             alertError({title: 'Quá trình truyền tải dữ liệu thất bại.'});
         }
     });

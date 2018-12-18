@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Helpers\Common;
+use App\Helpers\Messages;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,27 +12,24 @@ use Illuminate\Database\Eloquent\Model;
  * -------------------------------------
  * @property integer id
  *
- * @property string user_id
- * @property string debt_date
- * @property string content
- * @property string amount
- * @property string price
- * @property string vat
- * @property string residual
+ * @property string order_id
+ * @property string customer_id
+ * @property string total_money
  * @property string status
  *
  * @property string created_at
  * @property string updated_at
  *
- * @property User user
+ * @property Order order
  * @property Customer customer
  *
  */
 class Debt extends Model
 {
     const LIMIT = 10;
-    const ACTIVATE_STATUS = 'activate',
-        DEACTIVATE_STATUS = 'deactivate';
+
+    const OLD_STATUS = 1,
+        NEW_STATUS = 2;
 
     protected $table = 'debts';
     /**
@@ -38,42 +37,22 @@ class Debt extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'customer_id', 'debt_date', 'content', 'amount', 'price', 'vat', 'residual', 'status'];
+    protected $fillable = ['customer_id', 'order_id', 'total_money', 'status'];
 
     public $validateMessage = [
-        'user_id.required' => 'Chọn nhân viên kinh daonh.',
-        'customer_id.required' => 'Chọn khách hàng.',
-        'debt_date.required' => 'Chọn ngày công nợ.',
-        'content.required' => 'Nội dung công nợ không thể bỏ trống.',
-        'amount.required' => 'Số lượng không thể bỏ trống.',
-        'price.required' => 'Giá không thể bỏ trống.',
-        'vat.required' => 'VAT không thể bỏ trống.',
-        'residual.required' => 'Số dư không thể bỏ trống.',
+        'total_money.required' => 'Tổng dư nợ không thể bỏ trống.',
+        'total_money.numeric' => 'Tổng dư nợ phải là kiểu số.',
         'status.required' => 'Trạng thái không thể bỏ trống.',
     ];
 
     public $validateRules = [
-        'user_id' => 'required',
-        'customer_id' => 'required',
-        'debt_date' => 'required',
-        'content' => 'required',
-        'amount' => 'required',
-        'price' => 'required',
-        'vat' => 'required',
-        'residual' => 'required',
+        'total_money' => 'required|numeric',
         'status' => 'required',
     ];
 
-    public function checkBeforeSave()
+    public function order()
     {
-        if (!empty($this->debt_date)) {
-            $this->debt_date = $this->dmyToymd($this->debt_date);
-        }
-    }
-
-    public function user()
-    {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->hasOne(Order::class, 'id', 'order_id');
     }
 
     public function customer()
@@ -83,19 +62,22 @@ class Debt extends Model
 
     public function search($searchParams = [])
     {
-        $model = $this->with(['user', 'customer']);
+        $model = $this->with(['order', 'customer', 'order.customer']);
         $model = $model->orderBy('id', 'desc');
 
         // filter
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
         }
-        if (isset($searchParams['user']) && !empty($searchParams['user'])) {
-            $model = $model->where('user_id', $searchParams['user']);
-        }
+
         if (isset($searchParams['customer']) && !empty($searchParams['customer'])) {
             $model = $model->where('customer_id', $searchParams['customer']);
         }
+
+        if (isset($searchParams['order']) && !empty($searchParams['order'])) {
+            $model = $model->where('order_id', $searchParams['order']);
+        }
+
         if (isset($searchParams['status']) && !empty($searchParams['status'])) {
             $model = $model->where('status', $searchParams['status']);
         }
@@ -114,10 +96,8 @@ class Debt extends Model
         if ($addAll) {
             $data = [null => 'Tất cả'];
         }
-        $data = array_merge($data, [
-            self::ACTIVATE_STATUS => 'Kích Hoạt',
-            self::DEACTIVATE_STATUS => 'Tạm Hoãn',
-        ]);
+        $data[self::OLD_STATUS] = 'Nợ cũ';
+        $data[self::NEW_STATUS] = 'Nợ mới';
 
         return $data;
     }
@@ -126,12 +106,12 @@ class Debt extends Model
     {
         $arr = $this->getStatus();
         switch ($this->status) {
-            case self::ACTIVATE_STATUS:
-                $output = $arr[self::ACTIVATE_STATUS];
+            case self::OLD_STATUS:
+                $output = $arr[self::OLD_STATUS];
                 $cls = 'btn-info';
                 break;
-            case  self::DEACTIVATE_STATUS:
-                $output = $arr[self::DEACTIVATE_STATUS];
+            case  self::NEW_STATUS:
+                $output = $arr[self::NEW_STATUS];
                 $cls = 'btn-default';
                 break;
             default:
@@ -142,30 +122,36 @@ class Debt extends Model
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
-    public function formatUser()
+    public function formatMoney(){
+        return Common::formatMoney($this->total_money);
+    }
+
+    public function formatOrder()
     {
-        if ($this->user) {
-            return $this->user->name;
+        if (isset($this->order)) {
+            return $this->order->code;
         }
-        return 'không xác định';
+        return '';
+    }
+
+    public function formatCustomerUser()
+    {
+        if (isset($this->customer)) {
+            return $this->customer->user->name;
+        }
+        return '';
     }
 
     public function formatCustomer()
     {
-        if ($this->customer) {
+        if (isset($this->customer)) {
             return $this->customer->name;
         }
-        return 'không xác định';
-    }
 
-    public function formatDebtDate()
-    {
-        return date('d/m/Y', strtotime($this->debt_date));
-    }
+        if(isset($this->order)){
+            return $this->order->customer->name;
+        }
 
-    public function dmyToymd($date)
-    {
-        $date = str_replace('/', '-', $date);
-        return date('Y-m-d', strtotime($date));
+        return '';
     }
 }

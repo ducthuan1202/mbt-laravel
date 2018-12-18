@@ -25,9 +25,7 @@
 
             <div class="x_content">
 
-                <div role="Search form">
-                    @include('customer._search')
-                </div>
+                @include('customer._search')
 
                 @if($message = Session::get('success'))
                     <div class="alert alert-success">{{$message}}</div>
@@ -66,15 +64,17 @@
                                     <td><b class="text-success">{{$item->formatUser()}}</b></td>
                                     <td>{!! $item->formatStatus() !!}</td>
                                     <td class="text-right" style="min-width: 220px">
-                                        <a href="{{route('customers.edit', $item->id)}}" class="btn btn-primary btn-xs">
+                                        <a href="{{route('customers.show', $item->id)}}" class="btn btn-primary btn-xs">
                                             <i class="fa fa-folder"></i> Xem
                                         </a>
                                         <a href="{{route('customers.edit', $item->id)}}" class="btn btn-info btn-xs">
                                             <i class="fa fa-pencil"></i> Sửa
                                         </a>
-                                        <a onclick="MBT_Customer.delete({{$item->id}})" class="btn btn-danger btn-xs">
-                                            <i class="fa fa-trash-o"></i> Xóa
-                                        </a>
+                                        @can('admin')
+                                            <a onclick="MBT_Customer.delete({{$item->id}})" class="btn btn-danger btn-xs">
+                                                <i class="fa fa-trash-o"></i> Xóa
+                                            </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

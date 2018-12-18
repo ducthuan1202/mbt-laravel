@@ -95,5 +95,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/order.js') }}"></script>
-    <script>MBT_Order.getCustomerByCityIndex()</script>
+    <script>MBT_Order.getCustomerByCityIndex();</script>
 @endsection

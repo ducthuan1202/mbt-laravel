@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\City;
-use App\Company;
 use App\Customer;
 use App\Helpers\Messages;
 use Illuminate\Http\Request;

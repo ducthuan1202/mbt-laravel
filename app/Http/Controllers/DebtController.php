@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\City;
-use App\Company;
 use App\Customer;
 use App\Debt;
+use App\Helpers\Messages;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -19,21 +19,18 @@ class DebtController extends Controller
     public function index(Request $request)
     {
         $searchParams = [
-            'date' => null,
-            'user' => null,
+            'order' => null,
             'customer' => null,
             'status' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
-        $userModel = new User();
         $customerModel = new Customer();
         $model = new Debt();
 
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'users' => $userModel->getDropDownList(),
             'customers' => $customerModel->getDropDownList(),
             'status' => $model->getStatus(),
         ];
@@ -47,15 +44,14 @@ class DebtController extends Controller
      */
     public function create()
     {
+        $cityModel = new City();
         $userModel = new User();
-        $customerModel = new Customer();
 
         $model = new Debt();
-        $model->debt_date = date('Y-m-d');
         $shared = [
             "model" => $model,
+            'cities' => $cityModel->getDropDownList(),
             'users' => $userModel->getDropDownList(),
-            'customers' => $customerModel->getDropDownList(),
             'status' => $model->getStatus(),
         ];
         return view('debt.create', $shared);
@@ -70,15 +66,11 @@ class DebtController extends Controller
     {
         $model = new Debt();
         $this->validate($request, $model->validateRules, $model->validateMessage);
-
         $model->fill($request->all());
-        $model->checkBeforeSave();
-
         $model->save();
-
         return redirect()
             ->route('debts.index')
-            ->with('success', 'Thêm mới thành công');
+            ->with('success', Messages::INSERT_SUCCESS);
     }
 
     /**
@@ -89,14 +81,13 @@ class DebtController extends Controller
      */
     public function edit($id)
     {
+        $cityModel = new City();
         $userModel = new User();
-        $customerModel = new Customer();
-
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
+            'cities' => $cityModel->getDropDownList(),
             'users' => $userModel->getDropDownList(),
-            'customers' => $customerModel->getDropDownList(),
             'status' => $model->getStatus(),
         ];
         return view('debt.edit', $shared);
@@ -115,38 +106,10 @@ class DebtController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
-        $model->checkBeforeSave();
-
         $model->save();
         return redirect()
             ->route('debts.index')
-            ->with('success', 'Cập nhật thành công');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
-     */
-    public function destroy($id)
-    {
-        # find model and delete
-        $model = $this->finById($id);
-
-        if ($model->delete()) {
-            $output = [
-                'success' => true,
-                'message' => 'Xóa thành công.'
-            ];
-        } else {
-            $output = [
-                'success' => false,
-                'message' => 'Xóa thất bại',
-            ];
-        }
-        return response()->json($output);
+            ->with('success', Messages::UPDATE_SUCCESS);
     }
 
     /**

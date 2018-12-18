@@ -14,7 +14,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form action="{{ route('debts.update', $model->id) }}" method="POST">
+                        <form action="{{ route('debts.update', $model->id) }}" method="POST" onsubmit="return MBT_Debt.onSubmit();">
                             @method('PATCH')
                             @include('debt._form')
                         </form>
@@ -27,4 +27,8 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/debt.js') }}"></script>
+    <script>
+        MBT_Debt.getCustomerByCity();
+        // MBT_Debt.getOrderByCustomer();
+    </script>
 @endsection

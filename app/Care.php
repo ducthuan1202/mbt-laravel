@@ -4,7 +4,6 @@ namespace App;
 
 use App\Helpers\Common;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Care

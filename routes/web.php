@@ -21,17 +21,7 @@ Route::namespace('Auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
-
     Route::get('/', 'HomeController@index')->name('home');
-
-    Route::resource('cities', 'CityController')->except(['show']);
-    Route::resource('products', 'ProductController')->except(['show']);
-    Route::resource('customers', 'CustomerController')->except(['show']);
-    Route::resource('quotations', 'PriceQuotationController')->except(['show']);
-    Route::resource('cares', 'CareController')->except(['show']);
-    Route::resource('orders', 'OrderController')->except(['show']);
-    Route::resource('users', 'UserController')->except(['show']);
-    Route::resource('debts', 'DebtController')->except(['show']);
 
     // change password
     Route::get('/users/change-password', 'UserController@changePassword')->name('users.change_password');
@@ -41,4 +31,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/customers/by-city', 'CustomerController@getByCity');
     Route::get('/quotations/detail', 'PriceQuotationController@detail');
     Route::get('/orders/detail', 'OrderController@detail');
+    Route::get('/orders/by-customer', 'OrderController@getByCustomer');
+
+    // resource
+    Route::resource('cities', 'CityController')->except(['show']);
+    Route::resource('customers', 'CustomerController');
+    Route::resource('quotations', 'PriceQuotationController')->except(['show']);
+    Route::resource('cares', 'CareController')->except(['show']);
+    Route::resource('orders', 'OrderController');
+    Route::resource('users', 'UserController')->except(['show']);
+    Route::resource('debts', 'DebtController')->except(['show']);
+
 });
+

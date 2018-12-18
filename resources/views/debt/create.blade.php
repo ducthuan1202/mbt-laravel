@@ -14,7 +14,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form action="{{ route('debts.store') }}" method="POST">
+                        <form action="{{ route('debts.store') }}" method="POST" onsubmit="return MBT_Debt.onSubmit();">
                             @include('debt._form')
                         </form>
                     </div>
@@ -26,4 +26,8 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/debt.js') }}"></script>
+    <script>
+        MBT_Debt.getCustomerByCity();
+        // MBT_Debt.getOrderByCustomer();
+    </script>
 @endsection

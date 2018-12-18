@@ -51,7 +51,7 @@ var MBT_Order = function () {
             data: {
                 cityId: cityId,
                 userId: userId,
-                customerId: customerId,
+                customerId: customerId
             },
             beforeSend: function(){
                 $('#sCustomer').html('<option>đang tải dữ liệu...</option>');

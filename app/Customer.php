@@ -99,6 +99,7 @@ class Customer extends Model
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
         }
+
         // filter by city
         if (isset($searchParams['city']) && !empty($searchParams['city'])) {
             $model = $model->where('city_id', $searchParams['city']);
@@ -127,9 +128,11 @@ class Customer extends Model
         if(!empty($this->city_id)){
             $model = $model->where('city_id', $this->city_id);
         }
+
         if(!empty($this->user_id)){
             $model = $model->where('user_id', $this->user_id);
         }
+
         $data = $model->get()->toArray();
 
         if ($addAll) {

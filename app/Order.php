@@ -69,13 +69,16 @@ class Order extends Model
         'user_id.required' => 'Chọn nhân viên kinh doanh.',
         'customer_id.required' => 'Chọn khách hàng.',
         'amount.required' => 'Số lượng sản phẩm không thể bỏ trống.',
+        'amount.numeric' => 'Số lượng phải là kiểu số.',
         'price.required' => 'Giá báo không thể bỏ trống.',
+        'price.numeric' => 'Giá báo phải là kiểu số.',
         'power.required' => 'Công suất sản phẩm không thể bỏ trống.',
         'voltage_input.required' => 'Điện áp đầu vào không thể bỏ trống.',
         'voltage_output.required' => 'Điện áp đầu ra không thể bỏ trống.',
         'standard_output.required' => 'Tiêu chuẩn máy không thể bỏ trống.',
         'standard_real.required' => 'Tiêu chuẩn xuất thực không thể bỏ trống.',
         'guarantee.required' => 'Thời gian bảo hành không thể bỏ trống.',
+        'guarantee.numeric' => 'Thời gian bảo hành phải là kiểu số.',
         'product_number.required' => 'Số máy không thể bỏ trống.',
         'product_skin.required' => 'Chọn ngoại hình máy.',
         'product_type.required' => 'Chọn kiểu máy.',
@@ -89,14 +92,14 @@ class Order extends Model
     public $validateRules = [
         'user_id' => 'required',
         'customer_id' => 'required',
-        'amount' => 'required',
-        'price' => 'required',
+        'amount' => 'required|numeric',
+        'price' => 'required|numeric',
         'power' => 'required',
         'voltage_input' => 'required',
         'voltage_output' => 'required',
         'standard_output' => 'required',
         'standard_real' => 'required',
-        'guarantee' => 'required',
+        'guarantee' => 'required|numeric',
         'product_number' => 'required',
         'product_skin' => 'required',
         'product_type' => 'required',
@@ -184,6 +187,18 @@ class Order extends Model
         return $model->paginate(self::LIMIT);
     }
 
+    public function listByUser(){
+
+        if (empty($this->user_id)) {
+            return [];
+        }
+
+        return $this->with(['user', 'customer', 'customer.city'])
+            ->where('user_id', $this->user_id)
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
     public function checkCustomerExist($id = 0)
     {
         return $this->where('customer_id', $id)->count();
@@ -206,6 +221,15 @@ class Order extends Model
         return 0;
     }
 
+    public function getDropDownList()
+    {
+        $model = $this->select('id', 'code');
+        if(!empty($this->customer_id)){
+            $model = $model->where('customer_id', $this->customer_id);
+        }
+        $data = $model->get()->toArray();
+        return $data;
+    }
 
     // TODO:  LIST DATA =====
     public function listStandard()

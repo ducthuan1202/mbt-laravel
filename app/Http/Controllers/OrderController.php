@@ -6,7 +6,6 @@ use App\City;
 use App\Customer;
 use App\Helpers\Messages;
 use App\Order;
-use App\PriceQuotation;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -39,9 +38,9 @@ class OrderController extends Controller
             'model' => $model,
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'users'=>$userModel->getDropDownList(true),
-            'cities'=>$cityModel->getDropDownList(true),
-            'customers'=>$customerModel->getDropDownList(true),
+            'users' => $userModel->getDropDownList(true),
+            'cities' => $cityModel->getDropDownList(true),
+            'customers' => $customerModel->getDropDownList(true),
         ];
 
         return view('order.index', $shared);
@@ -63,9 +62,9 @@ class OrderController extends Controller
         $model->amount = 1;
         $shared = [
             "model" => $model,
-            'users'=>$userModel->getDropDownList(),
-            'cities'=>$cityModel->getDropDownList(),
-            'customers'=>$customerModel->getDropDownList(),
+            'users' => $userModel->getDropDownList(),
+            'cities' => $cityModel->getDropDownList(),
+            'customers' => $customerModel->getDropDownList(),
         ];
         return view('order.create', $shared);
     }
@@ -81,7 +80,7 @@ class OrderController extends Controller
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
         $model->checkBeforeSave();
-        if($model->save()){
+        if ($model->save()) {
             $model->code = $model->generateUniqueCode();
             $model->save();
         }
@@ -105,9 +104,9 @@ class OrderController extends Controller
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
-            'users'=>$userModel->getDropDownList(),
-            'cities'=>$cityModel->getDropDownList(),
-            'customers'=>$customerModel->getDropDownList(),
+            'users' => $userModel->getDropDownList(),
+            'cities' => $cityModel->getDropDownList(),
+            'customers' => $customerModel->getDropDownList(),
         ];
         return view('order.edit', $shared);
     }
@@ -167,7 +166,8 @@ class OrderController extends Controller
         return Order::findOrFail($id);
     }
 
-    public function detail(Request $request){
+    public function detail(Request $request)
+    {
         $id = $request->get('id');
         $model = $this->finById($id);
 
@@ -177,6 +177,22 @@ class OrderController extends Controller
         $output = [
             'success' => true,
             'message' => view('order.ajax.detail', $shared)->render()
+        ];
+        return response()->json($output);
+    }
+
+    public function getByCustomer(Request $request)
+    {
+        $model = new Order();
+        $model->customer_id = $request->get('customerId');
+
+        $shared = [
+            'orders' => $model->getDropDownList(),
+            'orderId' => $request->get('orderId'),
+        ];
+        $output = [
+            'success' => true,
+            'message' => view('order.ajax.by_customer', $shared)->render()
         ];
         return response()->json($output);
     }

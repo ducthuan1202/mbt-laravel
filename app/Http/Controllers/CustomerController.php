@@ -6,7 +6,6 @@ use App\Care;
 use App\City;
 use App\Customer;
 use App\Debt;
-use App\Helpers\Common;
 use App\Helpers\Messages;
 use App\Order;
 use App\PriceQuotation;
@@ -114,6 +113,36 @@ class CustomerController extends Controller
         return view('customer.edit', $shared);
     }
 
+    public function show($id)
+    {
+        $model = $this->finById($id);
+
+        $userModel = new User();
+        $cityModel = new City();
+
+        $orderModel = new Order();
+        $orderModel->user_id = $model->id;
+
+        $careModel = new Care();
+        $careModel->user_id = $model->id;
+
+        $priceQuotationModel = new PriceQuotation();
+        $priceQuotationModel->user_id = $model->id;
+        $debtModel = new Debt();
+
+        $shared = [
+            "model" => $model,
+            'users' => $userModel->getDropDownList(),
+            'cities' => $cityModel->getDropDownList(),
+            'status' => $model->getStatus(),
+            'orders'=>$orderModel->listByUser(),
+            'cares'=>$careModel,
+            'debts'=>$debtModel,
+            'priceQuotations'=>$priceQuotationModel,
+        ];
+        return view('customer.detail', $shared);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -207,10 +236,12 @@ class CustomerController extends Controller
     // TODO: api
     public function getByCity(Request $request)
     {
-        $model = new Customer();
+
         $cityId = (int)$request->get('cityId');
         $userId = (int)$request->get('userId');
         $customerId = (int)$request->get('customerId');
+
+        $model = new Customer();
         $model->city_id = $cityId;
         $model->user_id = $userId;
 

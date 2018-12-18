@@ -29,7 +29,10 @@ class Common
 
     public static function formatMoney($money, $suffix = 'đ')
     {
-        return number_format($money * 1000) . $suffix;
+        if(!empty($money)){
+            return number_format((int)$money * 1000) . $suffix;
+        }
+        return '0'.$suffix;
     }
 
     public static function dmY2Ymd($date)
