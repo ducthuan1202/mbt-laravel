@@ -96,14 +96,11 @@ class User extends Authenticatable
 
     public function countCustomerByUser()
     {
-        $data = DB::table('users')
-            ->rightJoin('customers', 'users.id', '=', 'customers.user_id')
-            ->select('users.name as name', DB::raw("count(customers.id) as value"))
-            ->groupBy('customers.user_id')
-            ->get();
-
-
-        return $data;
+        $data = DB::table('customers')
+            ->join('users', 'users.id', '=', 'customers.user_id')
+            ->select("users.name AS name", DB::raw('COUNT(customers.id) AS value'))
+            ->groupBy('customers.user_id');
+        return $data->get();
     }
 
     public function search($searchParams = [])
