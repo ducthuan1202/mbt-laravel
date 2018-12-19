@@ -2,9 +2,8 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -96,11 +95,16 @@ class User extends Authenticatable
 
     public function countCustomerByUser()
     {
-        $data = DB::table('customers')
-            ->join('users', 'users.id', '=', 'customers.user_id')
-            ->select("users.name AS name", DB::raw('COUNT(customers.id) AS value'))
-            ->groupBy('customers.user_id');
-        return $data->get();
+        // SELECT COUNT(customers.id) AS 'value', users.name FROM users LEFT JOIN customers ON users.id = customers.user_id GROUP BY users.id
+        $customerModel = new Customer();
+        $customerTbl = $customerModel->getTable();
+        $userTbl = $this->getTable();
+
+        return DB::table($userTbl)
+            ->select( "$userTbl.name AS name", DB::raw("COUNT($customerTbl.id) AS value"))
+            ->leftJoin($customerTbl, "$customerTbl.user_id", '=', "$userTbl.id")
+            ->groupBy("$userTbl.id")
+            ->get();
     }
 
     public function search($searchParams = [])
@@ -196,6 +200,14 @@ class User extends Authenticatable
 
     public function eChartGenerateData($data)
     {
+        if(!$data || isset($data['name'])|| isset($data['value'])){
+            return \GuzzleHttp\json_encode([
+                'label'=> ['không có dữ liệu'],
+                'data'=> [
+                    ['không có dữ liệu' => 0]
+                ]
+            ]);
+        }
         $label = [];
         foreach ($data as $item):
             $label[] = $item->name;

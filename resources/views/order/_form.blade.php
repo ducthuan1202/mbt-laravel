@@ -2,7 +2,6 @@
     /**
      * @var $model \App\Order
      */
-$model->customer_id = old('customer_id');
 @endphp
 
 @if(count($errors))
@@ -48,7 +47,7 @@ $model->customer_id = old('customer_id');
                 <div class="form-group">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer_id" id="customer_id">
-                        <option value="{{$model->customer_id}}">{{$model->customer_id}}</option>
+                        <option value="{{$model->customer_id}}">{{$model->customer->name}}</option>
                     </select>
                 </div>
             </div>

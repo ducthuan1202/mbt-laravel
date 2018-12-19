@@ -187,7 +187,7 @@ class OrderController extends Controller
         $model->customer_id = $request->get('customerId');
 
         $shared = [
-            'orders' => $model->getDropDownList(),
+            'orders' => $model->getDropDownList(true),
             'orderId' => $request->get('orderId'),
         ];
         $output = [

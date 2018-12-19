@@ -81,7 +81,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <div id="eChartPieCustomerByUser" style="height:350px;"></div>
+                        <div id="eChartPieCustomerByUser" style="height:500px;"></div>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <div id="eChartPieCustomerByStatus" style="height:350px;"></div>
+                        <div id="eChartPieCustomerByStatus" style="height:500px;"></div>
                     </div>
                 </div>
             </div>

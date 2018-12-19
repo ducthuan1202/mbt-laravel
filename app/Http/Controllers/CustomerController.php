@@ -121,13 +121,13 @@ class CustomerController extends Controller
         $cityModel = new City();
 
         $orderModel = new Order();
-        $orderModel->user_id = $model->id;
+        $orderModel->customer_id = $model->id;
 
         $careModel = new Care();
-        $careModel->user_id = $model->id;
+        $careModel->customer_id = $model->id;
 
         $priceQuotationModel = new PriceQuotation();
-        $priceQuotationModel->user_id = $model->id;
+        $priceQuotationModel->customer_id = $model->id;
         $debtModel = new Debt();
 
         $shared = [
@@ -136,9 +136,9 @@ class CustomerController extends Controller
             'cities' => $cityModel->getDropDownList(),
             'status' => $model->getStatus(),
             'orders'=>$orderModel->listByUser(),
-            'cares'=>$careModel,
+            'cares'=>$careModel->listByUser(),
+            'priceQuotations'=>$priceQuotationModel->listByUser(),
             'debts'=>$debtModel,
-            'priceQuotations'=>$priceQuotationModel,
         ];
         return view('customer.detail', $shared);
     }

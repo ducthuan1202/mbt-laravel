@@ -133,6 +133,18 @@ class Care extends Model
         return $model->paginate(self::LIMIT);
     }
 
+    public function listByUser()
+    {
+
+        if (empty($this->customer_id)) {
+            return [];
+        }
+
+        return $this->where('customer_id', $this->customer_id)
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
     public function checkCustomerExist($id = 0)
     {
         return $this->where('customer_id', $id)->count();

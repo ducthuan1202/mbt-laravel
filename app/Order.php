@@ -187,14 +187,14 @@ class Order extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public function listByUser(){
+    public function listByUser()
+    {
 
-        if (empty($this->user_id)) {
+        if (empty($this->customer_id)) {
             return [];
         }
 
-        return $this->with(['user', 'customer', 'customer.city'])
-            ->where('user_id', $this->user_id)
+        return $this->where('customer_id', $this->customer_id)
             ->orderBy('id', 'desc')
             ->get();
     }
@@ -221,13 +221,21 @@ class Order extends Model
         return 0;
     }
 
-    public function getDropDownList()
+    public function getDropDownList($addAll = false)
     {
         $model = $this->select('id', 'code');
-        if(!empty($this->customer_id)){
+
+        if (!empty($this->customer_id)) {
             $model = $model->where('customer_id', $this->customer_id);
         }
+
         $data = $model->get()->toArray();
+
+        if ($addAll) {
+            $firstItem = ['id' => null, 'code' => 'Chọn đơn hàng'];
+            array_unshift($data, $firstItem);
+        }
+
         return $data;
     }
 

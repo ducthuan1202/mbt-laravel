@@ -84,6 +84,7 @@ class Customer extends Model
 
     public function countCustomerByStatus()
     {
+
         $data = DB::table('customers')
             ->select('status AS name', DB::raw("COUNT(status) AS value"))
             ->groupBy('status')
