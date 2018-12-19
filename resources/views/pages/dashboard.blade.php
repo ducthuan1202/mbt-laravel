@@ -1,3 +1,6 @@
+@php
+use App\Helpers\Common;
+@endphp
 @extends('layouts.main')
 
 @section('content')
@@ -10,15 +13,15 @@
             <div class="row tile_count">
                 <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count">
                     <span class="count_top"><i class="fa fa-user"></i> Tổng giá trị đơn hàng</span>
-                    <div class="count green">{{$totalMoney}}</div>
+                    <div class="count green">{{Common::formatMoney($totalMoney)}}</div>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count">
                     <span class="count_top"><i class="fa fa-user"></i> Tổng công nợ</span>
-                    <div class="count">5,000,000 đ</div>
+                    <div class="count">{{Common::formatMoney($totalMoneyDebt)}}</div>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count">
                     <span class="count_top"><i class="fa fa-clock-o"></i> Tổng tiền thu về</span>
-                    <div class="count">30,000,000 đ</div>
+                    <div class="count">{{Common::formatMoney($totalMoney - $totalMoneyDebt)}}</div>
                 </div>
             </div>
             <!-- /top tiles -->
