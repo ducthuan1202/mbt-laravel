@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('orders', 'OrderController');
     Route::resource('users', 'UserController')->except(['show']);
     Route::resource('debts', 'DebtController')->except(['show']);
+    Route::resource('payment-schedule', 'PaymentSchedule')->except(['index','show', 'delete']);
 
 });
 

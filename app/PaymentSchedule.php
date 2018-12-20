@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helpers\Common;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -53,11 +54,6 @@ class PaymentSchedule extends Model
         'status' => 'required',
     ];
 
-    public function checkBeforeSave()
-    {
-        $this->payment_date = $this->dmyToymd($this->payment_date);
-    }
-
     // TODO:  RELATIONSHIP =====
     public function order()
     {
@@ -90,11 +86,6 @@ class PaymentSchedule extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public function checkCustomerExist($id = 0)
-    {
-        return $this->where('customer_id', $id)->count();
-    }
-
     // TODO:  LIST DATA =====
 
     public function listStatus()
@@ -121,16 +112,7 @@ class PaymentSchedule extends Model
 
     private function formatMoney()
     {
-        return number_format($this->money) . ',000 đ';
-    }
-
-    public function dmyToymd($date)
-    {
-        if (preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $date)) {
-            $date = str_replace('/', '-', $date);
-            return date('Y-m-d', strtotime($date));
-        }
-        return $date;
+        return Common::formatMoney($this->money);
     }
 
 }
