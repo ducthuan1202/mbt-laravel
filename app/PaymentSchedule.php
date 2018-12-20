@@ -66,36 +66,24 @@ class PaymentSchedule extends Model
         return self::count();
     }
 
-    public function search($searchParams = [])
+    public function search()
     {
-        $model = $this->with(['order']);
-
-        // filter by keyword
-        if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
-            $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
-        }
-
-        // filter by status
-        if (isset($searchParams['status']) && !empty($searchParams['status'])) {
-            $model = $model->where('status', $searchParams['status']);
-        }
-
-        // order by id desc
-        $model = $model->orderBy('id', 'desc');
-
-        return $model->paginate(self::LIMIT);
+        return $this->where('order_id', $this->order_id)
+            ->orderBy('id', 'desc')->get();
     }
 
     // TODO:  LIST DATA =====
 
-    public function listStatus()
+    public function listStatus($addAll = false)
     {
-        return [
-            null => 'Tất cả',
-            self::PAID_STATUS => 'Đã thanh toán',
-            self::PENDING_STATUS => 'Hẹn thanh toán',
-            self::DELAY_STATUS => 'Chậm thanh toán',
-        ];
+        $data = [];
+        if($addAll){
+            $data[null] = 'Tất cả';
+        }
+        $data[self::PENDING_STATUS] = 'Hẹn thanh toán';
+        $data[self::PAID_STATUS] = 'Đã thanh toán';
+        $data[self::DELAY_STATUS] = 'Chậm thanh toán';
+        return $data;
     }
 
 
@@ -109,10 +97,14 @@ class PaymentSchedule extends Model
         return 'n/a';
     }
 
-
-    private function formatMoney()
+    public function formatMoney()
     {
         return Common::formatMoney($this->money);
     }
+
+    public function formatDate(){
+        return Common::formatDate($this->payment_date);
+    }
+
 
 }

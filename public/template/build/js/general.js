@@ -74,6 +74,7 @@ function sendAjax(options) {
         dataType: 'JSON',
         data: {},
         fnSuccess: null,
+        fnError: null
     };
     Object.assign(setting, options);
     if (!setting.url) {
@@ -98,8 +99,11 @@ function sendAjax(options) {
         },
         error: function (response) {
             console.log(response);
-
-            alertError({title: 'Quá trình truyền tải dữ liệu thất bại.'});
+            if (typeof setting.fnError === 'function') {
+                setting.fnError(response);
+            } else {
+                alertError({title: 'Quá trình truyền tải dữ liệu thất bại.'});
+            }
         }
     });
 }

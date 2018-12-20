@@ -16,36 +16,42 @@
 
 {{csrf_field()}}
 
+<input type="hidden" name="order_id" value="{{$order->id}}" />
+
 <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="col-xs-12 col-sm-4 col-md-4">
         <div class="form-group">
-            <label>Số tiền thanh toán</label>
+            <label>Số tiền</label>
             <input type="text" class="form-control" name="money"
                    value="{{old('money') ? old('money') : $model->money}}" autofocus required/>
         </div>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
         <div class="form-group">
             <label>Ngày thanh toán</label>
-            <input type="text" class="form-control drp-single" name="money"
-                   value="{{old('payment_date') ? old('payment_date') : $model->payment_date}}" readonly/>
+            <div class="input-group date">
+                <span class="input-group-addon">
+                   <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+                <input type="text" class="form-control drp-single" name="payment_date"
+                       value="{{old('payment_date') ? old('payment_date') : $model->payment_date}}" readonly/>
+            </div>
         </div>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
         <div class="form-group">
-            <label>Kiểu thanh toán</label>
-
+            <label>Trạng thái</label>
             <select class="form-control chosen-select" name="status">
                 @foreach($model->listStatus() as $key => $val)
                     <option value="{{ $key }}" {{ $key == $model->status ? 'selected' : '' }}>{{$val}}</option>
                 @endforeach
             </select>
-
         </div>
     </div>
 </div>
 
 <div class="ln_solid"></div>
 <div class="form-group">
-    @if($model->exists)
-        <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
-    @else
-        <button type="submit" class="btn btn-success">Tạo Mới</button>
-    @endif
+    <button type="button" class="btn btn-success" id="btnSave"
+            onclick="MBT_PaymentSchedule.toSave('{{$order->id}}');">Lưu</button>
 </div>
