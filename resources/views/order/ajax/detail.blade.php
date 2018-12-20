@@ -50,7 +50,7 @@
                     <td>{!! $model->delivery_at !!}</td>
                 </tr>
                 <tr>
-                    <td>Số lượng x đơn giá = thành tiền </td>
+                    <td><kbd>Số lượng x  Đơn giá = Thành tiền</kbd> </td>
                     <td>{!!  sprintf('%s x %s = <code>%s</code>', $model->amount, $model->formatPrice(), $model->formatTotalMoney()) !!}</td>
                 </tr>
                 <tr>

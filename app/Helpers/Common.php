@@ -27,7 +27,7 @@ class Common
         return date('d/m/Y', strtotime($date));
     }
 
-    public static function formatMoney($money, $suffix = 'đ')
+    public static function formatMoney($money, $suffix = ' VNĐ')
     {
         if(!empty($money)){
             return number_format((int)$money * 1000) . $suffix;

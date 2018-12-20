@@ -36,14 +36,12 @@
                     <table class="table table-striped jambo_table bulk_action">
                         <thead>
                             <tr class="headings">
-                                <th>STT</th>
+                                <th>No.</th>
                                 <th>Ngày báo giá</th>
                                 <th>Khách hàng</th>
                                 <th>Khu vực</th>
                                 <th>Trạng thái</th>
-                                <th>Số lượng</th>
-                                <th>Đơn giá</th>
-                                <th>NVKD</th>
+                                <th>Nhân viên KD</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -60,8 +58,6 @@
                                             {!! $item->formatCustomerCity() !!}
                                         </td>
                                         <td>{!! $item->formatOrderStatus() !!}</td>
-                                        <td>{{$item->amount}}</td>
-                                        <td>{{$item->formatPrice()}}</td>
                                         <td>
                                             <b class="text-success">{{$item->formatUser()}}</b>
                                         </td>

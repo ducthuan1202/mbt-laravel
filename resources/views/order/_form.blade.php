@@ -86,6 +86,7 @@
                     <label>Đơn giá</label>
                     <input type="text" class="form-control" name="price" onchange="MBT_Order.priceOrAmountOnchange()"
                            value="{{old('price') ? old('price') : $model->price}}"/>
+                    <span class="help-block">tỉ lệ 1:1000 (<code>1 = 1,000 VNĐ></code>)</span>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4">

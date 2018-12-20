@@ -34,15 +34,7 @@
                     <td>{!! $model->delivery_at !!}</td>
                 </tr>
                 <tr>
-                    <td class="text-right">Số lượng</td>
-                    <td>{{ $model->amount }}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Giá báo</td>
-                    <td>{{ $model->formatPrice() }}</td>
-                </tr>
-                <tr>
-                    <td class="text-right">Thành tiền</td>
+                    <td class="text-right"><kbd>Số lượng x  Đơn giá = Thành tiền</kbd> </td>
                     <td>
                         {!!  sprintf('%s x %s = <code>%s</code>', $model->amount, $model->formatPrice(), $model->formatTotalMoney()) !!}
                     </td>

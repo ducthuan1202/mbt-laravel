@@ -65,6 +65,7 @@ $cityId = isset($model->customer) ? $model->customer->city_id : 0;
         <div class="form-group">
             <label>Số dư nợ</label>
             <input type="text" class="form-control" name="total_money" value="{{old('total_money') ? old('total_money') : $model->total_money}}"/>
+            <span class="help-block">tỉ lệ 1:1000 (<code>1 = 1,000 VNĐ></code>)</span>
         </div>
 
         <div class="form-group">

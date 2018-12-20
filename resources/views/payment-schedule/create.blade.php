@@ -9,13 +9,22 @@
 @section('content')
 
     <div class="right_col" role="main">
+
+        @if($message = Session::get('success'))
+            <div class="alert alert-success">{{$message}}</div>
+        @endif
+
         <div class="row">
-            <div class="col-xs-12 col-md-6">
+            <div class="col-xs-12 col-md-5">
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
                             Thông tin đơn hàng
                         </h2>
+
+                        <a class="btn btn-dark pull-right btn-xs" href="{{route('orders.index')}}">
+                            <i class="fa fa-reply"></i> Về đơn hàng
+                        </a>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content" style="padding:0">
@@ -105,7 +114,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-md-6">
+            <div class="col-xs-12 col-md-7">
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
@@ -118,7 +127,6 @@
                             <table class="table table-striped jambo_table bulk_action">
                                 <thead>
                                 <tr class="headings">
-                                    <th>No.</th>
                                     <th>Số tiền</th>
                                     <th>Ngày thanh toán</th>
                                     <th>Kiểu</th>
@@ -128,7 +136,6 @@
                                 @if(count($data))
                                     @foreach($data as $item)
                                         <tr>
-                                            <td style="width: 50px">{{$item->id}}</td>
                                             <td>{{$item->formatMoney()}}</td>
                                             <td>
                                                 {!! $item->formatDate() !!}

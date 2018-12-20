@@ -85,8 +85,8 @@ class OrderController extends Controller
             $model->save();
         }
         return redirect()
-            ->route('orders.index')
-            ->with('success', Messages::INSERT_SUCCESS);
+            ->route('payment-schedules.index', $model->id)
+            ->with('success', 'Thêm lịch trình thanh toán cho đơn hàng');
     }
 
     /**

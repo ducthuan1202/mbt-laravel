@@ -45,21 +45,30 @@
                                 <th>Trạng thái</th>
                                 <th>Nhân viên KD</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @if(count($data))
-                                @foreach($data as $item)
+                                @foreach($data as $index => $item)
                                     <tr>
-                                        <td style="width: 50px">{{$item->id}}</td>
-                                        <td><b class="text-danger">{{$item->code}}</b></td>
+                                        <td style="width: 50px">{{$index + 1}}</td>
+                                        <td>
+                                            <b class="text-danger">{{$item->code}}</b> <br/>
+                                            <a href="{{route('payment-schedules.index',$item->id)}}" class="btn btn-warning btn-xs">
+                                                <i class="fa fa-thumb-tack"></i> Lịch trình thanh toán
+                                            </a>
+                                        </td>
                                         <td><b style="color:#ff5722">{!! $item->formatCustomer() !!}</b></td>
                                         <td>{!! $item->formatCustomerCity() !!}</td>
                                         <td>{{$item->formatTotalMoney()}}</td>
                                         <td>{{$item->formatStartDate()}}</td>
                                         <td>{!! $item->formatStatus() !!}</td>
                                         <td><b class="text-success">{{$item->formatUser()}}</b></td>
-                                        <td class="text-right" style="min-width: 150px">
+                                        <td class="text-right">
+
+                                        </td>
+                                        <td class="text-right" style="min-width: 100px">
                                             <a onclick="MBT_Order.getDetail({{$item->id}})" class="btn btn-primary btn-xs">
                                                 <i class="fa fa-folder"></i> Xem
                                             </a>

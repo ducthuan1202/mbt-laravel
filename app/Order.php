@@ -195,7 +195,7 @@ class Order extends Model
         }
 
         return $this->where('customer_id', $this->customer_id)
-            ->orderBy('id', 'desc')
+            ->orderBy('start_date', 'desc')
             ->get();
     }
 

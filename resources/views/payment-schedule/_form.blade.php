@@ -24,6 +24,7 @@
             <label>Số tiền</label>
             <input type="text" class="form-control" name="money"
                    value="{{old('money') ? old('money') : $model->money}}" autofocus required/>
+            <span class="help-block">tỉ lệ 1:1000 (<code>1 = 1,000 VNĐ></code>)</span>
         </div>
     </div>
     <div class="col-xs-12 col-sm-4 col-md-4">
@@ -53,5 +54,5 @@
 <div class="ln_solid"></div>
 <div class="form-group">
     <button type="button" class="btn btn-success" id="btnSave"
-            onclick="MBT_PaymentSchedule.toSave('{{$order->id}}');">Lưu</button>
+            onclick="MBT_PaymentSchedule.toSave('{{$order->id}}');">Lưu lịch trình</button>
 </div>

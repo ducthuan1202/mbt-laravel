@@ -43,13 +43,14 @@ class PaymentSchedule extends Model
     public $validateMessage = [
         'order_id.required' => 'Chọn đơn hàng cần lên lịch thanh toán.',
         'money.required' => 'Số tiền thanh toán không thể bỏ trống.',
+        'money.numeric' => 'Số tiền thanh toán phải là kiểu số.',
         'payment_date.required' => 'Chọn ngày thanh toán.',
         'status.required' => 'Chọn trạng thái thanh toán.',
     ];
 
     public $validateRules = [
         'order_id' => 'required',
-        'money' => 'required',
+        'money' => 'required|numeric',
         'payment_date' => 'required',
         'status' => 'required',
     ];
@@ -69,7 +70,7 @@ class PaymentSchedule extends Model
     public function search()
     {
         return $this->where('order_id', $this->order_id)
-            ->orderBy('id', 'desc')->get();
+            ->orderBy('payment_date', 'asc')->get();
     }
 
     // TODO:  LIST DATA =====
