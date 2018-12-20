@@ -5,6 +5,7 @@ namespace App;
 use App\Helpers\Common;
 use App\Helpers\Messages;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Debt
@@ -88,6 +89,18 @@ class Debt extends Model
     public function checkCustomerExist($id = 0)
     {
         return $this->where('customer_id', $id)->count();
+    }
+
+    public function sumTotalMoney()
+    {
+        $data = DB::table($this->getTable())
+            ->select(DB::raw("SUM(total_money) as count"))
+            ->get();
+
+        if ($data && isset($data[0])) {
+            return $data[0]->count;
+        }
+        return 0;
     }
 
     public function getStatus($addAll = true)

@@ -47,7 +47,7 @@
                 <div class="form-group">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer_id" id="customer_id">
-                        <option value="{{$model->customer_id}}">{{$model->customer->name}}</option>
+                        <option value="{{$model->customer_id}}">{{ isset($model->customer) ? $model->customer->name : 'Chọn khách hàng'}}</option>
                     </select>
                 </div>
             </div>

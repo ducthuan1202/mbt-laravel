@@ -215,8 +215,8 @@ class Order extends Model
             ->select(DB::raw("SUM(total_money) as count"))
             ->get();
 
-        if ($data) {
-            return Common::formatMoney($data[0]->count);
+        if ($data && isset($data[0])) {
+            return $data[0]->count;
         }
         return 0;
     }
