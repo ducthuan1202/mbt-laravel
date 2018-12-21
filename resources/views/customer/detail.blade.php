@@ -23,6 +23,12 @@
             <div class="x_content">
 
                 <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tr>
+                            <td>Họ tên</td>
+                            <td>{{$model->name}}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
