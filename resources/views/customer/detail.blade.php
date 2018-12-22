@@ -93,7 +93,7 @@
                                 </tbody>
                             </table>
                             @else
-                                <div class="alert alert-info">Chưa gọi dữ liệu</div>
+                                <div class="alert">Không có dữ liệu</div>
                             @endif
 
                         </div>
@@ -137,7 +137,7 @@
                                     </tbody>
                                 </table>
                             @else
-                                <div class="alert alert-info">Chưa gọi dữ liệu</div>
+                                <div class="alert">Không có dữ liệu</div>
                             @endif
                         </div>
                     </div>
@@ -188,7 +188,7 @@
                                     </tbody>
                                 </table>
                             @else
-                                <div class="alert alert-info">Chưa gọi dữ liệu</div>
+                                <div class="alert">Không có dữ liệu</div>
                             @endif
                         </div>
                     </div>
@@ -231,7 +231,7 @@
                                     </tbody>
                                 </table>
                             @else
-                                <div class="alert alert-info">Chưa gọi dữ liệu</div>
+                                <div class="alert">Không có dữ liệu</div>
                             @endif
                         </div>
                     </div>
