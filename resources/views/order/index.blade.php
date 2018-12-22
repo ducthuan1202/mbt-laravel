@@ -15,9 +15,11 @@
                     <small>Tổng số <b>{{$data->total()}}</b></small>
                 </h2>
 
-                <a class="btn btn-success pull-right" href="{{route('orders.create')}}">
-                    <i class="fa fa-plus"></i> Thêm mới
-                </a>
+                @can('admin')
+                    <a class="btn btn-success pull-right" href="{{route('orders.create')}}">
+                        <i class="fa fa-plus"></i> Thêm mới
+                    </a>
+                @endcan
 
                 <div class="clearfix"></div>
             </div>

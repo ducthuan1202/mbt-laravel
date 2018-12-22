@@ -103,6 +103,7 @@ class User extends Authenticatable
         return DB::table($userTbl)
             ->select( "$userTbl.name AS name", DB::raw("COUNT($customerTbl.id) AS value"))
             ->leftJoin($customerTbl, "$customerTbl.user_id", '=', "$userTbl.id")
+            ->where("$userTbl.role", self::EMPLOYEE_ROLE)
             ->groupBy("$userTbl.id")
             ->get();
     }
@@ -127,7 +128,9 @@ class User extends Authenticatable
 
     public function getDropDownList($addAll = false)
     {
-        $data = $this->select('id', 'name')->get()->toArray();
+        $data = $this->select('id', 'name')
+            ->where('role', self::EMPLOYEE_ROLE)
+            ->get()->toArray();
 
         if ($addAll) {
             $firstItem = ['id' => null, 'name' => 'Tất cả'];

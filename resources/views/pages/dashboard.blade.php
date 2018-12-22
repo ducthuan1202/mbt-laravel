@@ -75,40 +75,26 @@ use App\Helpers\Common;
         </div>
 
         <div class="row">
-
-
-            <div class="col-md-4 col-sm-4 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel tile">
                     <div class="x_title">
                         <h2>Biểu đồ tỉ lệ khách hàng theo NVKD</h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <div id="eChartPieCustomerByUser" style="height:500px;"></div>
+                        <div id="eChartPieCustomerByUser" style="height:650px;"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4 col-sm-4 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel tile">
                     <div class="x_title">
                         <h2>Biểu đồ tỉ lệ khách hàng</h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <div id="eChartPieCustomerByStatus" style="height:500px;"></div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="x_panel tile">
-                    <div class="x_title">
-                        <h2>Biểu đồ tỉ lệ khách hàng</h2>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
+                        <div id="eChartPieCustomerByStatus" style="height:650px;"></div>
                     </div>
                 </div>
             </div>

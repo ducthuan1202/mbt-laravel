@@ -98,7 +98,10 @@ class Customer extends Model
         $model = $this->with(['city', 'user']);
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
-            $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
+            $model = $model->where(function ($query) use ($searchParams) {
+                $query->where('name', 'like', "%{$searchParams['keyword']}%")
+                    ->orWhere('mobile', 'like', "%{$searchParams['keyword']}%");
+            });
         }
 
         // filter by city
@@ -125,6 +128,7 @@ class Customer extends Model
     public function getDropDownList($addAll = false)
     {
         $model = $this->select('id', 'name', 'mobile');
+
 
         if(!empty($this->city_id)){
             $model = $model->where('city_id', $this->city_id);
