@@ -18,7 +18,7 @@ class CreatePaymentSchedules extends Migration
             $table->integer('order_id');
             $table->integer('money');
             $table->timestamp('payment_date')->nullable()->comment('ngày thanh toán');
-            $table->string('status')->comment('[1:đã thanh toán, 2: hẹn thanh toán, 3: chậm thanh toán]');
+            $table->string('status')->comment('[1:đã thanh toán, 2:hẹn thanh toán, 3:chậm thanh toán]');
             $table->timestamps();
         });
     }

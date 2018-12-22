@@ -42,9 +42,9 @@
                         </thead>
                         <tbody>
                         @if(count($data))
-                            @foreach($data as $item)
+                            @foreach($data as $index => $item)
                                 <tr>
-                                    <td style="width: 50px">{{$item->id}}</td>
+                                    <td style="width: 50px">{{$index + 1}}</td>
                                     <td>{{$item->name}}</td>
                                     <td class="text-right" style="min-width: 150px">
                                         <a href="{{route('cities.edit', $item->id)}}" class="btn btn-info btn-xs">

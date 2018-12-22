@@ -29,14 +29,14 @@ class CreateOrders extends Migration
             $table->integer('guarantee')->comment('thời gian bảo hành (tháng)');
             $table->string('product_number', 31)->comment('số máy');
             $table->boolean('product_skin')->comment('ngoại hình máy');
-            $table->boolean('product_type')->comment('[1: máy, 2: tủ/trạm]');
+            $table->boolean('product_type')->comment('[1:máy, 2:tủ/trạm]');
             $table->string('setup_at')->comment('địa chỉ nơi lắp');
             $table->string('delivery_at')->comment('địa chỉ giao hàng');
             $table->date('start_date')->nullable()->comment('ngày vào sản xuất');
             $table->date('shipped_date')->nullable()->comment('ngày dự kiến giao hàng');
             $table->date('shipped_date_real')->nullable()->comment('ngày dự kiến giao hàng');
             $table->text('note')->comment('ghi chú đơn hàng');
-            $table->boolean('status')->comment('[1: đã giao, 2: chưa giao, 3: đã hủy]');
+            $table->boolean('status')->comment('[1:đã giao, 2:chưa giao, 3:đã hủy]');
             $table->timestamps();
         });
     }

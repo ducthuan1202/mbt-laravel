@@ -21,19 +21,28 @@ class DebtController extends Controller
         $searchParams = [
             'order' => null,
             'customer' => null,
+            'user' => null,
+            'city' => null,
             'status' => null,
+            'type' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
+        $cityModel = new City();
+        $userModel = new User();
         $customerModel = new Customer();
         $model = new Debt();
 
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'customers' => $customerModel->getDropDownList(),
-            'status' => $model->getStatus(),
+            'users' => $userModel->getDropDownList(true),
+            'cities' => $cityModel->getDropDownList(true),
+            'customers' => $customerModel->getDropDownList(true),
+            'status' => $model->listStatus(true),
+            'types' => $model->listType(true),
         ];
+
         return view('debt.index', $shared);
     }
 
@@ -52,7 +61,6 @@ class DebtController extends Controller
             "model" => $model,
             'cities' => $cityModel->getDropDownList(),
             'users' => $userModel->getDropDownList(),
-            'status' => $model->getStatus(),
         ];
         return view('debt.create', $shared);
     }
@@ -67,6 +75,7 @@ class DebtController extends Controller
         $model = new Debt();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
+        $model->checkBeforeSave();
         $model->save();
         return redirect()
             ->route('debts.index')
@@ -88,7 +97,6 @@ class DebtController extends Controller
             "model" => $model,
             'cities' => $cityModel->getDropDownList(),
             'users' => $userModel->getDropDownList(),
-            'status' => $model->getStatus(),
         ];
         return view('debt.edit', $shared);
     }
@@ -106,6 +114,7 @@ class DebtController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
+        $model->checkBeforeSave();
         $model->save();
         return redirect()
             ->route('debts.index')

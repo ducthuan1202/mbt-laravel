@@ -1,8 +1,10 @@
 
 @php
     /**
+     * @var $model \App\Customer
      * @var $orders \App\Order[]
      * @var $cares \App\Care[]
+     * @var $debts \App\Debt[]
      * @var $priceQuotations \App\PriceQuotation[]
      */
 @endphp
@@ -14,7 +16,7 @@
         <div class="x_panel">
             <div class="x_title">
                 <h2>
-                    {{$model->name}}
+                    Khách hàng: #{{$model->name}}
                 </h2>
 
                 <div class="clearfix"></div>
@@ -28,6 +30,31 @@
                             <td>Họ tên</td>
                             <td>{{$model->name}}</td>
                         </tr>
+                        <tr>
+                            <td>Số điện thoại</td>
+                            <td>{{$model->mobile}}</td>
+                        </tr>
+                        <tr>
+                            <td>Địa chỉ</td>
+                            <td>{{$model->address. '-' .$model->formatCity()}}</td>
+                        </tr>
+                        <tr>
+                            <td>Công ty</td>
+                            <td>{{$model->company}}</td>
+                        </tr>
+                        <tr>
+                            <td>Mã khách hàng</td>
+                            <td>{{$model->code}}</td>
+                        </tr>
+                        <tr>
+                            <td>Nhân viên chăm sóc</td>
+                            <td>{{$model->formatUser()}}</td>
+                        </tr>
+                        <tr>
+                            <td>Trạng thái</td>
+                            <td>{!! $model->formatStatus() !!}</td>
+                        </tr>
+
                     </table>
                 </div>
             </div>
@@ -66,7 +93,7 @@
                                 </tbody>
                             </table>
                             @else
-                                <div class="alert alert-info">Chưa mua hàng lần nào</div>
+                                <div class="alert alert-info">Chưa gọi dữ liệu</div>
                             @endif
 
                         </div>
@@ -110,7 +137,7 @@
                                     </tbody>
                                 </table>
                             @else
-                                <div class="alert alert-info">Chưa gọi chăm sóc lần nào</div>
+                                <div class="alert alert-info">Chưa gọi dữ liệu</div>
                             @endif
                         </div>
                     </div>
@@ -161,7 +188,7 @@
                                     </tbody>
                                 </table>
                             @else
-                                <div class="alert alert-info">Chưa gọi chăm sóc lần nào</div>
+                                <div class="alert alert-info">Chưa gọi dữ liệu</div>
                             @endif
                         </div>
                     </div>
@@ -181,6 +208,31 @@
                     <div class="x_content">
 
                         <div class="table-responsive">
+                            @if(count($debts))
+                                <table class="table table-striped jambo_table bulk_action">
+                                    <thead>
+                                    <tr class="headings">
+                                        <th>Số tiền</th>
+                                        <th>Trạng thái</th>
+                                        <th>Đơn hàng (nếu có)</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($debts as $item)
+                                        <tr>
+                                            <td>{{$item->formatMoney()}}</td>
+                                            <td>{!! $item->formatStatus() !!}</td>
+                                            <td>{!! $item->formatOrder() !!}</td>
+                                            <td class="text-right"><a href="#" class="btn btn-xs btn-info">Xem</a> </td>
+                                        </tr>
+                                    @endforeach
+
+                                    </tbody>
+                                </table>
+                            @else
+                                <div class="alert alert-info">Chưa gọi dữ liệu</div>
+                            @endif
                         </div>
                     </div>
                 </div>

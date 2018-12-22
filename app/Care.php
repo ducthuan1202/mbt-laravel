@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Care extends Model
 {
-    const LIMIT = 10;
+    const LIMIT = 50;
 
     protected $table = 'cares';
     /**

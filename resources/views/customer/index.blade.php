@@ -38,21 +38,21 @@
                         <thead>
                         <tr class="headings">
                             <th>No.</th>
-                            <th>Họ tên</th>
-                            <th>Số điện thoại</th>
-                            <th>Chức vụ</th>
-                            <th>Công ty</th>
-                            <th>Khu vực</th>
-                            <th>NVKD chăm sóc</th>
-                            <th>Trạng thái</th>
+                            <th style="width: 150px">Họ tên</th>
+                            <th style="width: 150px">Số điện thoại</th>
+                            <th style="width: 250px">Chức vụ</th>
+                            <th style="width: 250px">Công ty</th>
+                            <th style="width: 250px">Khu vực</th>
+                            <th style="width: 180px">Nhân viên KD</th>
+                            <th style="width: 80px">Trạng thái</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         @if(count($data))
-                            @foreach($data as $item)
+                            @foreach($data as $index => $item)
                                 <tr>
-                                    <td style="width: 50px">{{$item->id}}</td>
+                                    <td style="width: 50px">{{$index + 1}}</td>
                                     <td>
                                         <b class="text-success">{{$item->name}}</b>
                                         <p style="font-size: 11px">{{$item->code}}</p>
@@ -63,7 +63,7 @@
                                     <td>{{$item->formatCity()}}</td>
                                     <td><b class="text-success">{{$item->formatUser()}}</b></td>
                                     <td>{!! $item->formatStatus() !!}</td>
-                                    <td class="text-right" style="min-width: 220px">
+                                    <td class="text-right" style="max-width: 220px">
                                         <a href="{{route('customers.show', $item->id)}}" class="btn btn-primary btn-xs">
                                             <i class="fa fa-folder"></i> Xem
                                         </a>

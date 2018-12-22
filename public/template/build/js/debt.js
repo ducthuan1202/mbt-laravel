@@ -31,6 +31,36 @@ var MBT_Debt = function () {
         });
     };
 
+    var getCustomerByCityIndex = function(){
+        var cityId = $("#sCity").val();
+        var userId = $("#sUser").val();
+        var customerId = $("#sCustomer").val();
+
+        cityId = parseInt(cityId);
+        userId = parseInt(userId);
+        customerId = parseInt(customerId);
+
+        sendAjax({
+            url: "/customers/by-city",
+            method: "GET",
+            data: {
+                cityId: cityId,
+                userId: userId,
+                customerId: customerId
+            },
+            beforeSend: function(){
+                $('#sCustomer').html('<option>đang tải dữ liệu...</option>');
+            },
+            fnSuccess: function (response) {
+                if (response.success) {
+                    $('#sCustomer').html(response.message);
+                } else {
+                    alertError({title: response.message});
+                }
+            }
+        });
+    };
+
     var getOrderByCustomer = function () {
         var orderId = $("#order_id").val();
         var customerId = $("#customer_id").val();
@@ -80,6 +110,9 @@ var MBT_Debt = function () {
     return {
         getOrderByCustomer: function () {
             getOrderByCustomer();
+        },
+        getCustomerByCityIndex: function () {
+            getCustomerByCityIndex();
         },
         getCustomerByCity: function () {
             getCustomerByCity();

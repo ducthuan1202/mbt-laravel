@@ -64,7 +64,7 @@
                                         <a href="{{route('users.edit', $item->id)}}" class="btn btn-info btn-xs">
                                             <i class="fa fa-pencil"></i> Sửa
                                         </a>
-                                        @if($user->role === \App\User::ADMIN_ROLE)
+                                        @can('admin')
                                             <a onclick="MBT_User.delete({{$item->id}})" class="btn btn-danger btn-xs">
                                                 <i class="fa fa-trash-o"></i> Xóa
                                             </a>

@@ -40,7 +40,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PriceQuotation extends Model
 {
-    const LIMIT = 10;
+    const LIMIT = 50;
 
     const
         SIGNED_ORDER_STATUS = 1,

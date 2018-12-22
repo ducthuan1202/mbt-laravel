@@ -29,7 +29,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    const LIMIT = 10;
+    const LIMIT = 50;
     const
         EMPLOYEE_ROLE = 3,
         MANAGER_ROLE = 2,
@@ -116,6 +116,10 @@ class User extends Authenticatable
                 $query->where('name', 'like', "%{$searchParams['keyword']}%")
                     ->orWhere('mobile', 'like', "%{$searchParams['keyword']}%");
             });
+        }
+
+        if (isset($searchParams['role']) && !empty($searchParams['role'])) {
+            $model = $model->where('role', $searchParams['role']);
         }
 
         return $model->paginate(self::LIMIT);

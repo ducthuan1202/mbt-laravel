@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\DB;
  */
 class Customer extends Model
 {
-    const LIMIT = 10;
+    const LIMIT = 50;
     const
         BUY_STATUS = 1,
         NO_BUY_STATUS = 2;

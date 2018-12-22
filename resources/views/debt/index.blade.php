@@ -37,24 +37,30 @@
                         <thead>
                         <tr class="headings">
                             <th>No.</th>
-
                             <th>Khách hàng</th>
+                            <th>Khu vực</th>
+                            <th>Ngày tạo</th>
                             <th>Đơn hàng</th>
                             <th>Số nợ</th>
                             <th>Nhân viên KD</th>
+                            <th>Kiểu công nợ</th>
                             <th>Trạng Thái</th>
                             <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         @if(count($data))
-                            @foreach($data as $item)
+                            @foreach($data as $index => $item)
                                 <tr>
-                                    <td style="width: 50px">{{$item->id}}</td>
-                                    <td>{{$item->formatCustomer()}}</td>
+                                    <td style="width: 50px">{{$index + 1}}</td>
+
+                                    <td>{!! $item->formatCustomer() !!}</td>
+                                    <td>{{$item->formatCustomerCity()}}</td>
+                                    <td>{{$item->formatDateCreate()}}</td>
                                     <td>{{$item->formatOrder()}}</td>
                                     <td>{{$item->formatMoney()}}</td>
                                     <td>{{$item->formatCustomerUser()}}</td>
+                                    <td>{!! $item->formatType() !!}</td>
                                     <td>{!! $item->formatStatus() !!}</td>
                                     <td class="text-right">
                                         @can('admin')
@@ -84,4 +90,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/debt.js') }}"></script>
+    <script>MBT_Debt.getCustomerByCityIndex()</script>
 @endsection

@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class City extends Model
 {
-    const LIMIT = 10;
+    const LIMIT = 50;
 
     protected $table = 'cities';
     /**

@@ -129,6 +129,7 @@ class CustomerController extends Controller
         $priceQuotationModel = new PriceQuotation();
         $priceQuotationModel->customer_id = $model->id;
         $debtModel = new Debt();
+        $debtModel->customer_id = $model->id;
 
         $shared = [
             "model" => $model,
@@ -138,7 +139,7 @@ class CustomerController extends Controller
             'orders'=>$orderModel->listByUser(),
             'cares'=>$careModel->listByUser(),
             'priceQuotations'=>$priceQuotationModel->listByUser(),
-            'debts'=>$debtModel,
+            'debts'=>$debtModel->listByUser(),
         ];
         return view('customer.detail', $shared);
     }

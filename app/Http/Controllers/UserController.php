@@ -27,8 +27,8 @@ class UserController extends Controller
         $shared = [
             'data' => $model->search($searchParams),
             'searchParams' => $searchParams,
-            'roles' => $model->getListRoles(),
-            'status' => $model->getStatus(),
+            'roles' => $model->getListRoles(true),
+            'status' => $model->getStatus(true),
         ];
         return view('user.index', $shared);
     }

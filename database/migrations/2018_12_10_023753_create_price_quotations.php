@@ -30,15 +30,15 @@ class CreatePriceQuotations extends Migration
             $table->integer('guarantee')->comment('thời gian bảo hành (tháng)');
 
             $table->boolean('product_skin')->comment('ngoại hình máy');
-            $table->boolean('product_type')->comment('[1: máy, 2: tủ/trạm]');
+            $table->boolean('product_type')->comment('[1:máy, 2:tủ/trạm]');
             $table->string('setup_at')->comment('địa chỉ lắp đặt');
             $table->string('delivery_at')->comment('địa chỉ giao hàng');
 
-            $table->string('order_status')->comment('[1: đã ký, 2: chưa ký]');
+            $table->string('order_status')->comment('[1:đã ký, 2:chưa ký]');
             $table->text('note')->comment('ghi chú');
 
             $table->text('reason')->comment('lý do thất bại hoặc thành công');
-            $table->boolean('status')->comment('[1: thành công, 2: thất bại, 3: đang theo]');
+            $table->boolean('status')->comment('[1:thành công, 2:thất bại, 3:đang theo]');
             $table->timestamps();
         });
     }

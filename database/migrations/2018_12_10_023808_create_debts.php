@@ -18,7 +18,10 @@ class CreateDebts extends Migration
             $table->integer('customer_id')->nullable();
             $table->integer('order_id')->nullable();
             $table->integer('total_money');
-            $table->boolean('status')->comment('[1: nợ cũ, 2: nợ mới]');
+            $table->boolean('status')->comment('[1:nợ cũ, 2:nợ mới]');
+            $table->boolean('type')->comment('[1:đã thanh toán, 2:chưa thanh toán]');
+            $table->date('date_create')->nullable();
+            $table->date('date_pay')->nullable();
             $table->timestamps();
         });
     }
