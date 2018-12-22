@@ -35,11 +35,13 @@ class UserController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create()
     {
+        $this->authorize('admin');
+
         $model = new User();
         $shared = [
             "model" => $model,
@@ -56,6 +58,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('admin');
         $model = new User();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
@@ -67,13 +70,13 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($id)
     {
+        $this->authorize('admin');
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
@@ -84,15 +87,15 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('admin');
         $model = $this->finById($id);
         $this->validate($request, [
             'name' => 'required|max:255',
@@ -165,6 +168,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('admin');
         $model = $this->finById($id);
 
         if ($model->delete()) {

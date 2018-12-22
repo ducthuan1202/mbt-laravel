@@ -43,12 +43,14 @@
                     <li>
                         <a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Báo Giá</a>
                     </li>
+                    @can('admin')
                     <li>
                         <a href="{{route('orders.index')}}"><i class="fa fa-shopping-cart"></i> Đơn Hàng</a>
                     </li>
                     <li>
                         <a href="{{route('debts.index')}}"><i class="fa fa-slideshare"></i> Công Nợ</a>
                     </li>
+                    @endcan
 
                 </ul>
             </div>

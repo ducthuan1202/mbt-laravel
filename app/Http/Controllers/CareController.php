@@ -143,6 +143,7 @@ class CareController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('admin');
         # find model and delete
         $model = $this->finById($id);
 

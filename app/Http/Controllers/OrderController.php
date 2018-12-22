@@ -15,9 +15,11 @@ class OrderController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
+        $this->authorize('admin');
         $searchParams = [
             'customer' => null,
             'user' => null,
@@ -48,12 +50,12 @@ class OrderController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create()
     {
+        $this->authorize('admin');
         $userModel = new User();
         $cityModel = new City();
         $customerModel = new Customer();
@@ -73,10 +75,12 @@ class OrderController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
+        $this->authorize('admin');
         $model = new Order();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
@@ -91,13 +95,13 @@ class OrderController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($id)
     {
+        $this->authorize('admin');
         $userModel = new User();
         $cityModel = new City();
         $customerModel = new Customer();
@@ -113,15 +117,15 @@ class OrderController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('admin');
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
@@ -141,6 +145,7 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('admin');
         # find model and delete
         $model = $this->finById($id);
 
@@ -169,6 +174,7 @@ class OrderController extends Controller
 
     public function detail(Request $request)
     {
+        $this->authorize('admin');
         $id = $request->get('id');
         $model = $this->finById($id);
 

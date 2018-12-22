@@ -15,9 +15,11 @@ class DebtController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
+        $this->authorize('admin');
         $searchParams = [
             'order' => null,
             'customer' => null,
@@ -47,12 +49,12 @@ class DebtController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create()
     {
+        $this->authorize('admin');
         $cityModel = new City();
         $userModel = new User();
 
@@ -68,10 +70,12 @@ class DebtController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
+        $this->authorize('admin');
         $model = new Debt();
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
@@ -83,13 +87,13 @@ class DebtController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($id)
     {
+        $this->authorize('admin');
         $cityModel = new City();
         $userModel = new User();
         $model = $this->finById($id);
@@ -102,15 +106,15 @@ class DebtController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('admin');
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
