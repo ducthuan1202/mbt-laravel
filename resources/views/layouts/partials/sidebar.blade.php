@@ -48,10 +48,31 @@
                         <a href="{{route('orders.index')}}"><i class="fa fa-shopping-cart"></i> Đơn Hàng</a>
                     </li>
                     <li>
-                        <a href="{{route('debts.index')}}"><i class="fa fa-slideshare"></i> Công Nợ</a>
+                        <a><i class="fa fa-slideshare"></i> Công Nợ <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{{route('debts.list_old')}}">Công nợ cũ</a></li>
+                            <li><a href="{{route('debts.list_new')}}">Công nợ mới</a></li>
+                        </ul>
                     </li>
                     @endcan
+                </ul>
 
+            </div>
+
+            <div class="menu_section">
+                <ul class="nav side-menu">
+                    @can('admin')
+                        <li>
+                            <a><i class="fa fa-edit"></i> BÁO CÁO <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li><a href="{{route('report.customers')}}">Khách hàng</a></li>
+                                <li><a href="{{route('report.cares')}}">CSKH</a></li>
+                                <li><a href="{{route('report.quotations')}}">Báo giá</a></li>
+                                <li><a href="{{route('report.orders')}}">Đơn hàng</a></li>
+                                <li><a href="{{route('report.debts')}}">Công nợ</a></li>
+                            </ul>
+                        </li>
+                    @endcan
                 </ul>
             </div>
 

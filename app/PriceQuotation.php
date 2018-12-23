@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Helpers\Common;
+use App\Helpers\Messages;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class PriceQuotation
@@ -11,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * -------------------------------------
  * @property integer id
  *
+ * @property integer code
  * @property integer user_id
  * @property integer customer_id
  * @property integer amount
@@ -36,6 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property Customer customer
  * @property User user
+ * @property Order order
  *
  */
 class PriceQuotation extends Model
@@ -47,8 +51,8 @@ class PriceQuotation extends Model
         UNSIGNED_ORDER_STATUS = 2;
     const
         SUCCESS_STATUS = 1,
-        FAIL_STATUS = 2,
-        PENDING_STATUS = 3;
+        PENDING_STATUS = 2,
+        FAIL_STATUS = 3;
 
     const
         MACHINE_SKIN = 1,
@@ -62,27 +66,26 @@ class PriceQuotation extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'customer_id', 'amount', 'price', 'quotations_date', 'power', 'voltage_input', 'voltage_output', 'standard_output',
+        'code', 'user_id', 'customer_id', 'amount', 'price', 'quotations_date', 'power', 'voltage_input', 'voltage_output', 'standard_output',
         'guarantee', 'product_skin', 'product_type', 'setup_at', 'delivery_at', 'order_status', 'note', 'reason', 'status',
     ];
 
     public $validateMessage = [
         'user_id.required' => 'Chọn nhân viên kinh doanh.',
         'customer_id.required' => 'Chọn khách hàng.',
-        'amount.required' => 'Số lượng sản phẩm không thể bỏ trống.',
+        'amount.required' => 'Số lượng không thể bỏ trống.',
         'price.required' => 'Giá báo không thể bỏ trống.',
         'quotations_date.required' => 'Ngày báo giá không thể bỏ trống.',
-        'power.required' => 'Công suất sản phẩm không thể bỏ trống.',
+        'power.required' => 'Công suất không thể bỏ trống.',
         'voltage_input.required' => 'Điện áp đầu vào không thể bỏ trống.',
         'voltage_output.required' => 'Điện áp đầu ra không thể bỏ trống.',
-        'standard_output.required' => 'Tiêu chuẩn không thể bỏ trống.',
-        'guarantee.required' => 'thời gian bảo hành không thể bỏ trống.',
+        'standard_output.required' => 'Chọn tiêu chuẩn.',
+        'guarantee.required' => 'Thời gian bảo hành không thể bỏ trống.',
         'product_skin.required' => 'Chọn ngoại hình máy.',
         'product_type.required' => 'Chọn kiểu máy.',
         'setup_at.required' => 'Địa chỉ lắp đặt không thể bỏ trống.',
         'delivery_at.required' => 'Địa chỉ giao hàng không thể bỏ trống.',
-        'order_status.required' => 'Chọn trạng thái đơn hàng.',
-        'status.required' => 'Chọn trạng thái khách hàng.',
+        'status.required' => 'Chọn trạng thái.',
     ];
 
     public $validateRules = [
@@ -100,7 +103,6 @@ class PriceQuotation extends Model
         'product_type' => 'required',
         'setup_at' => 'required',
         'delivery_at' => 'required',
-        'order_status' => 'required',
         'status' => 'required',
     ];
 
@@ -127,6 +129,11 @@ class PriceQuotation extends Model
         return $this->hasOne(Customer::class, 'id', 'customer_id');
     }
 
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'code', 'code');
+    }
+
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
@@ -140,7 +147,44 @@ class PriceQuotation extends Model
 
     public function search($searchParams = [])
     {
-        $model = $this->with(['customer', 'user', 'customer.city']);
+        $model = $this->buildQuerySearch($searchParams);
+
+        // order by id desc
+        $model = $model->orderBy('id', 'desc');
+
+        return $model->paginate(self::LIMIT);
+    }
+
+    public function countByStatus($data = [])
+    {
+        $count = [
+            self::SUCCESS_STATUS => 0,
+            self::PENDING_STATUS => 0,
+            self::FAIL_STATUS => 0,
+        ];
+
+        foreach ($data as $item) {
+            switch ($item->status) {
+                case self::SUCCESS_STATUS:
+                    $count[self::SUCCESS_STATUS]++;
+                    break;
+                case self::PENDING_STATUS:
+                    $count[self::PENDING_STATUS]++;
+                    break;
+                case self::FAIL_STATUS:
+                    $count[self::FAIL_STATUS]++;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return $count;
+    }
+
+    private function buildQuerySearch($searchParams = [])
+    {
+        $model = $this->with(['customer', 'user', 'customer.city', 'order']);
 
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
@@ -172,13 +216,10 @@ class PriceQuotation extends Model
 
         // filter by status
         if (isset($searchParams['status']) && !empty($searchParams['status'])) {
-            $model = $model->where('customer_status', $searchParams['status']);
+            $model = $model->where('status', $searchParams['status']);
         }
 
-        // order by id desc
-        $model = $model->orderBy('id', 'desc');
-
-        return $model->paginate(self::LIMIT);
+        return $model;
     }
 
     public function listByUser()
@@ -199,50 +240,58 @@ class PriceQuotation extends Model
     }
 
     // TODO:  LIST DATA =====
-    public function listStandard()
+    public function listStandard($addAll = false)
     {
-        return [
-            null => 'Tất cả',
-            '1011' => '&#9733; Tiêu chẩn 1011',
-            '8525-2010' => '&#9733; Tiêu chẩn 8525-2010',
-            '8525-2015' => '&#9733; Tiêu chẩn 8525-2015',
-            '3079' => '&#9733; Tiêu chẩn 3079',
-            '2608' => '&#9733; Tiêu chẩn 2608',
-            'qđ62' => '&#9733; Tiêu chẩn qđ 62',
-        ];
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data['1011'] = 'Tiêu chẩn 1011';
+        $data['8525-2010'] = 'Tiêu chẩn 8525-2010';
+        $data['8525-2015'] = 'Tiêu chẩn 8525-2015';
+        $data['3079'] = 'Tiêu chẩn 3079';
+        $data['2608'] = 'Tiêu chẩn 2608';
+        $data['qđ62'] = 'Tiêu chẩn qđ 62';
+        return $data;
     }
 
-    public function listSkin()
+    public function listSkin($addAll = false)
     {
-        return [
-            null => 'Tất cả',
-            '1' => '&#9671; Kiểu hở sứ thường',
-            '2' => '&#9649; Kiểu hở sứ elbow',
-            '3' => '&#9670; Kiểu kín sứ thường',
-            '4' => '&#9648; Kiểu kín sứ elbow',
-        ];
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data['1'] = 'Kiểu hở sứ thường';
+        $data['2'] = 'Kiểu hở sứ elbow';
+        $data['3'] = 'Kiểu kín sứ thường';
+        $data['4'] = 'Kiểu kín sứ thường';
+        return $data;
     }
 
-    public function listType()
+    public function listType($addAll = false)
     {
-        return [
-            null => 'Tất cả',
-            self::MACHINE_SKIN => '&#9744; Máy',
-            self::CABIN_SKIN => '&#9750; Tủ - Trạm',
-        ];
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data[self::MACHINE_SKIN] = 'Máy';
+        $data[self::CABIN_SKIN] = 'Tủ - Trạm';
+        return $data;
     }
 
-    public function listStatus()
+    public function listStatus($addAll = false)
     {
-        return [
-            null => 'Tất cả',
-            self::SUCCESS_STATUS => '&#10004; Thành công',
-            self::PENDING_STATUS => '&#9990; Đang theo',
-            self::FAIL_STATUS => '&#10006; Thất bại',
-        ];
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data[self::SUCCESS_STATUS] = 'Thành công';
+        $data[self::PENDING_STATUS] = 'Đang theo';
+        $data[self::FAIL_STATUS] = 'Thất bại';
+        return $data;
     }
 
-    public function listOrderStatus($addAll = true)
+    public function listOrderStatus($addAll = false)
     {
         $data = [];
         if ($addAll) {
@@ -272,10 +321,10 @@ class PriceQuotation extends Model
         return Common::UNKNOWN_TEXT;
     }
 
-    public function formatCustomer()
+    public function formatCustomer($separator = '-')
     {
         if ($this->customer) {
-            return sprintf('%s<br/>%s', $this->customer->name, $this->customer->mobile);
+            return sprintf('%s %s %s', $this->customer->name, $separator, $this->customer->mobile);
         }
         return Common::UNKNOWN_TEXT;
     }
@@ -319,10 +368,26 @@ class PriceQuotation extends Model
     public function formatStatus()
     {
         $list = $this->listStatus();
-        if (isset($list[$this->status])) {
-            return $list[$this->status];
+        switch ($this->status) {
+            case self::SUCCESS_STATUS:
+                $output = $list[self::SUCCESS_STATUS];
+                $cls = 'btn-success';
+                break;
+            case  self::FAIL_STATUS:
+                $output = $list[self::FAIL_STATUS];
+                $cls = 'btn-danger';
+                break;
+            case self::PENDING_STATUS:
+                $output = $list[self::PENDING_STATUS];
+                $cls = 'btn-dark';
+                break;
+            default:
+                $output = 'n/a';
+                $cls = 'btn-default';
+                break;
         }
-        return Common::UNKNOWN_TEXT;
+
+        return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
     public function formatPrice()
@@ -334,7 +399,6 @@ class PriceQuotation extends Model
     {
         return Common::formatMoney($this->total_money);
     }
-
 
     public function formatStandard()
     {

@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <label>Trạng thái đơn hàng</label>
                     <select class="form-control chosen-select" name="status">
-                        @foreach($model->listStatus() as $key => $val)
+                        @foreach($model->listStatus(true) as $key => $val)
                             <option value="{{ $key }}" {{ $key == $searchParams['status'] ? 'selected' : '' }}>{!! $val !!}</option>
                         @endforeach
                     </select>
@@ -56,8 +56,7 @@
                         <span class="input-group-addon">
                            <i class="glyphicon glyphicon-calendar"></i>
                         </span>
-                        <input type="text" class="form-control drp-multi" name="date"
-                               value="{{$searchParams['date'] ? $searchParams['date'] : ''}}" readonly/>
+                        <input type="text" class="form-control drp-multi" name="date" value="{{$searchParams['date'] ? $searchParams['date'] : ''}}" readonly/>
                     </div>
 
                 </div>

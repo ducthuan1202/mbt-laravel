@@ -48,6 +48,67 @@ class DebtController extends Controller
         return view('debt.index', $shared);
     }
 
+    public function oldDebt(Request $request)
+    {
+        $this->authorize('admin');
+        $searchParams = [
+            'order' => null,
+            'customer' => null,
+            'user' => null,
+            'city' => null,
+            'status' => Debt::OLD_STATUS,
+            'type' => null,
+        ];
+        $searchParams = array_merge($searchParams, $request->all());
+
+        $cityModel = new City();
+        $userModel = new User();
+        $customerModel = new Customer();
+        $model = new Debt();
+
+        $shared = [
+            'data' => $model->search($searchParams),
+            'searchParams' => $searchParams,
+            'users' => $userModel->getDropDownList(true),
+            'cities' => $cityModel->getDropDownList(true),
+            'customers' => $customerModel->getDropDownList(true),
+            'status' => $model->listStatus(true),
+            'types' => $model->listType(true),
+        ];
+
+        return view('debt.index', $shared);
+    }
+
+    public function newDebt(Request $request)
+    {
+        $this->authorize('admin');
+        $searchParams = [
+            'order' => null,
+            'customer' => null,
+            'user' => null,
+            'city' => null,
+            'status' => Debt::NEW_STATUS,
+            'type' => null,
+        ];
+        $searchParams = array_merge($searchParams, $request->all());
+
+        $cityModel = new City();
+        $userModel = new User();
+        $customerModel = new Customer();
+        $model = new Debt();
+
+        $shared = [
+            'data' => $model->search($searchParams),
+            'searchParams' => $searchParams,
+            'users' => $userModel->getDropDownList(true),
+            'cities' => $cityModel->getDropDownList(true),
+            'customers' => $customerModel->getDropDownList(true),
+            'status' => $model->listStatus(true),
+            'types' => $model->listType(true),
+        ];
+
+        return view('debt.index', $shared);
+    }
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -77,7 +138,7 @@ class DebtController extends Controller
     {
         $this->authorize('admin');
         $model = new Debt();
-        $this->validate($request, $model->validateRules, $model->validateMessage);
+        $this->validate($request, ['total_money' => 'required|numeric',], $model->validateMessage);
         $model->fill($request->all());
         $model->checkBeforeSave();
         $model->save();

@@ -15,6 +15,7 @@ class CreatePriceQuotations extends Migration
     {
         Schema::create('price_quotations', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('code')->nullable();
             $table->integer('user_id');
             $table->integer('customer_id');
 

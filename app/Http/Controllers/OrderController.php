@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Customer;
+use App\Debt;
 use App\Helpers\Messages;
 use App\Order;
+use App\PriceQuotation;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -39,12 +41,12 @@ class OrderController extends Controller
         $shared = [
             'model' => $model,
             'data' => $model->search($searchParams),
+            'count' => $model->countByStatus($searchParams),
             'searchParams' => $searchParams,
             'users' => $userModel->getDropDownList(true),
             'cities' => $cityModel->getDropDownList(true),
             'customers' => $customerModel->getDropDownList(true),
         ];
-
 
         return view('order.index', $shared);
     }
@@ -53,17 +55,36 @@ class OrderController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function create()
+    public function create(Request $request)
     {
+
         $this->authorize('admin');
+
+        /**
+         * @var $priceQuotation PriceQuotation
+         */
+        $priceQuotation = PriceQuotation::where('id', $request->get('orderId'))
+            ->where('status', PriceQuotation::SUCCESS_STATUS)
+            ->first();
+
         $userModel = new User();
         $cityModel = new City();
         $customerModel = new Customer();
         $model = new Order();
+        if($priceQuotation){
+            $model->fill($priceQuotation->getAttributes());
+            $model->standard_real = $model->standard_output;
+            $model->status = Order::NOT_SHIPPED_STATUS;
+            $message = sprintf('Thông tin đơn hàng hiện tại được lấy từ báo giá #%s ', $priceQuotation->code);
+        } else {
+            $message = sprintf('Không có báo giá phù hợp, đơn hàng phải nhập số liệu từ đầu');
+        }
+
         $model->start_date = date('Y-m-d');
         $model->shipped_date = date('Y-m-d', strtotime("+1 month"));
-        $model->amount = 1;
+
         $shared = [
+            "message" => $message,
             "model" => $model,
             'users' => $userModel->getDropDownList(),
             'cities' => $cityModel->getDropDownList(),
@@ -80,18 +101,39 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        /**
+         * @var $debt Debt
+         */
         $this->authorize('admin');
         $model = new Order();
+
+        if($request->get('code')){
+            $this->validate($request, ['code' => 'unique:orders,code'], ['code.unique' => 'Đơn hàng cho báo giá này đã tồn tại.']);
+        }
+
         $this->validate($request, $model->validateRules, $model->validateMessage);
+
         $model->fill($request->all());
         $model->checkBeforeSave();
-        if ($model->save()) {
-            $model->code = $model->generateUniqueCode();
-            $model->save();
+        if($model->save()){
+            $debt = new Debt();
+            $debt->order_id = $model->id;
+            $debt->customer_id = $model->customer_id;
+            $debt->total_money = $model->total_money;
+            $debt->status = Debt::NEW_STATUS;
+            $debt->type = Debt::NOT_PAY_TYPE;
+            $debt->date_create = date('Y-m-d');
+            if($debt->save()){
+                return redirect()
+                    ->route('payment-schedules.index', $model->id)
+                    ->with('success', 'Thêm lịch trình thanh toán cho đơn hàng');
+            }
+        } else {
+            return redirect()
+                ->route('orders.index', $model->id)
+                ->withErrors(['lỗi khi tạo công nợ']);
         }
-        return redirect()
-            ->route('payment-schedules.index', $model->id)
-            ->with('success', 'Thêm lịch trình thanh toán cho đơn hàng');
+
     }
 
     /**

@@ -10,9 +10,11 @@ use App\Order;
 use App\PriceQuotation;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Excel;
 
 class HomeController extends Controller
 {
+
 
     /**
      * Show the application dashboard.
@@ -46,7 +48,8 @@ class HomeController extends Controller
     }
 
     public function convertData(){
-        $this->convertQuotations();
+//        $this->convertQuotations();
+        $this->importCustomer();
     }
 
     public function updateCode(){
@@ -105,4 +108,23 @@ class HomeController extends Controller
             $model->save();
         }
     }
+
+    private function importCustomer(){
+        $file = public_path('customers.xlsx');
+
+        dd($file);
+        try{
+//            $data = Excel::load($file, function($reader) {})->get();
+
+            if($data){
+                dd(1);
+            }
+
+            dd(2);
+        } catch(\Exception $e){
+            dd($e);
+        }
+
+    }
+
 }

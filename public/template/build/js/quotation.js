@@ -94,7 +94,11 @@ var MBT_PriceQuotation = function () {
         $("#total_money").val(formatMoney(equal));
     };
 
-
+    var statusOnchange = function(){
+        if($("#labelStatus").length  && $("#status").length){
+            $("#labelStatus").html('Lý do ' + $("#status option:selected").text());
+        }
+    };
 
     return {
         delete: function (id) {
@@ -115,7 +119,12 @@ var MBT_PriceQuotation = function () {
         },
         priceOrAmountOnchange: function(){
             priceOrAmountOnchange();
+        },
+        statusOnchange: function(){
+            statusOnchange();
         }
     };
 
 }();
+
+MBT_PriceQuotation.statusOnchange();

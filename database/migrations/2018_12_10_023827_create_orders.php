@@ -15,7 +15,7 @@ class CreateOrders extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code', 15)->comment('mã đơn hàng');
+            $table->string('code')->nullable();
             $table->integer('user_id');
             $table->integer('customer_id');
             $table->integer('amount');
@@ -37,6 +37,9 @@ class CreateOrders extends Migration
             $table->date('shipped_date_real')->nullable()->comment('ngày dự kiến giao hàng');
             $table->text('note')->comment('ghi chú đơn hàng');
             $table->boolean('status')->comment('[1:đã giao, 2:chưa giao, 3:đã hủy]');
+
+            $table->boolean('prepay')->comment('[1:có tạm ứng, 2:không tạm ứng]');
+            $table->boolean('payment_pre_shipped')->comment('[1:thanh toán hết trước giao, 2:thanh toán sau khi giao]');
             $table->timestamps();
         });
     }

@@ -95,6 +95,21 @@ class Customer extends Model
     // TODO:  QUERY TO DATABASE =====
     public function search($searchParams = [])
     {
+        $model = $this->buildQuerySearch($searchParams);
+        $model = $model->orderBy('id', 'desc');
+
+        return $model->paginate(self::LIMIT);
+    }
+
+    public function countHasBuy($searchParams = [])
+    {
+        $model = $this->buildQuerySearch($searchParams);
+        $model = $model->where('status', self::BUY_STATUS);
+        return $model->count();
+    }
+
+    private function buildQuerySearch($searchParams = [])
+    {
         $model = $this->with(['city', 'user']);
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
@@ -104,20 +119,30 @@ class Customer extends Model
             });
         }
 
-        // filter by city
+        if (isset($searchParams['user']) && !empty($searchParams['user'])) {
+            $model = $model->where('user_id', $searchParams['user']);
+        }
+
         if (isset($searchParams['city']) && !empty($searchParams['city'])) {
             $model = $model->where('city_id', $searchParams['city']);
         }
 
-        // filter by company
         if (isset($searchParams['status']) && !empty($searchParams['status'])) {
             $model = $model->where('status', $searchParams['status']);
         }
 
-        // order by id desc
-        $model = $model->orderBy('id', 'desc');
+        // filter by quotations_date
+        if (isset($searchParams['date']) && !empty($searchParams['date'])) {
+            $d = Common::extractDate($searchParams['date']);
+            $startDate = Common::dmY2Ymd($d[0]);
+            $endDate = Common::dmY2Ymd($d[1]);
 
-        return $model->paginate(self::LIMIT);
+            if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $startDate) && preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $endDate)) {
+                $model = $model->whereBetween('created_at', [$startDate, $endDate]);
+            }
+        }
+
+        return $model;
     }
 
     public static function countNumber()
@@ -171,7 +196,7 @@ class Customer extends Model
     {
         $location = '';
         if (!empty($this->address)) {
-            $location = $this->address;
+//            $location = $this->address;
         }
 
         if (isset($this->city)) {
@@ -190,6 +215,10 @@ class Customer extends Model
             return $this->user->name;
         }
         return Common::UNKNOWN_TEXT;
+    }
+
+    public function formatCreatedAt(){
+        return Common::formatDate($this->created_at);
     }
 
     public function formatStatus()

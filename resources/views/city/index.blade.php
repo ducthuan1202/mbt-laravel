@@ -12,7 +12,6 @@
             <div class="x_title">
                 <h2>
                     Khu Vực
-                    <small>Tổng số <b>{{$data->total()}}</b></small>
                 </h2>
                 <a class="btn btn-success pull-right" href="{{route('cities.create')}}">
                     <i class="fa fa-plus"></i> Thêm mới

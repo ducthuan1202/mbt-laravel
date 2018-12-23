@@ -156,24 +156,26 @@ class Care extends Model
     }
 
     // TODO:  LIST DATA =====
-    public function listStatus()
+    public function listStatus($addAll =false)
     {
-        return [
-            null => 'Tất cả',
-            1 => 'Chăm sóc lại báo giá đã báo',
-            2 => 'Xin việc',
-            3 => 'Để báo giá',
-            4 => 'Tư vấn về sản phẩm',
-            5 => 'Chốt đơn hàng',
-            6 => 'Làm hợp đồng',
-            7 => 'Giục lấy hàng',
-            8 => 'Giục tạm ứng',
-            9 => 'Đòi nợ',
-            10 => 'Đòi hợp đồng',
-            11 => 'Xin đối chiếu công nợ',
-            12 => 'Giới thiệu sản phẩm (khách mới)',
-            13 => 'Chúc mừng sinh nhật khách hàng',
-        ];
+        $data = [];
+        if($addAll){
+            $data = [null => 'Tất cả'];
+        }
+        $data[1] = 'Chăm sóc lại báo giá đã báo';
+        $data[2] = 'Xin việc';
+        $data[3] = 'Để báo giá';
+        $data[4] = 'Tư vấn về sản phẩm';
+        $data[5] = 'Chốt đơn hàng';
+        $data[6] = 'Làm hợp đồng';
+        $data[7] = 'Giục lấy hàng';
+        $data[8] = 'Giục tạm ứng';
+        $data[9] = 'Đòi nợ';
+        $data[10] = 'Đòi hợp đồng';
+        $data[11] = 'Xin đối chiếu công nợ';
+        $data[12] = 'Giới thiệu sản phẩm (khách mới)';
+        $data[13] = 'Chúc mừng sinh nhật khách hàng';
+        return $data;
     }
 
     // TODO:  FORMAT =====

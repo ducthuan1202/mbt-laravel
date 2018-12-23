@@ -13,7 +13,6 @@
             <div class="x_title">
                 <h2>
                     Nhân Sự
-                    <small>Tổng số <b>{{$data->total()}}</b></small>
                 </h2>
 
                 @can('admin')

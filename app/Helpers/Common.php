@@ -43,4 +43,8 @@ class Common
         }
         return $date;
     }
+
+    public static function formatNumber($number){
+        return number_format($number);
+    }
 }

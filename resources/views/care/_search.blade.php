@@ -23,7 +23,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer" id="sCustomer">
@@ -45,7 +45,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Nội dung chăm sóc</label>
                     <select class="form-control chosen-select" name="status">
@@ -55,7 +55,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Chọn Ngày</label>
                     <div class="input-group date">
@@ -68,7 +68,8 @@
 
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
                     <a href="{{route('cares.index')}}" class="btn btn-default">Bỏ Lọc</a>

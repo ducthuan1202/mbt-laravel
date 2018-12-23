@@ -2,6 +2,7 @@
     /**
      * @var $data \App\Debt[]
      */
+    use App\Helpers\Common;
 @endphp
 
 @extends('layouts.main')
@@ -28,11 +29,24 @@
 
                 @include('debt._search')
 
+                <div class="row tile_count text-center" style="margin-top: 0;">
+                    <div class="col-md-4 col-sm-4 col-xs-4 tile_stats_count" style="margin-bottom: 0">
+                        <span class="count_top">Tổng số</span>
+                        <div class="count blue">{{Common::formatNumber($data->total())}}</div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4 tile_stats_count" style="margin-bottom: 0">
+                        <span class="count_top">ĐÃ THANH TOÁN</span>
+                        <div class="count green">{{Common::formatNumber(0)}}</div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4 tile_stats_count" style="margin-bottom: 0">
+                        <span class="count_top">CHƯA THANH TOÁN</span>
+                        <div class="count red">{{Common::formatNumber(0)}}</div>
+                    </div>
+                </div>
+
                 @if($message = Session::get('success'))
                     <div class="alert alert-success">{{$message}}</div>
                 @endif
-
-                <div class="ln_solid"></div>
 
                 <div class="table-responsive">
                     <table class="table table-striped jambo_table bulk_action">
@@ -66,9 +80,11 @@
                                     <td>{!! $item->formatStatus() !!}</td>
                                     <td class="text-right">
                                         @can('admin')
+                                            @if($item->status == \App\Debt::OLD_STATUS)
                                             <a href="{{route('debts.edit', $item->id)}}" class="btn btn-info btn-xs">
                                                 <i class="fa fa-pencil"></i> Sửa
                                             </a>
+                                            @endif
                                         @endcan
                                     </td>
                                 </tr>

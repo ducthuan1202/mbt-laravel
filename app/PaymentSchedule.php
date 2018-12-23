@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string money
  * @property string payment_date
  * @property string status
+ * @property string note
  *
  * @property string created_at
  * @property string updated_at
@@ -38,7 +39,7 @@ class PaymentSchedule extends Model
      *
      * @var array
      */
-    protected $fillable = ['order_id', 'money', 'payment_date', 'status',];
+    protected $fillable = ['order_id', 'money', 'payment_date', 'status','note'];
 
     public $validateMessage = [
         'order_id.required' => 'Chọn đơn hàng cần lên lịch thanh toán.',
@@ -58,7 +59,7 @@ class PaymentSchedule extends Model
     // TODO:  RELATIONSHIP =====
     public function order()
     {
-        return $this->hasOne(Order::class, 'id', 'orderid');
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
     // TODO:  QUERY TO DATABASE =====
@@ -73,8 +74,10 @@ class PaymentSchedule extends Model
             ->orderBy('payment_date', 'asc')->get();
     }
 
-    // TODO:  LIST DATA =====
+    public function syncWithDebt(){
 
+    }
+    // TODO:  LIST DATA =====
     public function listStatus($addAll = false)
     {
         $data = [];
@@ -86,7 +89,6 @@ class PaymentSchedule extends Model
         $data[self::DELAY_STATUS] = 'Chậm thanh toán';
         return $data;
     }
-
 
     // TODO:  FORMAT =====
     public function formatStatus()

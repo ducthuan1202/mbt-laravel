@@ -40,7 +40,7 @@ class CareController extends Controller
             'users'=>$userModel->getDropDownList(true),
             'cities'=>$cityModel->getDropDownList(true),
             'customers'=>$customerModel->getDropDownList(true),
-            'status' => $model->listStatus(),
+            'status' => $model->listStatus(true),
             'buyStatus' => $customerModel->getStatus(true),
         ];
 

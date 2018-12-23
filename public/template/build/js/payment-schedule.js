@@ -42,9 +42,74 @@ var MBT_PaymentSchedule = function () {
     };
 
 
+    var openForm = function(id){
+
+        sendAjax({
+            url: "/payment-schedules/ajax/" + id,
+            method: "GET",
+            beforeSend: function () {
+            },
+            fnSuccess: function (response) {
+                if(response.success){
+                    $("#paymentSchedule").html(response.message);
+
+                    $("#paymentSchedule").modal("show");
+                    initialize();
+                } else {
+                    alertError({title: "không thể mở giao diện sửa"});
+                }
+            },
+            fnError: function(response){
+                var data = response.responseJSON;
+                if(data.hasOwnProperty('errors')){
+                    $("#display-error").html(printError(data.errors)).removeClass('hidden');
+                } else {
+                    $("#display-error").html('không thể lưu dữ liệu').removeClass('hidden');
+                }
+            }
+        });
+    };
+
+    var saveForm = function(id){
+        var data = $("#payment-schedule-form-update").serialize();
+        sendAjax({
+            url: "/payment-schedules/ajax/" + id,
+            method: "PUT",
+            data: data,
+            beforeSend: function () {
+                $("#button-update-modal").html('Đang gửi dữ liệu...')
+            },
+            fnSuccess: function (response) {
+                if(response.success){
+                    alertSuccess({title: "cập nhật thành công"});
+                    window.location.reload(true);
+                } else {
+                    alertError({title: "cập nhật thất bại"});
+                }
+                $("#paymentSchedule").html('');
+                $("#paymentSchedule").modal('hide');
+            },
+            fnError: function(response){
+                var data = response.responseJSON;
+                if(data.hasOwnProperty('errors')){
+                    $("#ajaxError").html(printError(data.errors)).removeClass('hidden');
+                } else {
+                    $("#ajaxError").html('không thể lưu dữ liệu').removeClass('hidden');
+                }
+            }
+        });
+    };
+
+
     return {
         toSave: function (orderId) {
             toSave(orderId);
+        },
+        openForm: function (id) {
+            openForm(id);
+        },
+        saveForm: function (id) {
+            saveForm(id);
         }
     };
 

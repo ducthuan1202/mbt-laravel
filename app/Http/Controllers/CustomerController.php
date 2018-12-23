@@ -26,6 +26,8 @@ class CustomerController extends Controller
             'city' => null,
             'keyword' => null,
             'status' => null,
+            'user' => null,
+            'date' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
@@ -36,11 +38,13 @@ class CustomerController extends Controller
 
         $shared = [
             'data' => $model->search($searchParams),
+            'hasBuy' => $model->countHasBuy($searchParams),
             'searchParams' => $searchParams,
             'users' => $userModel->getDropDownList(true),
             'cities' => $cityModel->getDropDownList(true),
             'status' => $model->getStatus(true)
         ];
+
         return view('customer.index', $shared);
     }
 
@@ -56,6 +60,7 @@ class CustomerController extends Controller
 
         $model = new Customer();
         $model->average_sale = 0;
+        $model->position = 'Nhân viên';
 
         $userLogin = Auth::user();
         if ($userLogin && isset($userLogin->id)) {

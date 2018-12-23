@@ -19,54 +19,69 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
-                            Thông tin đơn hàng
+                            Đơn hàng #{{$order->code}}
                         </h2>
-
-                        <a class="btn btn-dark pull-right btn-xs" href="{{route('orders.index')}}">
-                            <i class="fa fa-reply"></i> Về đơn hàng
-                        </a>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content" style="padding:0">
                         <div class="modal-body" style="padding:0">
-                            <table class="table table-striped">
+                            <table class="table table-bordered">
                                 <tbody>
-                                <tr>
+                                <tr class="bg-warning">
                                     <td>Nhân viên</td>
                                     <td>{!! $order->formatUser()!!}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-warning">
+                                    <td>Mã đơn hàng</td>
+                                    <td><kbd>{{$order->code}}</kbd></td>
+                                </tr>
+                                <tr class="bg-warning">
+                                    <td>Trạng thái đơn hàng</td>
+                                    <td>{!! $order->formatStatus() !!}</td>
+                                </tr>
+                                <tr class="bg-warning">
                                     <td>Khách hàng</td>
                                     <td>{!! $order->formatCustomer() !!}</td>
                                 </tr>
+                                <tr class="bg-warning">
+                                    <td>VAT</td>
+                                    <td>{{$order->formatVat()}}</td>
+                                </tr>
                                 <tr>
                                     <td>Khu vực</td>
-                                    <td>{!! $order->formatCustomerCity() !!}</td>
+                                    <td>{{$order->formatCustomerCity()}}</td>
                                 </tr>
-
                                 <tr>
                                     <td>Ngày vào sản xuất</td>
-                                    <td>{!! $order->formatStartDate() !!}</td>
+                                    <td>{{$order->formatStartDate()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Ngày giao hàng dự tính</td>
-                                    <td>{!! $order->formatShippedDate() !!}</td>
+                                    <td>{{$order->formatShippedDate()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Ngày giao hàng thực tế</td>
-                                    <td>{!! $order->formatShippedDateReal() !!}</td>
+                                    <td>{{$order->formatShippedDateReal()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Địa chỉ lắp đặt</td>
-                                    <td>{!! $order->setup_at !!}</td>
+                                    <td>{{$order->setup_at}}</td>
                                 </tr>
                                 <tr>
                                     <td>Địa chỉ giao hàng</td>
-                                    <td>{!! $order->delivery_at !!}</td>
+                                    <td>{{$order->delivery_at}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Số lượng x đơn giá = thành tiền </td>
-                                    <td>{!!  sprintf('%s x %s = <code>%s</code>', $order->amount, $order->formatPrice(), $order->formatTotalMoney()) !!}</td>
+                                    <td>Số lượng</td>
+                                    <td>{{$order->amount}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Giá bán</td>
+                                    <td>{{$order->formatPrice()}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Thành tiền</td>
+                                    <td>{{$order->formatTotalMoney()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Công suất</td>
@@ -84,12 +99,12 @@
 
                                 <tr>
                                     <td>Kiểu máy</td>
-                                    <td>{!! $order->formatType() !!}</td>
+                                    <td>{{$order->formatType()}}</td>
                                 </tr>
 
                                 <tr>
                                     <td>Ngoại hình máy</td>
-                                    <td>{!! $order->formatSkin() !!}</td>
+                                    <td>{{$order->formatSkin()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Bảo hành</td>
@@ -97,12 +112,9 @@
                                 </tr>
                                 <tr>
                                     <td>Tiêu chuẩn</td>
-                                    <td>{!! $order->formatStandard() !!}</td>
+                                    <td>{{$order->formatStandard()}}</td>
                                 </tr>
-                                <tr>
-                                    <td>Trạng thái đơn hàng</td>
-                                    <td>{!! $order->formatStatus() !!}</td>
-                                </tr>
+
                                 <tr>
                                     <td>Ghi chú đơn hàng</td>
                                     <td>{!! $order->note !!}</td>
@@ -124,25 +136,44 @@
                     </div>
                     <div class="x_content">
                         <div class="table-responsive">
-                            <table class="table table-striped jambo_table bulk_action">
+                            <table class="table table-bordered">
                                 <thead>
                                 <tr class="headings">
-                                    <th>Số tiền</th>
                                     <th>Ngày thanh toán</th>
+                                    <th>Số tiền</th>
                                     <th>Kiểu</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @if(count($data))
+                                    @php $sum = 0 @endphp
                                     @foreach($data as $item)
+                                        @php if($item->status == \App\PaymentSchedule::PAID_STATUS) $sum += $item->money; @endphp
                                         <tr>
+                                            <td {{(!empty($item->note)) ? 'rowspan=2' : ''}} style="vertical-align: middle; width: 150px">{{$item->formatDate()}}</td>
                                             <td>{{$item->formatMoney()}}</td>
-                                            <td>
-                                                {!! $item->formatDate() !!}
-                                            </td>
                                             <td>{!! $item->formatStatus() !!}</td>
+                                            <td style="width: 30px">
+                                                <button class="btn btn-xs btn-outline" onclick="MBT_PaymentSchedule.openForm({{$item->id}})">
+                                                    <i class="fa fa-pencil"></i> Sửa
+                                                </button>
+                                            </td>
                                         </tr>
+                                        @if(!empty($item->note))
+                                            <tr>
+                                                <td colspan="3">
+                                                    <span style="font-weight: bold; text-decoration: underline; padding-right: 10px;">Ghi chú:</span>
+                                                    {!! $item->note !!}
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
+                                    <tr class="bg-primary">
+                                        <td class="text-right">Tổng thanh toán</td>
+                                        <td>{{\App\Helpers\Common::formatMoney($sum)}}</td>
+                                        <td colspan="2">Còn lại: {{\App\Helpers\Common::formatMoney($order->total_money - $sum)}}</td>
+                                    </tr>
                                 @else
                                     <tr>
                                         <td colspan="100%">Chưa có lịch trình thanh toán nào.</td>
@@ -156,9 +187,7 @@
 
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>
-                            Tạo mới
-                        </h2>
+                        <h2>Thêm mới 1 lịch thanh toán cho đơn hàng</h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -171,6 +200,8 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="paymentSchedule"></div>
 @endsection
 
 @section('script')

@@ -1,8 +1,8 @@
-
 @php
     /**
      * @var $data \App\Customer[]
      */
+    use App\Helpers\Common;
 @endphp
 
 @extends('layouts.main')
@@ -13,7 +13,6 @@
             <div class="x_title">
                 <h2>
                     Khách Hàng
-                    <small>Tổng số <b>{{$data->total()}}</b></small>
                 </h2>
 
                 <a class="btn btn-success pull-right" href="{{route('customers.create')}}">
@@ -27,11 +26,24 @@
 
                 @include('customer._search')
 
+                <div class="row tile_count text-center" style="margin-top: 0;">
+                    <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count" style="margin-bottom: 0">
+                        <span class="count_top">Tổng số</span>
+                        <div class="count blue">{{Common::formatNumber($data->total())}}</div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count" style="margin-bottom: 0">
+                        <span class="count_top">Đã mua</span>
+                        <div class="count green">{{Common::formatNumber($hasBuy)}}</div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count" style="margin-bottom: 0">
+                        <span class="count_top">Chưa mua</span>
+                        <div class="count ">{{Common::formatNumber($data->total() - $hasBuy)}}</div>
+                    </div>
+                </div>
+
                 @if($message = Session::get('success'))
                     <div class="alert alert-success">{{$message}}</div>
                 @endif
-
-                <div class="ln_solid"></div>
 
                 <div class="table-responsive">
                     <table class="table table-striped jambo_table bulk_action">
@@ -40,11 +52,10 @@
                             <th>No.</th>
                             <th style="width: 150px">Họ tên</th>
                             <th style="width: 150px">Số điện thoại</th>
-                            <th style="width: 250px">Chức vụ</th>
-                            <th style="width: 250px">Công ty</th>
+                            <th style="width: 250px">Chức vụ - Công ty</th>
                             <th style="width: 250px">Khu vực</th>
                             <th style="width: 180px">Nhân viên KD</th>
-                            <th style="width: 80px">Trạng thái</th>
+                            <th class="text-right">Ngày tạo</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -57,12 +68,19 @@
                                         <b class="text-success">{{$item->name}}</b>
                                         <p style="font-size: 11px">{{$item->code}}</p>
                                     </td>
-                                    <td><a class="text-primary" href="tel:{{$item->mobile}}"><b>{{$item->mobile}}</b></a></td>
-                                    <td><span class="text-primary">{{$item->position}}</span></td>
-                                    <td><span class="text-primary">{{$item->company}}</span></td>
+                                    <td>
+                                        <a class="text-primary" href="tel:{{$item->mobile}}"><b>{{$item->mobile}}</b></a><br/>
+                                        {!! $item->formatStatus() !!}
+                                    </td>
+                                    <td>
+                                        <span class="text-primary">{{$item->position}}</span><br/>
+                                        <span>{{$item->company}}</span>
+                                    </td>
                                     <td>{{$item->formatCity()}}</td>
-                                    <td><b class="text-success">{{$item->formatUser()}}</b></td>
-                                    <td>{!! $item->formatStatus() !!}</td>
+                                    <td>
+                                        <b class="text-success">{{$item->formatUser()}}</b>
+                                    </td>
+                                    <td class="text-right">{{$item->formatCreatedAt()}}</td>
                                     <td class="text-right" style="max-width: 220px">
                                         <a href="{{route('customers.show', $item->id)}}" class="btn btn-primary btn-xs">
                                             <i class="fa fa-folder"></i> Xem

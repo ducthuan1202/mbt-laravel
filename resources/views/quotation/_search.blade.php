@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <label>Trạng thái KH</label>
                     <select class="form-control chosen-select" name="status">
-                        @foreach($model->listStatus() as $key => $val)
+                        @foreach($model->listStatus(true) as $key => $val)
                             <option value="{{ $key }}" {{ $key == $searchParams['status'] ? 'selected' : '' }}>{!! $val !!}</option>
                         @endforeach
                     </select>

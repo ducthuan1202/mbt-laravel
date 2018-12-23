@@ -18,7 +18,6 @@ class PriceQuotationController extends Controller
      */
     public function index(Request $request)
     {
-//        $this->authorize('admin');
 
         $searchParams = [
             'customer' => null,
@@ -36,9 +35,11 @@ class PriceQuotationController extends Controller
         $customerModel = new Customer();
 
         $model = new PriceQuotation();
+        $data = $model->search($searchParams);
         $shared = [
             'model' => $model,
-            'data' => $model->search($searchParams),
+            'data' => $data,
+            'counter' => $model->countByStatus($data),
             'searchParams' => $searchParams,
             'users'=>$userModel->getDropDownList(true),
             'cities'=>$cityModel->getDropDownList(true),
@@ -82,10 +83,22 @@ class PriceQuotationController extends Controller
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
         $model->checkBeforeSave();
-        $model->save();
+        if($model->save()){
+            $model->code = str_slug($model->user->name) . '-'.$model->id;
+            $model->save();
+        }
         return redirect()
             ->route('quotations.index')
             ->with('success', Messages::INSERT_SUCCESS);
+    }
+
+    public function show($id)
+    {
+        $model = $this->finById($id);
+        $shared = [
+            "model" => $model,
+        ];
+        return view('quotation.detail', $shared);
     }
 
     /**

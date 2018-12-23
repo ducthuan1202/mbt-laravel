@@ -9,7 +9,7 @@
                     <div class="x_title">
                         <h2>
                             Đơn hàng
-                            <small>Tạo Mới</small>
+                            <small>{{$message}}</small>
                         </h2>
                         <div class="clearfix"></div>
                     </div>

@@ -62,6 +62,10 @@ class Debt extends Model
 
     public function checkBeforeSave()
     {
+        if(!$this->exists){
+            $this->status = self::OLD_STATUS;
+            $this->type = self::NOT_PAY_TYPE;
+        }
         if (!empty($this->date_create)) {
             $this->date_create = Common::dmY2Ymd($this->date_create);
         }

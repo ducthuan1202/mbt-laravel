@@ -2,7 +2,7 @@
 <div class="well" style="overflow: auto">
     <form class="form" action="{{route('debts.index')}}" method="GET">
         <div class="row">
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                 <div class="form-group">
                     <label>Nhân viên</label>
                     <select class="form-control chosen-select" name="user" id="sUser" onchange="MBT_Debt.getCustomerByCityIndex()">
@@ -12,7 +12,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                 <div class="form-group">
                     <label>Khu vực</label>
                     <select class="form-control chosen-select" name="city" id="sCity" onchange="MBT_Debt.getCustomerByCityIndex()">
@@ -22,7 +22,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                 <div class="form-group">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer" id="sCustomer">
@@ -33,18 +33,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
-                <div class="form-group">
-                    <label>Kiểu công nợ</label>
-                    <select class="form-control chosen-select" name="status">
-                        @foreach($status as $key => $val)
-                            <option value="{{ $key }}" {{ $key == $searchParams['status'] ? 'selected' : '' }}>{!! $val !!}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                 <div class="form-group">
                     <label>Tình trạng</label>
                     <select class="form-control chosen-select" name="type">
@@ -55,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
                     <a href="{{route('debts.index')}}" class="btn btn-default">Bỏ Lọc</a>

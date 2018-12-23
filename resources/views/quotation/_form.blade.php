@@ -2,7 +2,6 @@
     /**
      * @var $model \App\PriceQuotation
      */
-$model->customer_id = old('customer_id');
 @endphp
 
 @if(count($errors))
@@ -17,10 +16,12 @@ $model->customer_id = old('customer_id');
 
 {{csrf_field()}}
 
-<div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-6">
-        <h3>Thông tin khách hàng</h3>
 
+
+<div class="row">
+    <div class="col-xs-12 col-sm-5 col-md-5">
+        <h3>Thông tin khách hàng</h3>
+        <div class="ln_solid"></div>
         <div class="form-group">
             <label>Nhân viên kinh doanh</label>
             <select class="form-control chosen-select" name="user_id" id="user_id" onchange="MBT_PriceQuotation.getCustomerByCity()">
@@ -34,114 +35,72 @@ $model->customer_id = old('customer_id');
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control chosen-select" id="city_id" onchange="MBT_PriceQuotation.getCustomerByCity()">
+                    <select class="form-control chosen-select" name="city_id" id="city_id" onchange="MBT_PriceQuotation.getCustomerByCity()">
                         @foreach($cities as $city)
-                            <option value="{{ $city['id'] }}"
-                                    {{ isset($model->customer) && $city['id'] == $model->customer->city_id ? 'selected' : '' }}>
-                                {{$city['name']}}
-                            </option>
+                            @php
+                            $_selected = (isset($model->customer) && $city['id'] == $model->customer->city_id) || $city['id'] == old('city_id')
+                            @endphp
+                            <option value="{{ $city['id'] }}" {{ $_selected ? 'selected' : '' }}>{{$city['name']}}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6">
-                <div class="form-group">
+                <div class="form-group {{$errors->has('customer_id') ? 'has-error' : ''}}">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer_id" id="customer_id">
                         <option value="{{$model->customer_id}}">{{$model->customer_id}}</option>
                     </select>
+                    @if ($errors->has('customer_id')) <span class="help-block">{{ $errors->first('customer_id') }}</span> @endif
                 </div>
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group {{$errors->has('setup_at') ? 'has-error' : ''}}">
             <label>Địa chỉ lắp đặt</label>
             <input type="text" class="form-control" name="setup_at" value="{{old('setup_at') ? old('setup_at') : $model->setup_at}}"/>
+            @if ($errors->has('setup_at')) <span class="help-block">{{ $errors->first('setup_at') }}</span> @endif
         </div>
-        <div class="form-group">
+
+        <div class="form-group {{$errors->has('delivery_at') ? 'has-error' : ''}}">
             <label>Địa chỉ giao hàng</label>
             <input type="text" class="form-control" name="delivery_at" value="{{old('delivery_at') ? old('delivery_at') : $model->delivery_at}}"/>
+            @if ($errors->has('delivery_at')) <span class="help-block">{{ $errors->first('delivery_at') }}</span> @endif
         </div>
 
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <label>Ngày Báo Giá</label>
-                    <div class="input-group date">
-                        <span class="input-group-addon">
-                           <i class="glyphicon glyphicon-calendar"></i>
-                        </span>
-                        <input type="text" class="form-control drp-single" name="quotations_date"
-                               value="{{old('quotations_date') ? old('quotations_date') : $model->formatQuotationDate()}}" readonly/>
-                    </div>
-                </div>
+        <div class="form-group {{$errors->has('quotations_date') ? 'has-error' : ''}}">
+            <label>Ngày báo giá</label>
+            <div class="input-group date">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <input type="text" class="form-control drp-single" name="quotations_date" value="{{old('quotations_date') ? old('quotations_date') : $model->formatQuotationDate()}}" readonly/>
             </div>
-            <div class="col-xs-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <label>Trạng Thái KH</label>
-                    <select class="form-control chosen-select" name="status">
-                        @foreach($model->listStatus() as $key => $val)
-                            <option value="{{ $key }}" {{ ($key == $model->status || $key == old('status')) ? 'selected' : '' }}>{!! $val !!}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
+            @if ($errors->has('quotations_date')) <span class="help-block">{{ $errors->first('quotations_date') }}</span> @endif
         </div>
+
     </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="col-xs-12 col-sm-7 col-md-7">
         <h3>Thông tin sản phẩm</h3>
-
+        <div class="ln_solid"></div>
         <div class="row">
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="form-group">
-                    <label>Số lượng</label>
-                    <input type="text" class="form-control" name="amount" onchange="MBT_PriceQuotation.priceOrAmountOnchange()"
-                           value="{{old('amount') ? old('amount') : $model->amount}}"/>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="form-group">
-                    <label>Đơn giá</label>
-                    <input type="text" class="form-control" name="price" onchange="MBT_PriceQuotation.priceOrAmountOnchange()"
-                           value="{{old('price') ? old('price') : $model->price}}"/>
-                    <span class="help-block">tỉ lệ 1:1000 (<code>1 = 1,000 VNĐ></code>)</span>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="form-group">
-                    <label>Thành tiền</label>
-                    <input type="text" class="form-control" id="total_money" readonly/>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="form-group">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="form-group {{$errors->has('power') ? 'has-error' : ''}}">
                     <label>Công suất (kvA)</label>
                     <input type="text" class="form-control" name="power" value="{{old('power') ? old('power') : $model->power}}"/>
+                    @if ($errors->has('power')) <span class="help-block">{{ $errors->first('power') }}</span> @endif
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="form-group">
+                <div class="form-group {{$errors->has('voltage_input') ? 'has-error' : ''}}">
                     <label>Điện áp vào (kv)</label>
-                    <input type="text" class="form-control" name="voltage_input"
-                           value="{{old('voltage_input') ? old('voltage_input') : $model->voltage_input}}"/>
+                    <input type="text" class="form-control" name="voltage_input" value="{{old('voltage_input') ? old('voltage_input') : $model->voltage_input}}"/>
+                    @if ($errors->has('voltage_input')) <span class="help-block">{{ $errors->first('voltage_input') }}</span> @endif
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="form-group">
+                <div class="form-group {{$errors->has('voltage_output') ? 'has-error' : ''}}">
                     <label>Điện áp ra (kv)</label>
-                    <input type="text" class="form-control" name="voltage_output"
-                           value="{{old('voltage_output') ? old('voltage_output') : $model->voltage_output}}"/>
+                    <input type="text" class="form-control" name="voltage_output" value="{{old('voltage_output') ? old('voltage_output') : $model->voltage_output}}"/>
+                    @if ($errors->has('voltage_output')) <span class="help-block">{{ $errors->first('voltage_output') }}</span> @endif
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-xs-12 col-sm-4 col-md-4">
+            <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
                     <label>Kiểu máy</label>
                     <select name="product_type" class="form-control chosen-select">
@@ -150,8 +109,7 @@ $model->customer_id = old('customer_id');
                         @endforeach
                     </select>
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
+
                 <div class="form-group">
                     <label>Ngoại hình máy</label>
                     <select name="product_skin" class="form-control chosen-select">
@@ -160,8 +118,7 @@ $model->customer_id = old('customer_id');
                         @endforeach
                     </select>
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
+
                 <div class="form-group">
                     <label>Tiêu chuẩn</label>
                     <select name="standard_output" class="form-control chosen-select">
@@ -175,33 +132,47 @@ $model->customer_id = old('customer_id');
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <label>Bảo hành (tháng)</label>
-                    <input type="text" class="form-control" name="guarantee"
-                           value="{{old('guarantee') ? old('guarantee') : $model->guarantee}}"/>
-                </div>
-
-                <div class="form-group">
-                    <label>Ghi Chú</label>
-                    <textarea class="form-control" name="note" rows="5">{{old('note') ? old('note') : $model->reason}}</textarea>
+                <div class="form-group {{$errors->has('amount') ? 'has-error' : ''}}">
+                    <label>Số lượng</label>
+                    <input type="number" class="form-control" name="amount" value="{{old('amount') ? old('amount') : $model->amount}}"/>
+                    @if ($errors->has('amount')) <span class="help-block">{{ $errors->first('amount') }}</span> @endif
                 </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="form-group {{$errors->has('price') ? 'has-error' : ''}}">
+                    <label>Đơn giá (<code>ngàn đồng</code>)</label>
+                    <input type="number" class="form-control" name="price" value="{{old('price') ? old('price') : $model->price}}"/>
+                    @if ($errors->has('price')) <span class="help-block">{{ $errors->first('price') }}</span> @endif
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+
+                <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
+                    <label>Bảo hành</label>
+                    <div class="input-group">
+                        <input type="number" min="1" class="form-control" name="guarantee" value="{{old('guarantee') ? old('guarantee') : $model->guarantee}}"/>
+                        <code class="input-group-addon">tháng</code>
+                    </div>
+                    @if ($errors->has('guarantee')) <span class="help-block">{{ $errors->first('guarantee') }}</span> @endif
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                    <label>Trạng đơn hàng</label>
-                    <select class="form-control chosen-select" name="order_status">
-                        @foreach($model->listOrderStatus() as $key => $val)
-                            <option value="{{ $key }}" {{ ($key == $model->order_status || $key == old('order_status')) ? 'selected' : '' }}>{!! $val !!}</option>
+                    <label>Trạng Thái</label>
+                    <select class="form-control chosen-select" name="status" id="status" onchange="MBT_PriceQuotation.statusOnchange()">
+                        @foreach($model->listStatus() as $key => $val)
+                            <option value="{{ $key }}" {{ ($key == $model->status || $key == old('status')) ? 'selected' : '' }}>{!! $val !!}</option>
                         @endforeach
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Lý do</label>
-                    <textarea class="form-control" name="reason" rows="5">{{old('reason') ? old('reason') : $model->reason}}</textarea>
-                </div>
-
+            </div>
+            <div class="form-group">
+                <label id="labelStatus">Lý do</label>
+                <textarea class="form-control" name="reason" rows="5">{{old('reason') ? old('reason') : $model->reason}}</textarea>
             </div>
         </div>
 

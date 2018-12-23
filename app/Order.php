@@ -34,12 +34,17 @@ use Illuminate\Support\Facades\DB;
  * @property string shipped_date_real
  * @property string note
  * @property string status
+ * @property string vat
+ * @property string prepay
+ * @property string payment_pre_shipped
  *
  * @property string created_at
  * @property string updated_at
  *
  * @property User user
  * @property Customer customer
+ * @property Debt debt
+ * @property PaymentSchedule payments
  *
  */
 class Order extends Model
@@ -52,6 +57,9 @@ class Order extends Model
     const
         MACHINE_SKIN = 1,
         CABIN_SKIN = 2;
+    const
+        YES = 1,
+        NO = 2;
 
     protected $table = 'orders';
     /**
@@ -62,7 +70,7 @@ class Order extends Model
     protected $fillable = [
         'user_id', 'customer_id', 'code', 'amount', 'price', 'total_money', 'power', 'voltage_input', 'voltage_output',
         'standard_output', 'standard_real', 'guarantee', 'product_number', 'product_skin', 'product_type',
-        'setup_at', 'delivery_at', 'start_date', 'shipped_date', 'note', 'status'
+        'setup_at', 'delivery_at', 'start_date', 'shipped_date', 'note', 'status', 'vat', 'prepay', 'payment_pre_shipped'
     ];
 
     public $validateMessage = [
@@ -119,9 +127,8 @@ class Order extends Model
             $this->shipped_date = Common::dmY2Ymd($this->shipped_date);
         }
 
-        if (!$this->exists) {
-            $this->shipped_date_real = null;
-            $this->code = '';
+        if (!empty($this->shipped_date_real)) {
+            $this->shipped_date_real = Common::dmY2Ymd($this->shipped_date_real);
         }
 
         $this->total_money = (int)$this->price * (int)$this->amount;
@@ -133,20 +140,32 @@ class Order extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    public function priceQuotation()
+    {
+        return $this->hasOne(User::class, 'code', 'code');
+    }
+
     public function customer()
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');
     }
 
-    // TODO:  QUERY TO DATABASE =====
-    public function search($searchParams = [])
+    public function debt()
     {
-        $model = $this->with(['user', 'customer', 'customer.city']);
+        return $this->belongsTo(Debt::class, 'id', 'order_id');
+    }
 
-        // filter by keyword
-        if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
-            $model = $model->where('name', 'like', "%{$searchParams['keyword']}%");
-        }
+    public function payments()
+    {
+        return $this->hasMany(PaymentSchedule::class, 'order_id', 'id');
+    }
+
+    // TODO:  QUERY TO DATABASE =====
+    public function buildQuerySearch($searchParams = [])
+    {
+        $model = $this->with(['user', 'customer', 'customer.city', 'debt', 'payments' => function ($query) {
+            $query->where('status', PaymentSchedule::PAID_STATUS);
+        }]);
 
         // filter by user
         if (isset($searchParams['user']) && !empty($searchParams['user'])) {
@@ -172,7 +191,7 @@ class Order extends Model
             $endDate = Common::dmY2Ymd($d[1]);
 
             if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $startDate) && preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $endDate)) {
-                $model = $model->whereBetween('start_date', [$startDate, $endDate]);
+                $model = $model->whereBetween('shipped_date', [$startDate, $endDate]);
             }
         }
 
@@ -181,10 +200,79 @@ class Order extends Model
             $model = $model->where('status', $searchParams['status']);
         }
 
+        return $model;
+    }
+
+    public function search($searchParams = [])
+    {
+        $model = $this->buildQuerySearch($searchParams);
+
         // order by
         $model = $model->orderBy('id', 'desc');
 
         return $model->paginate(self::LIMIT);
+    }
+
+    public function countByStatus($searchParams = [])
+    {
+        $city = new City();
+        $user = new User();
+        $customer = new Customer();
+
+        $orderTbl = $this->getTable();
+        $cityTbl = $city->getTable();
+        $userTbl = $user->getTable();
+        $customerTbl = $customer->getTable();
+
+        $query = DB::table($orderTbl)
+            ->join($customerTbl, "$customerTbl.id", "=", "$orderTbl.customer_id")
+            ->join($cityTbl, "$customerTbl.city_id", "=", "$cityTbl.id")
+            ->join($userTbl, "$userTbl.id", "=", "$orderTbl.user_id")
+            ->select(DB::raw("COUNT($orderTbl.id) AS 'value', $orderTbl.status"));
+
+        if (isset($searchParams['date']) && !empty($searchParams['date'])) {
+            $d = Common::extractDate($searchParams['date']);
+            $startDate = Common::dmY2Ymd($d[0]);
+            $endDate = Common::dmY2Ymd($d[1]);
+
+            if (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $startDate) && preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $endDate)) {
+                $query = $query->whereBetween("$orderTbl.shipped_date", [$startDate, $endDate]);
+            }
+        }
+
+        if (isset($searchParams['city']) && !empty($searchParams['city'])) {
+            $query = $query->whereHas('customer', function ($qr) use ($cityTbl, $searchParams) {
+                $qr->where("$cityTbl.city_id", $searchParams['city']);
+            });
+        }
+
+        if (isset($searchParams['user']) && !empty($searchParams['user'])) {
+            $query = $query->where("$userTbl.user_id", $searchParams['user']);
+        }
+
+        if (isset($searchParams['customer']) && !empty($searchParams['customer'])) {
+            $query = $query->where("$orderTbl.customer_id", $searchParams['customer']);
+        }
+
+        if (isset($searchParams['status']) && !empty($searchParams['status'])) {
+            $query = $query->where("$orderTbl.status", $searchParams['status']);
+        }
+
+        $data = $query->groupBy("$orderTbl.status")->get();
+
+        $count = [
+            self::SHIPPED_STATUS => 0,
+            self::NOT_SHIPPED_STATUS => 0,
+            self::CANCEL_STATUS => 0,
+        ];
+        if(!$data ||count($data)<1){
+            return $count;
+        } else{
+            foreach ($data as $item){
+                $count[$item->status] = $item->value;
+            }
+            return $count;
+        }
     }
 
     public function listByUser()
@@ -240,47 +328,77 @@ class Order extends Model
     }
 
     // TODO:  LIST DATA =====
-    public function listStandard()
+    public function listStandard($addAll = false)
     {
-        return [
-            null => 'Tất cả',
-            '1011' => '&#9733; Tiêu chẩn 1011',
-            '8525-2010' => '&#9733; Tiêu chẩn 8525-2010',
-            '8525-2015' => '&#9733; Tiêu chẩn 8525-2015',
-            '3079' => '&#9733; Tiêu chẩn 3079',
-            '2608' => '&#9733; Tiêu chẩn 2608',
-            'qđ62' => '&#9733; Tiêu chẩn qđ 62',
-        ];
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data['1011'] = 'Tiêu chẩn 1011';
+        $data['8525-2010'] = 'Tiêu chẩn 8525-2010';
+        $data['8525-2015'] = 'Tiêu chẩn 8525-2015';
+        $data['3079'] = 'Tiêu chẩn 3079';
+        $data['2608'] = 'Tiêu chẩn 2608';
+        $data['qđ62'] = 'Tiêu chẩn qđ 62';
+        return $data;
     }
 
-    public function listSkin()
+    public function listSkin($addAll = false)
     {
-        return [
-            null => 'Tất cả',
-            '1' => '&#9671; Kiểu hở sứ thường',
-            '2' => '&#9649; Kiểu hở sứ elbow',
-            '3' => '&#9670; Kiểu kín sứ thường',
-            '4' => '&#9648; Kiểu kín sứ elbow',
-        ];
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data['1'] = 'Kiểu hở sứ thường';
+        $data['2'] = 'Kiểu hở sứ elbow';
+        $data['3'] = 'Kiểu kín sứ thường';
+        $data['4'] = 'Kiểu kín sứ thường';
+        return $data;
     }
 
-    public function listType()
+    public function listType($addAll = false)
     {
-        return [
-            null => 'Tất cả',
-            self::MACHINE_SKIN => '&#9744; Máy',
-            self::CABIN_SKIN => '&#9750; Tủ - Trạm',
-        ];
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data[self::MACHINE_SKIN] = 'Máy';
+        $data[self::CABIN_SKIN] = 'Tủ - Trạm';
+        return $data;
     }
 
-    public function listStatus()
+    public function listPrePay($addAll = false)
     {
-        return [
-            null => 'Tất cả',
-            self::SHIPPED_STATUS => 'Đã giao',
-            self::NOT_SHIPPED_STATUS => 'Chưa giao',
-            self::CANCEL_STATUS => 'Đã hủy',
-        ];
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data[self::YES] = 'Có tạm ứng';
+        $data[self::NO] = 'Không tạm ứng';
+        return $data;
+    }
+
+    public function listPaymentPreShip($addAll = false)
+    {
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data[self::YES] = 'Thanh toán hết trước khi giao';
+        $data[self::NO] = 'Thanh toán hết sau khi giao';
+        return $data;
+    }
+
+    public function listStatus($addAll = false)
+    {
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data[self::SHIPPED_STATUS] = 'Đã giao';
+        $data[self::NOT_SHIPPED_STATUS] = 'Chưa giao';
+        $data[self::CANCEL_STATUS] = 'Đã hủy';
+        return $data;
     }
 
     // TODO:  FORMAT =====
@@ -335,6 +453,11 @@ class Order extends Model
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 80px">%s</span>', $cls, $output);
     }
 
+    public function formatVat()
+    {
+        return Common::formatMoney($this->vat);
+    }
+
     public function formatUser()
     {
         if ($this->user) {
@@ -343,10 +466,10 @@ class Order extends Model
         return Common::UNKNOWN_TEXT;
     }
 
-    public function formatCustomer()
+    public function formatCustomer($separator = '-')
     {
-        if ($this->customer) {
-            return sprintf('%s<br/>%s', $this->customer->name, $this->customer->mobile);
+        if (isset($this->customer)) {
+            return sprintf('%s %s %s', $this->customer->name, $separator, $this->customer->mobile);
         }
         return Common::UNKNOWN_TEXT;
     }
@@ -357,6 +480,26 @@ class Order extends Model
             return $this->customer->city->name;
         }
         return Common::UNKNOWN_TEXT;
+    }
+
+    public function formatDebt()
+    {
+        if (isset($this->debt)) {
+            return Common::formatMoney($this->debt->total_money);
+        }
+        return Common::formatMoney(0);
+    }
+
+    public function formatPayment()
+    {
+        if (isset($this->payments) && count($this->payments)) {
+            $sum = 0;
+            foreach ($this->payments as $item) {
+                $sum += $item->money;
+            }
+            return Common::formatMoney($sum);
+        }
+        return Common::formatMoney(0);
     }
 
     public function formatStartDate()
