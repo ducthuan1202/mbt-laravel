@@ -11,6 +11,9 @@
 |
 */
 
+Route::get('/import/customer', 'HomeController@importCustomer');
+//    Route::get('/convert-data', 'HomeController@convertData');
+    Route::get('/update-code', 'HomeController@updateCode');
 
 Route::namespace('Auth')->group(function () {
     Route::get('login', 'LoginController@showLoginForm')->name('login');
@@ -21,8 +24,8 @@ Route::namespace('Auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/', 'HomeController@index')->name('home');
-//    Route::get('/convert-data', 'HomeController@convertData');
-//    Route::get('/update-code', 'HomeController@updateCode');
+
+
 
     // change password
     Route::get('/users/change-password', 'UserController@changePassword')->name('users.change_password');

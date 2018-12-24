@@ -10,11 +10,12 @@ use App\Order;
 use App\PriceQuotation;
 use App\User;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class HomeController extends Controller
 {
-
 
     /**
      * Show the application dashboard.
@@ -47,25 +48,28 @@ class HomeController extends Controller
         return view('pages/dashboard', $shared);
     }
 
-    public function convertData(){
+    public function convertData()
+    {
 //        $this->convertQuotations();
         $this->importCustomer();
     }
 
-    public function updateCode(){
+    public function updateCode()
+    {
 
         $customers = Customer::select('id', 'code')->get();
-        foreach ($customers as $customer){
+        foreach ($customers as $customer) {
             $customer->code = $customer->generateUniqueCode();
             $customer->save();
         }
 
     }
 
-    public function convertCustomer(){
+    public function convertCustomer()
+    {
         $customers = DB::connection('mysql01')->select("select * from bao_gia where 1");
 
-        foreach ($customers as $customer){
+        foreach ($customers as $customer) {
             $model = new Customer();
             $model->code = 'MBT-KH00000';
             $model->user_id = 1;
@@ -81,10 +85,11 @@ class HomeController extends Controller
         }
     }
 
-    public function convertQuotations(){
+    public function convertQuotations()
+    {
         $data = DB::connection('mysql01')->select("select * from bao_gia where 1");
 
-        foreach ($data as $item){
+        foreach ($data as $item) {
             $model = new PriceQuotation();
             $model->user_id = 1;
             $model->customer_id = 1;
@@ -109,22 +114,58 @@ class HomeController extends Controller
         }
     }
 
-    private function importCustomer(){
+    public function importCustomer()
+    {
+        $cities = City::select('id', 'name')->get()->toArray();
+        $users = User::select('id', 'name')->get()->toArray();
+
         $file = public_path('customers.xlsx');
 
-        dd($file);
-        try{
-//            $data = Excel::load($file, function($reader) {})->get();
+        if (file_exists($file)) {
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadSheet = $reader->load($file);
+            $sheetData = $spreadSheet->getActiveSheet()->toArray();
 
-            if($data){
-                dd(1);
+            $data = [];
+            foreach ($sheetData as $sheet) {
+                if (!empty($sheet[0]) && !empty($sheet[1]) && !empty($sheet[2])) {
+                    $city = collect($cities)->firstWhere('name', $sheet[7]);
+                    $user = collect($users)->firstWhere('name', $sheet[1]);
+                    $data[] = [
+                        'code' => 'MBT-KH00000',
+                        'user_id' => $user['id'],
+                        'city_id' => $city['id'],
+                        'name' => $sheet[2],
+                        'position' => $sheet[3],
+                        'mobile' => $sheet[4],
+                        'company' => $sheet[5],
+                        'address' => $sheet[6],
+                        'status' => ((int)$sheet[8] == 1 || (string)$sheet[8] == '1') ? 1 : 2,
+                        'created_at' => date('Y-m-d'),
+                        'updated_at' => date('Y-m-d'),
+                    ];
+                }
             }
 
-            dd(2);
-        } catch(\Exception $e){
-            dd($e);
+            unset($data[0]);
+            DB::table('customers')->insert($data);
+            return sprintf('done');
+        } else {
+            return sprintf('file không tồn tại.');
         }
-
     }
 
+    public function exportExcel()
+    {
+        $spreadSheet = new Spreadsheet();
+        $sheet = $spreadSheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Hello');
+        $sheet->setCellValue('B1', 'worldsss s');
+        $writer = new Xlsx($spreadSheet);
+
+        $fileName = 'excel/export/hello.xlsx';
+        $writer->save(public_path($fileName));
+        return 'done';
+    }
 }
