@@ -13,7 +13,7 @@
 
 Route::get('/import/customer', 'HomeController@importCustomer');
 //    Route::get('/convert-data', 'HomeController@convertData');
-    Route::get('/update-code', 'HomeController@updateCode');
+Route::get('/update-code', 'HomeController@updateCode');
 
 Route::namespace('Auth')->group(function () {
     Route::get('login', 'LoginController@showLoginForm')->name('login');
@@ -25,8 +25,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/', 'HomeController@index')->name('home');
 
-
-
     // change password
     Route::get('/users/change-password', 'UserController@changePassword')->name('users.change_password');
     Route::post('/users/change-password', 'UserController@updatePassword')->name('users.update_password');
@@ -37,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
 
     // api
     Route::get('/customers/by-city', 'CustomerController@getByCity');
+    Route::get('/customers/cities-by-user', 'CustomerController@getCitiesByUser');
     Route::get('/quotations/detail', 'PriceQuotationController@detail');
     Route::get('/orders/detail', 'OrderController@detail');
     Route::get('/orders/by-customer', 'OrderController@getByCustomer');

@@ -141,10 +141,10 @@ class CustomerController extends Controller
             'users' => $userModel->getDropDownList(),
             'cities' => $cityModel->getDropDownList(),
             'status' => $model->getStatus(),
-            'orders'=>$orderModel->listByUser(),
-            'cares'=>$careModel->listByUser(),
-            'priceQuotations'=>$priceQuotationModel->listByUser(),
-            'debts'=>$debtModel->listByUser(),
+            'orders' => $orderModel->listByUser(),
+            'cares' => $careModel->listByUser(),
+            'priceQuotations' => $priceQuotationModel->listByUser(),
+            'debts' => $debtModel->listByUser(),
         ];
         return view('customer.detail', $shared);
     }
@@ -186,7 +186,7 @@ class CustomerController extends Controller
         if ($priceQuotationModel->checkCustomerExist($model->id)) {
             return response()->json([
                 'success' => false,
-                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH.' BÁO GIÁ.',
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH . ' BÁO GIÁ.',
             ]);
         }
 
@@ -195,7 +195,7 @@ class CustomerController extends Controller
         if ($debtModel->checkCustomerExist($model->id)) {
             return response()->json([
                 'success' => false,
-                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH.' CÔNG NỢ.',
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH . ' CÔNG NỢ.',
             ]);
         }
 
@@ -204,7 +204,7 @@ class CustomerController extends Controller
         if ($orderModel->checkCustomerExist($model->id)) {
             return response()->json([
                 'success' => false,
-                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH.' ĐƠN HÀNG.',
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH . ' ĐƠN HÀNG.',
             ]);
         }
 
@@ -213,7 +213,7 @@ class CustomerController extends Controller
         if ($careModel->checkCustomerExist($model->id)) {
             return response()->json([
                 'success' => false,
-                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH.' CSKH.',
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH . ' CSKH.',
             ]);
         }
 
@@ -248,18 +248,65 @@ class CustomerController extends Controller
         $userId = (int)$request->get('userId');
         $customerId = (int)$request->get('customerId');
 
-        $model = new Customer();
-        $model->city_id = $cityId;
-        $model->user_id = $userId;
+        $customerQuery = Customer::select('id', 'name', 'mobile');
+
+        if (!empty($userId)) {
+            $customerQuery = $customerQuery->where('user_id', $userId);
+        }
+
+        if (!empty($cityId)) {
+            $customerQuery = $customerQuery->where('city_id', $cityId);
+        }
+
+        $customers = $customerQuery->get()->toArray();
 
         $shared = [
-            'model' => $model,
-            'customers' => $model->getDropDownList(true),
+            'customers' => $customers,
             'customerId' => $customerId,
         ];
         $output = [
             'success' => true,
             'message' => view('customer.ajax.by_city', $shared)->render()
+        ];
+        return response()->json($output);
+    }
+
+    public function getCitiesByUser(Request $request)
+    {
+        $userId = (int)$request->get('userId');
+        $cityId = (int)$request->get('cityId');
+
+        $customerQuery = Customer::select('id', 'name', 'city_id');
+        if (!empty($userId)) {
+            $customerQuery = $customerQuery->where('user_id', $userId);
+        }
+        $customers = $customerQuery->get()->toArray();
+        $customerGroupByCity = collect($customers)->groupBy('city_id');
+
+        $citiesId = [];
+        foreach ($customers as $customer) {
+            if (!in_array($customer['city_id'], $citiesId)) {
+                $citiesId[] = $customer['city_id'];
+            }
+        }
+
+        if (!empty($citiesId)) {
+            $cities = City::select('id', 'name')
+                ->whereIn('id', $citiesId)
+                ->get()->toArray();
+        } else {
+            $cities = [];
+        }
+
+        $shared = [
+            'customers' => $customers,
+            'cities' => $cities,
+            'customerGroupByCity' => $customerGroupByCity,
+            'cityId' => $cityId,
+        ];
+        $output = [
+            'success' => true,
+            'message' => view('customer.ajax.city_smart', $shared)->render()
         ];
         return response()->json($output);
     }

@@ -110,5 +110,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/care.js') }}"></script>
-    <script>MBT_Care.getCustomerByCityIndex()</script>
+    <script>getCitiesByUser()</script>
 @endsection

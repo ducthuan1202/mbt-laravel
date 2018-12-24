@@ -48,40 +48,12 @@ class HomeController extends Controller
         return view('pages/dashboard', $shared);
     }
 
-    public function convertData()
-    {
-//        $this->convertQuotations();
-        $this->importCustomer();
-    }
-
     public function updateCode()
     {
-
         $customers = Customer::select('id', 'code')->get();
         foreach ($customers as $customer) {
             $customer->code = $customer->generateUniqueCode();
             $customer->save();
-        }
-
-    }
-
-    public function convertCustomer()
-    {
-        $customers = DB::connection('mysql01')->select("select * from bao_gia where 1");
-
-        foreach ($customers as $customer) {
-            $model = new Customer();
-            $model->code = 'MBT-KH00000';
-            $model->user_id = 1;
-            $model->city_id = 1;
-            $model->company = $customer->ten_cong_ty;
-            $model->address = $customer->dia_chi;
-            $model->name = $customer->ten_kh;
-            $model->position = $customer->chuc_vu;
-            $model->mobile = $customer->sdt;
-            $model->average_sale = $customer->doanh_so_tb;
-            $model->status = $customer->status == Customer::BUY_STATUS ? Customer::BUY_STATUS : Customer::NO_BUY_STATUS;
-            $model->save();
         }
     }
 
@@ -128,16 +100,18 @@ class HomeController extends Controller
             $sheetData = $spreadSheet->getActiveSheet()->toArray();
 
             $data = [];
-            foreach ($sheetData as $sheet) {
-                if (!empty($sheet[0]) && !empty($sheet[1]) && !empty($sheet[2])) {
+            foreach ($sheetData as $index => $sheet) {
+
+                if (!empty($sheet[2]) && !empty($sheet[4])) {
                     $city = collect($cities)->firstWhere('name', $sheet[7]);
                     $user = collect($users)->firstWhere('name', $sheet[1]);
+
                     $data[] = [
                         'code' => 'MBT-KH00000',
                         'user_id' => $user['id'],
                         'city_id' => $city['id'],
                         'name' => $sheet[2],
-                        'position' => $sheet[3],
+                        'position' => empty($sheet[3]) ? 'Nhân Viên' : $sheet[3],
                         'mobile' => $sheet[4],
                         'company' => $sheet[5],
                         'address' => $sheet[6],
@@ -147,8 +121,6 @@ class HomeController extends Controller
                     ];
                 }
             }
-
-            unset($data[0]);
             DB::table('customers')->insert($data);
             return sprintf('done');
         } else {

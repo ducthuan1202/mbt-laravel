@@ -39,7 +39,7 @@ class CareController extends Controller
             'searchParams' => $searchParams,
             'users'=>$userModel->getDropDownList(true),
             'cities'=>$cityModel->getDropDownList(true),
-            'customers'=>$customerModel->getDropDownList(true),
+//            'customers'=>$customerModel->getDropDownList(true),
             'status' => $model->listStatus(true),
             'buyStatus' => $customerModel->getStatus(true),
         ];
@@ -55,7 +55,6 @@ class CareController extends Controller
     public function create()
     {
         $userModel = new User();
-        $cityModel = new City();
 
         $model = new Care();
         $model->start_date = date('Y-m-d');
@@ -69,7 +68,6 @@ class CareController extends Controller
         $shared = [
             "model" => $model,
             'users'=>$userModel->getDropDownList(),
-            'cities'=>$cityModel->getDropDownList(),
             'status' => $model->listStatus()
         ];
         return view('care.create', $shared);
@@ -101,12 +99,10 @@ class CareController extends Controller
     public function edit($id)
     {
         $userModel = new User();
-        $cityModel = new City();
 
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
-            'cities'=>$cityModel->getDropDownList(),
             'users'=>$userModel->getDropDownList(),
             'status' => $model->listStatus()
         ];

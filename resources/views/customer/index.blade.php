@@ -11,9 +11,7 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <h2>
-                    Khách Hàng
-                </h2>
+                <h2>Khách Hàng</h2>
 
                 <a class="btn btn-success pull-right" href="{{route('customers.create')}}">
                     <i class="fa fa-plus"></i> Thêm mới

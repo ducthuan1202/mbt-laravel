@@ -20,7 +20,7 @@
     <div class="col-md-6">
         <div class="form-group {{$errors->has('user_id') ? 'has-error' : ''}}">
             <label>Nhân viên kinh doanh</label>
-            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="MBT_Care.getCustomerByCity()">
+            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesByUser()">
                 @foreach($users as $user)
                     <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id || $user['id'] == old('user_id') ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
@@ -32,13 +32,8 @@
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control chosen-select" onchange="MBT_Care.getCustomerByCity()" id="city_id">
-                        @foreach($cities as $city)
-                            <option value="{{ $city['id'] }}"
-                                    {{ isset($model->customer) && $city['id'] == $model->customer->city_id ? 'selected' : '' }}>
-                                {{$city['name']}}
-                            </option>
-                        @endforeach
+                    <select class="form-control chosen-select" onchange="getCustomerByCityAndUser()" id="city_id">
+                        <option value="{{$model->city_id}}">{{$model->city_id}}</option>
                     </select>
                 </div>
             </div>

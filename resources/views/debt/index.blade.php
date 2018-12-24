@@ -11,11 +11,7 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <h2>
-                    Công Nợ
-                    <small>Tổng số <b>{{$data->total()}}</b></small>
-                </h2>
-
+                <h2>Công Nợ</h2>
                 @can('admin')
                     <a class="btn btn-success pull-right" href="{{route('debts.create')}}">
                         <i class="fa fa-plus"></i> Thêm mới

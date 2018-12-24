@@ -31,8 +31,7 @@ class User extends Authenticatable
 
     const LIMIT = 50;
     const
-        EMPLOYEE_ROLE = 3,
-        MANAGER_ROLE = 2,
+        EMPLOYEE_ROLE = 2,
         ADMIN_ROLE = 1;
     const
         ACTIVATE_STATUS = 1,
@@ -162,8 +161,7 @@ class User extends Authenticatable
             $data = ['0' => 'Tất cả'];
         }
 
-        $data[self::ADMIN_ROLE] = 'Quản Trị Viên Cấp Cao';
-        $data[self::MANAGER_ROLE] = 'Giám Đốc - Quản Lý';
+        $data[self::ADMIN_ROLE] = 'Quản Trị Viên';
         $data[self::EMPLOYEE_ROLE] = 'Nhân Viên Kinh Doanh';
 
         return $data;
