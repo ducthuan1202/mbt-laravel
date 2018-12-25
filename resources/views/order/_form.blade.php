@@ -74,7 +74,7 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
     </div>
 
     <div class="col-xs-12 col-sm-6 col-md-6">
-        <h3>Thông tin sản phẩm</h3>
+        <h3>Thông tin đơn hàng</h3>
         <div class="ln_solid"></div>
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -101,6 +101,10 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
                     @if ($errors->has('product_number')) <span class="help-block">{{ $errors->first('product_number') }}</span> @endif
                 </div>
 
+                <div class="form-group">
+                    <label>VAT (<code>ngàn đồng</code>)</label>
+                    <input type="number" class="form-control" name="vat" value="{{old('vat') ? old('vat') : $model->vat}}"/>
+                </div>
 
             </div>
 
@@ -177,14 +181,9 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
         <div class="row">
             <div class="col-xs-12 col-sm-4 col-md-4">
                 <div class="form-group">
-                    <label>Tạm ứng</label>
-                    <select name="prepay" class="form-control chosen-select">
-                        @foreach($model->listPrePay() as $key => $val)
-                            <option value="{{ $key }}" {{ ($key == $model->prepay || $key == old('prepay')) ? 'selected' : '' }}>{!! $val !!}</option>
-                        @endforeach
-                    </select>
+                    <label>Tạm ứng (<code>ngàn đồng</code>)</label>
+                    <input type="number" class="form-control" name="prepay" value="{{old('prepay') ? old('prepay') : $model->prepay}}"/>
                 </div>
-
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4">
                 <div class="form-group">

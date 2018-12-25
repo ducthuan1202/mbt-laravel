@@ -45,7 +45,12 @@
                     </li>
                     @can('admin')
                     <li>
-                        <a href="{{route('orders.index')}}"><i class="fa fa-shopping-cart"></i> Đơn Hàng</a>
+                        <a><i class="fa fa-shopping-cart"></i> Đơn Hàng <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{{route('orders.shipped')}}">Đã giao</a></li>
+                            <li><a href="{{route('orders.no_shipped')}}">Chưa giao</a></li>
+                            <li><a href="{{route('orders.cancel')}}">Đã hủy</a></li>
+                        </ul>
                     </li>
                     <li>
                         <a><i class="fa fa-slideshare"></i> Công Nợ <span class="fa fa-chevron-down"></span></a>

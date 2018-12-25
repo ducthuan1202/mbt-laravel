@@ -28,20 +28,8 @@
 
                 <div class="row tile_count text-center" style="margin-top: 0;">
                     <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
-                        <span class="count_top">Tổng số</span>
+                        <span class="count_top">Tổng số lượt chăm sóc</span>
                         <div class="count blue">{{Common::formatNumber($data->total())}}</div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
-                        <span class="count_top">THÀNH CÔNG</span>
-                        <div class="count green">{{Common::formatNumber(0)}}</div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
-                        <span class="count_top">ĐANG THEO</span>
-                        <div class="count purple">{{Common::formatNumber(0)}}</div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
-                        <span class="count_top">THẤT BẠI</span>
-                        <div class="count red">{{Common::formatNumber(0)}}</div>
                     </div>
                 </div>
 

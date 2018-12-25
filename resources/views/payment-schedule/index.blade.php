@@ -1,9 +1,12 @@
 @php
+    use \App\Helpers\Common;
     /**
     * @var $order \App\Order
     * @var $data \App\PaymentSchedule[]
     */
+    $sum = 0;
 @endphp
+
 @extends('layouts.main')
 
 @section('content')
@@ -43,10 +46,7 @@
                                     <td>Khách hàng</td>
                                     <td>{!! $order->formatCustomer() !!}</td>
                                 </tr>
-                                <tr class="bg-warning">
-                                    <td>VAT</td>
-                                    <td>{{$order->formatVat()}}</td>
-                                </tr>
+
                                 <tr>
                                     <td>Khu vực</td>
                                     <td>{{$order->formatCustomerCity()}}</td>
@@ -82,6 +82,18 @@
                                 <tr>
                                     <td>Thành tiền</td>
                                     <td>{{$order->formatTotalMoney()}}</td>
+                                </tr>
+                                <tr class="bg-warning">
+                                    <td>VAT</td>
+                                    <td><span class="red">{{$order->formatVat()}}</span></td>
+                                </tr>
+                                <tr class="bg-warning">
+                                    <td>Tạm ứng</td>
+                                    <td><span class="blue">{{$order->formatPrePay()}}</span></td>
+                                </tr>
+                                <tr class="bg-warning">
+                                    <td>Còn lại</td>
+                                    <td>{{$order->formatPaymentPreShip()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Công suất</td>
@@ -147,7 +159,7 @@
                                 </thead>
                                 <tbody>
                                 @if(count($data))
-                                    @php $sum = 0 @endphp
+
                                     @foreach($data as $item)
                                         @php if($item->status == \App\PaymentSchedule::PAID_STATUS) $sum += $item->money; @endphp
                                         <tr>
@@ -169,11 +181,6 @@
                                             </tr>
                                         @endif
                                     @endforeach
-                                    <tr class="bg-primary">
-                                        <td class="text-right">Tổng thanh toán</td>
-                                        <td>{{\App\Helpers\Common::formatMoney($sum)}}</td>
-                                        <td colspan="2">Còn lại: {{\App\Helpers\Common::formatMoney($order->total_money - $sum)}}</td>
-                                    </tr>
                                 @else
                                     <tr>
                                         <td colspan="100%">Chưa có lịch trình thanh toán nào.</td>
@@ -195,6 +202,41 @@
                         <form id="payment-schedule-form" onsubmit="return;">
                             @include('payment-schedule._form')
                         </form>
+                    </div>
+                </div>
+
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>
+                            Tổng quan
+                        </h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <td>Tổng đơn hàng</td>
+                                    <td class="text-right">{{$order->formatTotalMoney()}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tạm ứng</td>
+                                    <td class="text-right">{{$order->formatPrePay()}}</td>
+                                </tr>
+                                <tr>
+                                    <td>VAT</td>
+                                    <td class="text-right">{{$order->formatVat()}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Đã thanh toán</td>
+                                    <td class="text-right">{{Common::formatMoney($sum)}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Còn lại</td>
+                                    <td class="text-right">{{Common::formatMoney($order->getTotalMoneyWithoutPayment() -$sum)}}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

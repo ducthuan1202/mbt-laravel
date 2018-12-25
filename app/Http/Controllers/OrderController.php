@@ -46,7 +46,89 @@ class OrderController extends Controller
         return view('order.index', $shared);
     }
 
+    public function shipped(Request $request)
+    {
+        $this->authorize('admin');
+        $searchParams = [
+            'customer' => null,
+            'user' => null,
+            'city' => null,
+            'keyword' => null,
+            'date' => null,
+            'status' => Order::SHIPPED_STATUS,
+        ];
+        $searchParams = array_merge($searchParams, $request->all());
+
+        // get relation
+        $userModel = new User();
+        $model = new Order();
+        $shared = [
+            'model' => $model,
+            'data' => $model->search($searchParams),
+            'count' => $model->countByStatus($searchParams),
+            'searchParams' => $searchParams,
+            'users' => $userModel->getDropDownList(true),
+        ];
+
+        return view('order.index', $shared);
+    }
+
+    public function noShipped(Request $request)
+    {
+        $this->authorize('admin');
+        $searchParams = [
+            'customer' => null,
+            'user' => null,
+            'city' => null,
+            'keyword' => null,
+            'date' => null,
+            'status' => Order::NOT_SHIPPED_STATUS,
+        ];
+        $searchParams = array_merge($searchParams, $request->all());
+
+        // get relation
+        $userModel = new User();
+        $model = new Order();
+        $shared = [
+            'model' => $model,
+            'data' => $model->search($searchParams),
+            'count' => $model->countByStatus($searchParams),
+            'searchParams' => $searchParams,
+            'users' => $userModel->getDropDownList(true),
+        ];
+
+        return view('order.index', $shared);
+    }
+
+    public function cancel(Request $request)
+    {
+        $this->authorize('admin');
+        $searchParams = [
+            'customer' => null,
+            'user' => null,
+            'city' => null,
+            'keyword' => null,
+            'date' => null,
+            'status' => Order::CANCEL_STATUS,
+        ];
+        $searchParams = array_merge($searchParams, $request->all());
+
+        // get relation
+        $userModel = new User();
+        $model = new Order();
+        $shared = [
+            'model' => $model,
+            'data' => $model->search($searchParams),
+            'count' => $model->countByStatus($searchParams),
+            'searchParams' => $searchParams,
+            'users' => $userModel->getDropDownList(true),
+        ];
+
+        return view('order.index', $shared);
+    }
+
     /**
+     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
@@ -97,34 +179,35 @@ class OrderController extends Controller
          */
         $this->authorize('admin');
         $model = new Order();
-
         if($request->get('code')){
             $this->validate($request, ['code' => 'unique:orders,code'], ['code.unique' => 'Đơn hàng cho báo giá này đã tồn tại.']);
         }
-
         $this->validate($request, $model->validateRules, $model->validateMessage);
-
         $model->fill($request->all());
         $model->checkBeforeSave();
+
         if($model->save()){
             $debt = new Debt();
             $debt->order_id = $model->id;
             $debt->customer_id = $model->customer_id;
-            $debt->total_money = $model->total_money;
+            $debt->total_money = 0;
             $debt->status = Debt::NEW_STATUS;
             $debt->type = Debt::NOT_PAY_TYPE;
             $debt->date_create = date('Y-m-d');
-            if($debt->save()){
-                return redirect()
-                    ->route('payment-schedules.index', $model->id)
-                    ->with('success', 'Thêm lịch trình thanh toán cho đơn hàng');
+
+            if($model->status == Order::SHIPPED_STATUS){
+                $debt->total_money = $model->getTotalMoneyWithoutPayment();
             }
+
+            $debt->save();
+            return redirect()
+                ->route('orders.index')
+                ->with('success', Messages::UPDATE_SUCCESS);
         } else {
             return redirect()
                 ->route('orders.index', $model->id)
                 ->withErrors(['lỗi khi tạo công nợ']);
         }
-
     }
 
     /**
@@ -154,12 +237,38 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
+        /**
+         * @var $debt Debt
+         */
         $this->authorize('admin');
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
         $model->checkBeforeSave();
-        $model->save();
+
+        if($model->save()){
+            $debt = Debt::where('order_id', $model->id)
+                ->where('customer_id', $model->customer_id)
+                ->first();
+
+            if($model->status == Order::SHIPPED_STATUS){
+                if(!$debt) {
+                    $debt = new Debt();
+                    $debt->order_id = $model->id;
+                    $debt->customer_id = $model->customer_id;
+                    $debt->status = Debt::NEW_STATUS;
+                    $debt->type = Debt::NOT_PAY_TYPE;
+                    $debt->date_create = date('Y-m-d');
+                    $debt->save();
+                } else{
+                    $debt->total_money = 0;
+                }
+
+                $debt->total_money = $model->total_money - $model->prepay + $model->vat;
+                $debt->save();
+            }
+        }
+
         return redirect()
             ->route('orders.index')
             ->with('success', Messages::UPDATE_SUCCESS);

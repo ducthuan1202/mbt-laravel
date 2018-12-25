@@ -12,20 +12,20 @@ use Illuminate\Support\Facades\DB;
  * -------------------------------------
  * @property integer id
  *
- * @property string user_id
- * @property string customer_id
+ * @property integer user_id
+ * @property integer customer_id
  * @property string code
  * @property integer amount
- * @property string price
- * @property string total_money
+ * @property integer price
+ * @property integer total_money
  * @property string power
  * @property string voltage_input
  * @property string voltage_output
  * @property string standard_output
  * @property string standard_real
- * @property string guarantee
+ * @property integer guarantee
  * @property string product_number
- * @property string product_skin
+ * @property integer product_skin
  * @property string product_type
  * @property string setup_at
  * @property integer delivery_at
@@ -33,9 +33,9 @@ use Illuminate\Support\Facades\DB;
  * @property string shipped_date
  * @property string shipped_date_real
  * @property string note
- * @property string status
- * @property string vat
- * @property string prepay
+ * @property integer status
+ * @property integer vat
+ * @property integer prepay
  * @property string payment_pre_shipped
  *
  * @property string created_at
@@ -241,13 +241,11 @@ class Order extends Model
         }
 
         if (isset($searchParams['city']) && !empty($searchParams['city'])) {
-            $query = $query->whereHas('customer', function ($qr) use ($cityTbl, $searchParams) {
-                $qr->where("$cityTbl.city_id", $searchParams['city']);
-            });
+            $query = $query->where("$cityTbl.id", $searchParams['city']);
         }
 
         if (isset($searchParams['user']) && !empty($searchParams['user'])) {
-            $query = $query->where("$userTbl.user_id", $searchParams['user']);
+            $query = $query->where("$userTbl.id", $searchParams['user']);
         }
 
         if (isset($searchParams['customer']) && !empty($searchParams['customer'])) {
@@ -265,14 +263,14 @@ class Order extends Model
             self::NOT_SHIPPED_STATUS => 0,
             self::CANCEL_STATUS => 0,
         ];
+
         if(!$data ||count($data)<1){
-            return $count;
         } else{
             foreach ($data as $item){
                 $count[$item->status] = $item->value;
             }
-            return $count;
         }
+        return $count;
     }
 
     public function listByUser()
@@ -367,17 +365,6 @@ class Order extends Model
         return $data;
     }
 
-    public function listPrePay($addAll = false)
-    {
-        $data = [];
-        if ($addAll) {
-            $data = [null => 'Tất cả'];
-        }
-        $data[self::YES] = 'Có tạm ứng';
-        $data[self::NO] = 'Không tạm ứng';
-        return $data;
-    }
-
     public function listPaymentPreShip($addAll = false)
     {
         $data = [];
@@ -458,6 +445,14 @@ class Order extends Model
         return Common::formatMoney($this->vat);
     }
 
+    public function formatPaymentPreShip(){
+        $data = $this->listPaymentPreShip();
+        if(isset($data[$this->payment_pre_shipped])){
+            return $data[$this->payment_pre_shipped];
+        }
+        return 'n/a';
+    }
+
     public function formatUser()
     {
         if ($this->user) {
@@ -480,6 +475,10 @@ class Order extends Model
             return $this->customer->city->name;
         }
         return Common::UNKNOWN_TEXT;
+    }
+
+    public function getTotalMoneyWithoutPayment(){
+        return $this->total_money + $this->vat - $this->prepay;
     }
 
     public function formatDebt()
@@ -525,6 +524,11 @@ class Order extends Model
     public function formatTotalMoney()
     {
         return Common::formatMoney($this->total_money);
+    }
+
+    public function formatPrePay()
+    {
+        return Common::formatMoney($this->prepay);
     }
 
     public function generateUniqueCode()

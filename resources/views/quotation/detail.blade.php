@@ -28,7 +28,12 @@
                         </tr>
                         <tr class="bg-warning">
                             <td>Trạng thái báo giá</td>
-                            <td>{!! $model->formatStatus() !!}</td>
+                            <td>
+                                {!! $model->formatStatus() !!}
+                                @if(!empty($model->reason))
+                                    <p class="alert"> Lý do: {{$model->reason}}</p>
+                                @endif
+                            </td>
                         </tr>
                         <tr class="bg-warning">
                             <td>Mã báo giá</td>

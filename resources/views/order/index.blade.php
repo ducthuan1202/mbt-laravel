@@ -13,7 +13,6 @@
             <div class="x_title">
                 <h2>
                     Đơn hàng
-                    <small>Tổng số <b>{{$data->total()}}</b></small>
                 </h2>
 
                 @can('admin')
@@ -57,12 +56,12 @@
                         <thead>
                             <tr class="headings">
                                 <th style="vertical-align: middle">No.</th>
-                                <th style="vertical-align: middle">Mã ĐH</th>
                                 <th style="vertical-align: middle">Khách hàng</th>
                                 <th style="vertical-align: middle">Khu vực</th>
-                                <th style="vertical-align: middle">Công nợ</th>
+                                <th style="vertical-align: middle">Tạm ứng</th>
                                 <th style="vertical-align: middle">Đã thanh toán</th>
-                                <th style="vertical-align: middle" class="text-center">Ngày giao hàng<br/>dự tính</th>
+                                <th style="vertical-align: middle">Công nợ</th>
+                                <th style="vertical-align: middle" class="text-center">Ngày giao hàng</th>
                                 <th style="vertical-align: middle">Trạng thái</th>
                                 <th style="vertical-align: middle">Nhân viên KD</th>
                                 <th style="vertical-align: middle"></th>
@@ -75,16 +74,11 @@
 
                                     <tr>
                                         <td style="width: 50px">{{$index + 1}}</td>
-                                        <td>
-                                            <b class="text-danger">{{$item->code}}</b> <br/>
-                                            <a href="{{route('payment-schedules.index',$item->id)}}" class="btn btn-warning btn-xs">
-                                                <i class="fa fa-thumb-tack"></i> Lịch trình thanh toán
-                                            </a>
-                                        </td>
-                                        <td><b style="color:#ff5722">{!! $item->formatCustomer() !!}</b></td>
+                                        <td><b style="color:#ff5722">{!! $item->formatCustomer('<br/>') !!}</b></td>
                                         <td>{!! $item->formatCustomerCity() !!}</td>
-                                        <td>{{$item->formatDebt() }}</td>
+                                        <td>{{$item->formatPrePay() }}</td>
                                         <td>{{$item->formatPayment() }}</td>
+                                        <td>{{$item->formatDebt() }}</td>
                                         <td class="text-center">{{$item->formatShippedDate()}}</td>
                                         <td>{!! $item->formatStatus() !!}</td>
                                         <td><b class="text-success">{{$item->formatUser()}}</b></td>

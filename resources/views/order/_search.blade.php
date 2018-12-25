@@ -26,7 +26,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                 <div class="form-group">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer" id="customer_id">
@@ -35,17 +35,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
-                <div class="form-group">
-                    <label>Trạng thái</label>
-                    <select class="form-control chosen-select" name="status">
-                        @foreach($model->listStatus(true) as $key => $val)
-                            <option value="{{ $key }}" {{ $key == $searchParams['status'] ? 'selected' : '' }}>{!! $val !!}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                 <div class="form-group">
                     <label>Chọn Ngày</label>
                     <div class="input-group date">

@@ -38,7 +38,8 @@ class CreateOrders extends Migration
             $table->text('note')->comment('ghi chú đơn hàng');
             $table->boolean('status')->comment('[1:đã giao, 2:chưa giao, 3:đã hủy]');
 
-            $table->boolean('prepay')->comment('[1:có tạm ứng, 2:không tạm ứng]');
+            $table->integer('vat')->default(0)->comment('%vat');
+            $table->integer('prepay')->default(0)->comment('số tiền tạm ứng');
             $table->boolean('payment_pre_shipped')->comment('[1:thanh toán hết trước giao, 2:thanh toán sau khi giao]');
             $table->timestamps();
         });

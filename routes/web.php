@@ -32,7 +32,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('payment-schedules/{orderId}', 'PaymentScheduleController@store')->name('payment-schedules.store');
     Route::get('debts/old', 'DebtController@oldDebt')->name('debts.list_old');
     Route::get('debts/new', 'DebtController@newDebt')->name('debts.list_new');
-
+    Route::get('/orders/shipped', 'OrderController@shipped')->name('orders.shipped');
+    Route::get('/orders/no-shipped', 'OrderController@noShipped')->name('orders.no_shipped');
+    Route::get('/orders/cancel', 'OrderController@cancel')->name('orders.cancel');
     // api
     Route::get('/customers/by-city', 'CustomerController@getByCity');
     Route::get('/customers/cities-by-user', 'CustomerController@getCitiesByUser');

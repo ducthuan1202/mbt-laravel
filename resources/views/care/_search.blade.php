@@ -30,10 +30,9 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2 hidden">
                 <div class="form-group">
                     <label>Trạng thái KH</label>
-
                     <select class="form-control chosen-select" name="buy">
                         @foreach($buyStatus as $key => $val)
                             <option value="{{ $key }}" {{ $key == $searchParams['buy'] ? 'selected' : '' }}>{{$val}}</option>
@@ -41,6 +40,7 @@
                     </select>
                 </div>
             </div>
+
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Nội dung chăm sóc</label>
@@ -55,20 +55,15 @@
                 <div class="form-group">
                     <label>Chọn Ngày</label>
                     <div class="input-group date">
-                        <span class="input-group-addon">
-                           <i class="glyphicon glyphicon-calendar"></i>
-                        </span>
-                        <input type="text" class="form-control drp-multi" name="date"
-                               value="{{$searchParams['date'] ? $searchParams['date'] : ''}}" readonly/>
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        <input type="text" class="form-control drp-multi" name="date" value="{{$searchParams['date'] ? $searchParams['date'] : ''}}" readonly/>
                     </div>
-
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
-                    <a href="{{route('cares.index')}}" class="btn btn-default">Bỏ Lọc</a>
                 </div>
             </div>
         </div>

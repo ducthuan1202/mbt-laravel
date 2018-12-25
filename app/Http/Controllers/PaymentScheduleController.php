@@ -8,6 +8,7 @@ use App\Helpers\Messages;
 use App\Order;
 use App\PaymentSchedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PaymentScheduleController extends Controller
 {
@@ -41,42 +42,58 @@ class PaymentScheduleController extends Controller
 
         /**
          * @var $order Order
-         * @var $debtModel Debt
+         * @var $debt Debt
          */
         $order = Order::findOrFail($orderId);
-
         $model = new PaymentSchedule();
+
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
+
         $model->order_id = $order->id;
         $model->payment_date = Common::dmY2Ymd($model->payment_date);
 
-        if ($model->save()) {
+        $output = [
+            'success' => false,
+            'message' => Messages::UPDATE_ERROR
+        ];
 
-            // update debt
-            $debtModel = Debt::where('order_id', $order->id)
+        if ($model->save()) {
+            $totalHasPay = DB::table('payment_schedules')
+                ->select(DB::raw('SUM(money) AS total'))
+                ->where('order_id', $order->id)
+                ->where('status', PaymentSchedule::PAID_STATUS)
+                ->first();
+
+            $debt = Debt::where('order_id', $order->id)
                 ->where('customer_id', $order->customer_id)
                 ->first();
 
-            if ($model->status == PaymentSchedule::PAID_STATUS) {
-                $debtModel->total_money = $debtModel->total_money - $model->money;
-                $debtModel->save();
+            if(!$debt){
+                $debt = new Debt();
+                $debt->order_id = $order->id;
+                $debt->customer_id = $order->customer_id;
+                $debt->status = Debt::NEW_STATUS;
+                $debt->type = Debt::NOT_PAY_TYPE;
+                $debt->date_create = date('Y-m-d');
             }
+            $debt->total_money = $order->getTotalMoneyWithoutPayment() - $totalHasPay->total;
 
-            $output = [
-                'success' => true,
-                'message' => 'thành công'
-            ];
-        } else {
-            $output = [
-                'success' => false,
-                'message' => 'thất bại'
-            ];
+            if ($debt->save()) {
+                $output = [
+                    'success' => true,
+                    'message' => Messages::UPDATE_SUCCESS
+                ];
+            }
         }
-
         return response()->json($output);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function openForm($id)
     {
 
@@ -95,13 +112,16 @@ class PaymentScheduleController extends Controller
         return response()->json($output);
     }
 
-    public function saveForm(Request $request, $id)
+    public function saveForm_bk(Request $request, $id)
     {
 
         /**
          * @var $model PaymentSchedule
          * @var $debt Debt
+         * @var $order Order
          */
+
+
         $model = PaymentSchedule::findOrFail($id);
         $oldData = $model->getOriginal();
 
@@ -121,6 +141,8 @@ class PaymentScheduleController extends Controller
                 'message' => Messages::UPDATE_ERROR
             ]);
         }
+
+        $order = Order::find($model->order_id);
 
         $oldMoney = $oldData['money'];
         $newMoney = $model->money;
@@ -164,6 +186,72 @@ class PaymentScheduleController extends Controller
                 'message' => Messages::UPDATE_ERROR,
                 'code' => 2
             ];
+        }
+        return response()->json($output);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function saveForm(Request $request, $id)
+    {
+
+        /**
+         * @var $model PaymentSchedule
+         * @var $debt Debt
+         * @var $order Order
+         */
+
+        $model = PaymentSchedule::findOrFail($id);
+        $order = Order::findOrFail($model->order_id);
+
+        $oldData = $model->getOriginal();
+        $rules = $model->validateRules;
+        unset($rules['order_id']);
+
+        $this->validate($request, $rules, $model->validateMessage);
+        $model->fill($request->all());
+        $model->payment_date = Common::dmY2Ymd($model->payment_date);
+
+        $output = [
+            'success' => false,
+            'message' => Messages::UPDATE_ERROR,
+        ];
+
+        if ($model->save()) {
+            $totalHasPay = DB::table('payment_schedules')
+                ->select(DB::raw('SUM(money) AS total'))
+                ->where('order_id', $order->id)
+                ->where('status', PaymentSchedule::PAID_STATUS)
+                ->first();
+
+            $debt = Debt::where('order_id', $order->id)
+                ->where('customer_id', $order->customer_id)
+                ->first();
+
+            if(!$debt){
+                $debt = new Debt();
+                $debt->order_id = $order->id;
+                $debt->customer_id = $order->customer_id;
+                $debt->status = Debt::NEW_STATUS;
+                $debt->type = Debt::NOT_PAY_TYPE;
+                $debt->date_create = date('Y-m-d');
+            }
+
+            $debt->total_money = $order->getTotalMoneyWithoutPayment() - $totalHasPay->total;
+
+            if ($debt->save()) {
+                $output = [
+                    'success' => true,
+                    'message' => Messages::UPDATE_SUCCESS
+                ];
+            } else {
+                $model->fill($oldData);
+                $model->save();
+            }
         }
         return response()->json($output);
     }
