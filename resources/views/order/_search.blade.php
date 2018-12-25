@@ -37,7 +37,7 @@
 
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
-                    <label>Trạng thái đơn hàng</label>
+                    <label>Trạng thái</label>
                     <select class="form-control chosen-select" name="status">
                         @foreach($model->listStatus(true) as $key => $val)
                             <option value="{{ $key }}" {{ $key == $searchParams['status'] ? 'selected' : '' }}>{!! $val !!}</option>
@@ -54,13 +54,11 @@
                         </span>
                         <input type="text" class="form-control drp-multi" name="date" value="{{$searchParams['date'] ? $searchParams['date'] : ''}}" readonly/>
                     </div>
-
                 </div>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
-                    <a href="{{route('orders.index')}}" class="btn btn-default">Bỏ Lọc</a>
                 </div>
             </div>
         </div>

@@ -2,6 +2,8 @@
     /**
      * @var $model \App\Care
      */
+$cityId = old('city_id') ? old('city_id') : 0;
+$customerId = old('customer_id') ? old('customer_id') : ($model->customer_id ? $model->customer_id : 0);
 @endphp
 
 @if(count($errors))
@@ -32,8 +34,8 @@
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control chosen-select" onchange="getCustomerByCityAndUser()" id="city_id">
-                        <option value="{{$model->city_id}}">{{$model->city_id}}</option>
+                    <select class="form-control chosen-select" name="city_id" onchange="getCustomerByCityAndUser()" id="city_id">
+                        <option value="{{$cityId}}">đang tải dữ liệu</option>
                     </select>
                 </div>
             </div>
@@ -41,7 +43,7 @@
                 <div class="form-group {{$errors->has('customer_id') ? 'has-error' : ''}}">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer_id" id="customer_id">
-                        <option value="{{$model->customer_id}}">{{$model->customer_id}}</option>
+                        <option value="{{$customerId}}">đang tải dữ liệu</option>
                     </select>
                     @if ($errors->has('customer_id')) <span class="help-block">{{ $errors->first('customer_id') }}</span> @endif
                 </div>

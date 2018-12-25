@@ -318,7 +318,6 @@ function getCustomerByCityAndUser(callback){
 }
 
 function getCitiesAndCustomersByUser(){
-    console.log('aaaaaaaaa');
     getCitiesByUser(function () {
         getCustomerByCityAndUser();
     });

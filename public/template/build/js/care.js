@@ -1,18 +1,16 @@
 var MBT_Care = function () {
 
     var deleteItem = function (id) {
-        deleteAjax({
-            url: "/cares/" + id
+        alertConfirm({
+            cbSuccess: function () {
+                deleteAjax({url: "/cares/" + id});
+            }
         });
     };
 
     return {
         delete: function (id) {
-            alertConfirm({
-                cbSuccess: function () {
-                    deleteItem(id);
-                }
-            });
+            deleteItem(id);
         }
     };
 

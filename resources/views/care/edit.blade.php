@@ -27,5 +27,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/care.js') }}"></script>
-    <script>getCitiesByUser()</script>
+    <script>getCitiesAndCustomersByUser()</script>
 @endsection
