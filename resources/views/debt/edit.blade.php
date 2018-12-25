@@ -27,8 +27,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/debt.js') }}"></script>
-    <script>
-        MBT_Debt.getCustomerByCity();
-        // MBT_Debt.getOrderByCustomer();
-    </script>
+    <script>getCitiesAndCustomersByUser();</script>
 @endsection

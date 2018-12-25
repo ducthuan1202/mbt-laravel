@@ -2,6 +2,8 @@
     /**
      * @var $model \App\PriceQuotation
      */
+$userId = isset($model->customer) ? $model->customer->user_id : 0;
+$cityId = isset($model->customer) ? $model->customer->city_id : 0;
 @endphp
 
 @if(count($errors))
@@ -24,7 +26,7 @@
         <div class="ln_solid"></div>
         <div class="form-group">
             <label>Nhân viên kinh doanh</label>
-            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="MBT_PriceQuotation.getCustomerByCity()">
+            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesAndCustomersByUser()">
                 @foreach($users as $user)
                     <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
@@ -35,13 +37,8 @@
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control chosen-select" name="city_id" id="city_id" onchange="MBT_PriceQuotation.getCustomerByCity()">
-                        @foreach($cities as $city)
-                            @php
-                            $_selected = (isset($model->customer) && $city['id'] == $model->customer->city_id) || $city['id'] == old('city_id')
-                            @endphp
-                            <option value="{{ $city['id'] }}" {{ $_selected ? 'selected' : '' }}>{{$city['name']}}</option>
-                        @endforeach
+                    <select class="form-control chosen-select" name="city_id" id="city_id" onchange="getCustomerByCityAndUser()">
+                        <option value="{{$cityId}}">{{$cityId}}</option>
                     </select>
                 </div>
             </div>

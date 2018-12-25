@@ -24,7 +24,7 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
     <div class="col-xs-12 col-sm-6 col-md-6">
         <div class="form-group">
             <label>Nhân viên kinh doanh</label>
-            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="MBT_Debt.getCustomerByCity()">
+            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesAndCustomersByUser()">
                 @foreach($users as $user)
                     <option value="{{ $user['id'] }}" {{ $user['id'] == $userId || $user['id'] == old('user_id') ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
@@ -32,19 +32,14 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
         </div>
         <div class="form-group">
             <label>Khu vực</label>
-            <select class="form-control chosen-select" name="city_id" id="city_id" onchange="MBT_Debt.getCustomerByCity()">
-                @foreach($cities as $city)
-                    <option value="{{ $city['id'] }}"
-                            {{ $city['id'] == $cityId || $city['id'] == old('city_id') ? 'selected' : '' }}>
-                        {{$city['name']}}
-                    </option>
-                @endforeach
+            <select class="form-control chosen-select" name="city_id" id="city_id" onchange="getCustomerByCityAndUser()">
+                <option value="{{$cityId}}">{{$cityId}}</option>
             </select>
         </div>
 
         <div class="form-group">
             <label>Khách hàng</label>
-            <select class="form-control chosen-select" name="customer_id" id="customer_id" onchange="MBT_Debt.getOrderByCustomer()">
+            <select class="form-control chosen-select" name="customer_id" id="customer_id"/>
                 <option value="{{$customerId}}">{{$customerId}}</option>
             </select>
         </div>

@@ -80,7 +80,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <span class="text-success">{!! $item->formatCustomer('<br/>') !!}</span>
+                                        <strong class="text-success">{!! $item->formatCustomer() !!}</strong>
                                     </td>
                                     <td>
                                         {!! $item->formatCustomerCity() !!}
@@ -89,13 +89,9 @@
                                         {!! $item->formatStatus() !!}
                                     </td>
                                     <td>
-                                        <b class="text-success">{{$item->formatUser()}}</b>
+                                        <strong class="text-danger">{!! $item->formatUser() !!}</strong>
                                     </td>
                                     <td class="text-right" style="min-width: 150px">
-                                        {{--<a onclick="MBT_PriceQuotation.getDetail({{$item->id}})"--}}
-                                           {{--class="btn btn-primary btn-xs">--}}
-                                            {{--<i class="fa fa-folder"></i> Xem nhanh--}}
-                                        {{--</a>--}}
                                         <a href="{{route('quotations.show', $item->id)}}" class="btn btn-primary btn-xs">
                                             <i class="fa fa-folder"></i> Xem
                                         </a>
@@ -132,5 +128,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/quotation.js') }}"></script>
-    <script>MBT_PriceQuotation.getCustomerByCityIndex()</script>
+    <script>getCitiesAndCustomersByUser();</script>
 @endsection

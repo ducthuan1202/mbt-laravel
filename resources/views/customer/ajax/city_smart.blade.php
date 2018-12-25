@@ -6,7 +6,7 @@
 * @var $cityId string
 */
 @endphp
-<option>Chọn khu vực</option>
+<option value="0">--- Chọn khu vực ---</option>
 @if(count($cities))
     @foreach($cities as $city)
         <option value="{{ $city['id'] }}" {{$city['id'] == $cityId ? 'selected' : ''}}>

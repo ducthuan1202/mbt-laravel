@@ -11,7 +11,7 @@
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Nhân viên</label>
-                    <select class="form-control chosen-select" name="user" id="sUser" onchange="MBT_Order.getCustomerByCityIndex()">
+                    <select class="form-control chosen-select" name="user" id="user_id" onchange="getCitiesAndCustomersByUser()">
                         @foreach($users as $user)
                             <option value="{{ $user['id'] }}" {{ $user['id'] == $searchParams['user'] ? 'selected' : '' }}>{{$user['name']}}</option>
                         @endforeach
@@ -21,20 +21,16 @@
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control chosen-select" name="city" id="sCity" onchange="MBT_Order.getCustomerByCityIndex()">
-                        @foreach($cities as $city)
-                            <option value="{{ $city['id'] }}" {{ $city['id'] == $searchParams['city'] ? 'selected' : '' }}>{{$city['name']}}</option>
-                        @endforeach
+                    <select class="form-control chosen-select" name="city" id="city_id" onchange="getCustomerByCityAndUser()">
+                        <option value="{{$searchParams['city']}}">đang tải dữ liệu</option>
                     </select>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Khách hàng</label>
-                    <select class="form-control chosen-select" name="customer" id="sCustomer">
-                        @foreach($customers as $customer)
-                            <option value="{{ $customer['id'] }}" {{ $customer['id'] == $searchParams['customer'] ? 'selected' : '' }}>{{$customer['name']}}</option>
-                        @endforeach
+                    <select class="form-control chosen-select" name="customer" id="customer_id">
+                        <option value="{{$searchParams['customer']}}">đang tải dữ liệu</option>
                     </select>
                 </div>
             </div>

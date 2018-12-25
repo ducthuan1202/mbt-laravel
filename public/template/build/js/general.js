@@ -258,7 +258,7 @@ function initSelect2() {
     });
 }
 
-function getCitiesByUser(){
+function getCitiesByUser(callback){
     var cityId = $("#city_id").val();
     var userId = $("#user_id").val();
 
@@ -281,11 +281,12 @@ function getCitiesByUser(){
             } else {
                 alertError({title: response.message});
             }
+            if(typeof callback === 'function') callback();
         }
     });
 }
 
-function getCustomerByCityAndUser(){
+function getCustomerByCityAndUser(callback){
     var cityId = $("#city_id").val();
     var userId = $("#user_id").val();
     var customerId = $("#customer_id").val();
@@ -311,7 +312,15 @@ function getCustomerByCityAndUser(){
             } else {
                 alertError({title: response.message});
             }
+            if(typeof callback === 'function') callback();
         }
+    });
+}
+
+function getCitiesAndCustomersByUser(){
+    console.log('aaaaaaaaa');
+    getCitiesByUser(function () {
+        getCustomerByCityAndUser();
     });
 }
 

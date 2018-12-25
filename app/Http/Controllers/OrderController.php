@@ -33,10 +33,7 @@ class OrderController extends Controller
         $searchParams = array_merge($searchParams, $request->all());
 
         // get relation
-        $cityModel = new City();
         $userModel = new User();
-        $customerModel = new Customer();
-
         $model = new Order();
         $shared = [
             'model' => $model,
@@ -44,8 +41,6 @@ class OrderController extends Controller
             'count' => $model->countByStatus($searchParams),
             'searchParams' => $searchParams,
             'users' => $userModel->getDropDownList(true),
-            'cities' => $cityModel->getDropDownList(true),
-            'customers' => $customerModel->getDropDownList(true),
         ];
 
         return view('order.index', $shared);
@@ -68,8 +63,6 @@ class OrderController extends Controller
             ->first();
 
         $userModel = new User();
-        $cityModel = new City();
-        $customerModel = new Customer();
         $model = new Order();
         if($priceQuotation){
             $model->fill($priceQuotation->getAttributes());
@@ -87,8 +80,6 @@ class OrderController extends Controller
             "message" => $message,
             "model" => $model,
             'users' => $userModel->getDropDownList(),
-            'cities' => $cityModel->getDropDownList(),
-            'customers' => $customerModel->getDropDownList(),
         ];
         return view('order.create', $shared);
     }
@@ -145,15 +136,11 @@ class OrderController extends Controller
     {
         $this->authorize('admin');
         $userModel = new User();
-        $cityModel = new City();
-        $customerModel = new Customer();
 
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
             'users' => $userModel->getDropDownList(),
-            'cities' => $cityModel->getDropDownList(),
-            'customers' => $customerModel->getDropDownList(),
         ];
         return view('order.edit', $shared);
     }

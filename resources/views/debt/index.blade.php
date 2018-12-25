@@ -77,9 +77,10 @@
                                     <td class="text-right">
                                         @can('admin')
                                             @if($item->status == \App\Debt::OLD_STATUS)
-                                            <a href="{{route('debts.edit', $item->id)}}" class="btn btn-info btn-xs">
-                                                <i class="fa fa-pencil"></i> Sửa
-                                            </a>
+                                                <a href="{{route('debts.edit', $item->id)}}"
+                                                   class="btn btn-info btn-xs">
+                                                    <i class="fa fa-pencil"></i> Sửa
+                                                </a>
                                             @endif
                                         @endcan
                                     </td>
@@ -104,5 +105,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/debt.js') }}"></script>
-    <script>MBT_Debt.getCustomerByCityIndex()</script>
+    <script>getCitiesAndCustomersByUser();</script>
 @endsection

@@ -92,9 +92,6 @@
 
                                         </td>
                                         <td class="text-right" style="min-width: 100px">
-                                            {{--<a onclick="MBT_Order.getDetail({{$item->id}})" class="btn btn-primary btn-xs">--}}
-                                                {{--<i class="fa fa-folder"></i> Xem--}}
-                                            {{--</a>--}}
                                             <a href="{{route('payment-schedules.index', $item->id)}}" class="btn btn-primary btn-xs">
                                                 <i class="fa fa-folder"></i> Xem
                                             </a>
@@ -130,5 +127,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/order.js') }}"></script>
-    <script>MBT_Order.getCustomerByCityIndex();</script>
+    <script>getCitiesAndCustomersByUser();</script>
 @endsection

@@ -196,10 +196,10 @@ class Care extends Model
         return Common::UNKNOWN_TEXT;
     }
 
-    public function formatCustomer()
+    public function formatCustomer($separator = '-')
     {
         if ($this->customer) {
-            return sprintf('%s<br/><small>%s</small>', $this->customer->name, $this->customer->mobile);
+            return sprintf('%s %s <small>%s</small>', $this->customer->name,$separator, $this->customer->mobile);
         }
         return Common::UNKNOWN_TEXT;
     }

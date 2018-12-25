@@ -63,7 +63,7 @@
                                 <tr>
                                     <td style="width: 50px">{{$index + 1}}</td>
                                     <td>
-                                        <b class="text-success">{{$item->name}}</b>
+                                        <strong class="text-success">{{$item->name}}</strong>
                                         <p style="font-size: 11px">{{$item->code}}</p>
                                     </td>
                                     <td>
@@ -76,7 +76,7 @@
                                     </td>
                                     <td>{{$item->formatCity()}}</td>
                                     <td>
-                                        <b class="text-success">{{$item->formatUser()}}</b>
+                                        <strong class="text-danger">{!! $item->formatUser() !!}</strong>
                                     </td>
                                     <td class="text-right">{{$item->formatCreatedAt()}}</td>
                                     <td class="text-right" style="max-width: 220px">
@@ -113,4 +113,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/customer.js') }}"></script>
+    <script>getCitiesByUser()</script>
 @endsection

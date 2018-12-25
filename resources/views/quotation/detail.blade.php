@@ -1,4 +1,3 @@
-
 @php
     /**
      * @var $model \App\PriceQuotation
@@ -14,7 +13,9 @@
                 <h2>
                     Báo giá: #{{$model->code}}
                 </h2>
-
+                <a class="btn btn-dark pull-right" href="{{route('quotations.index')}}">
+                    <i class="fa fa-reply"></i> Trở về
+                </a>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -89,6 +90,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 @endsection

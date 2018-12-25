@@ -2,6 +2,9 @@
     /**
      * @var $model \App\Order
      */
+$userId = isset($model->customer) ? $model->customer->user_id : 0;
+$cityId = isset($model->customer) ? $model->customer->city_id : 0;
+$customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
 @endphp
 
 @if(count($errors))
@@ -24,7 +27,7 @@
         <div class="ln_solid"></div>
         <div class="form-group">
             <label>Nhân viên kinh doanh</label>
-            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="MBT_Order.getCustomerByCity()">
+            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesAndCustomersByUser()">
                 @foreach($users as $user)
                     <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id || $user['id'] == old('user_id') ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
@@ -35,13 +38,8 @@
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
                     <label>Khu vực</label>
-                    <select class="form-control chosen-select" id="city_id" onchange="MBT_Order.getCustomerByCity()">
-                        @foreach($cities as $city)
-                            <option value="{{ $city['id'] }}"
-                                    {{ isset($model->customer) && $city['id'] == $model->customer->city_id ? 'selected' : '' }}>
-                                {{$city['name']}}
-                            </option>
-                        @endforeach
+                    <select class="form-control chosen-select" id="city_id" onchange="getCustomerByCityAndUser()">
+                        <option value="{{$cityId}}">{{$cityId}}</option>
                     </select>
                 </div>
             </div>
@@ -49,7 +47,7 @@
                 <div class="form-group">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer_id" id="customer_id">
-                        <option value="{{$model->customer_id}}">{{ isset($model->customer) ? $model->customer->name : 'Chọn khách hàng'}}</option>
+                        <option value="{{$customerId}}">{{$customerId}}</option>
                     </select>
                 </div>
             </div>

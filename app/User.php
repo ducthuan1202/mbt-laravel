@@ -132,7 +132,7 @@ class User extends Authenticatable
             ->get()->toArray();
 
         if ($addAll) {
-            $firstItem = ['id' => null, 'name' => 'Tất cả'];
+            $firstItem = ['id' => '0', 'name' => '--- Chọn NVKD ---'];
             array_unshift($data, $firstItem);
         }
         return $data;
@@ -144,7 +144,7 @@ class User extends Authenticatable
         $data = [];
 
         if ($addAll) {
-            $data = ['0' => 'Tất cả'];
+            $data = ['0' => 'Chọn trạng thái'];
         }
 
         $data[self::ACTIVATE_STATUS] = 'Hoạt Động';

@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/import/customer', 'HomeController@importCustomer');
-//    Route::get('/convert-data', 'HomeController@convertData');
-Route::get('/update-code', 'HomeController@updateCode');
+// Route::get('/import/customer', 'HomeController@importCustomer');
+// Route::get('/convert-data', 'HomeController@convertData');
+// Route::get('/update-code', 'HomeController@updateCode');
 
 Route::namespace('Auth')->group(function () {
     Route::get('login', 'LoginController@showLoginForm')->name('login');

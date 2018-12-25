@@ -41,7 +41,6 @@ class CustomerController extends Controller
             'hasBuy' => $model->countHasBuy($searchParams),
             'searchParams' => $searchParams,
             'users' => $userModel->getDropDownList(true),
-            'cities' => $cityModel->getDropDownList(true),
             'status' => $model->getStatus(true)
         ];
 
@@ -273,13 +272,15 @@ class CustomerController extends Controller
 
     public function getCitiesByUser(Request $request)
     {
-        $userId = (int)$request->get('userId');
-        $cityId = (int)$request->get('cityId');
+        $userId = $request->get('userId');
+        $cityId = $request->get('cityId');
 
         $customerQuery = Customer::select('id', 'name', 'city_id');
+
         if (!empty($userId)) {
             $customerQuery = $customerQuery->where('user_id', $userId);
         }
+
         $customers = $customerQuery->get()->toArray();
         $customerGroupByCity = collect($customers)->groupBy('city_id');
 
@@ -306,6 +307,10 @@ class CustomerController extends Controller
         ];
         $output = [
             'success' => true,
+            'data'=>[
+                'city_id'=>$cityId,
+                'user_id'=>$userId,
+            ],
             'message' => view('customer.ajax.city_smart', $shared)->render()
         ];
         return response()->json($output);

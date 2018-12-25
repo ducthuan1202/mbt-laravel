@@ -26,8 +26,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/order.js') }}"></script>
-    <script>
-        MBT_Order.getCustomerByCity();
-        MBT_Order.priceOrAmountOnchange()
-    </script>
+    <script>getCitiesAndCustomersByUser();</script>
 @endsection

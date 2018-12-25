@@ -69,12 +69,16 @@
                             @foreach($data as $index => $item)
                                 <tr>
                                     <td style="width: 50px">{{$index + 1}}</td>
-                                    <td>{!! $item->formatCustomer() !!}</td>
+                                    <td>
+                                        <strong class="text-success">{!! $item->formatCustomer() !!}</strong>
+                                    </td>
                                     <td>{!! $item->formatCustomerCity() !!}</td>
                                     <td>{{$item->formatStartDate()}}</td>
                                     <td>{{$item->formatEndDate()}}</td>
                                     <td><span class="badge">{{$item->formatStatus()}}</span></td>
-                                    <td>{!! $item->formatUser() !!}</td>
+                                    <td>
+                                        <strong class="text-danger">{!! $item->formatUser() !!}</strong>
+                                    </td>
                                     <td>{!! $item->customer_note !!}</td>
                                     <td class="text-right" style="min-width: 150px">
                                         <a href="{{route('cares.edit', $item->id)}}" class="btn btn-info btn-xs">
@@ -110,5 +114,5 @@
 
 @section('script')
     <script src="{{ asset('/template/build/js/care.js') }}"></script>
-    <script>getCitiesByUser()</script>
+    <script>getCitiesAndCustomersByUser();</script>
 @endsection
