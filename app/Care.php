@@ -4,6 +4,7 @@ namespace App;
 
 use App\Helpers\Common;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Care
@@ -42,9 +43,9 @@ class Care extends Model
     public $validateMessage = [
         'user_id.required' => 'Chọn nhân viên chăm sóc.',
         'customer_id.required' => 'Chọn khách hàng.',
-        'customer_note.required' => 'Nội dung cuộc chăm sóc không thể bỏ trống.',
+        'customer_note.required' => 'Mô tả khách hàng không thể bỏ trống.',
         'call_date.required' => 'Chọn ngày chăm sóc.',
-        'status.required' => 'Trạng thái không thể bỏ trống.',
+        'status.required' => 'Nội dung cuộc chăm sóc không thể bỏ trống.',
     ];
 
     public $validateRules = [
@@ -55,6 +56,10 @@ class Care extends Model
         'end_date' => 'required',
         'status' => 'required',
     ];
+
+    private function getUserLogin(){
+        return Auth::user();
+    }
 
     public function checkBeforeSave()
     {
@@ -81,7 +86,15 @@ class Care extends Model
     public function search($searchParams = [])
     {
 
+        /**
+         * @var $userLogin User
+         */
         $model = $this->with(['user', 'customer', 'customer.city']);
+
+        $userLogin = $this->getUserLogin();
+        if($userLogin && $userLogin->role !== User::ADMIN_ROLE){
+            $model = $model->where('user_id', $userLogin->id);
+        }
 
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {

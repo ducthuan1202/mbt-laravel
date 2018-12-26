@@ -2,20 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
+use App\PaymentSchedule;
+use Illuminate\Http\Request;
+use App\Order;
 
 class ReportController extends Controller
 {
 
-    public function customers()
-    {
-        $shared = [
-            'data' => 0,
-        ];
-        return view('report/customer', $shared);
-    }
-
-    public function orders()
+    public function index()
     {
         $shared = [
             'data' => 0,
@@ -23,27 +17,33 @@ class ReportController extends Controller
         return view('report/order', $shared);
     }
 
-    public function quotations()
+    public function revenue(Request $request)
     {
-        $shared = [
-            'data' => 0,
-        ];
-        return view('report/quotation', $shared);
-    }
+        $order = new Order();
 
-    public function cares()
-    {
-        $shared = [
-            'data' => 0,
-        ];
-        return view('report/care', $shared);
-    }
+        $thisWeek = $request->get('thisWeek');
+        $thisMonth = $request->get('thisMonth');
 
-    public function debts()
-    {
+        // order pre pay
+        $revenuePrePayWeek = $order->getPrePay($thisWeek);
+        $revenuePrePayMonth = $order->getPrePay($thisMonth);
+
+        // payment schedule
+        $paymentSchedule = new PaymentSchedule();
+        $paymentWeek = $paymentSchedule->getPrePay($thisWeek);
+        $paymentMonth = $paymentSchedule->getPrePay($thisMonth);
+
         $shared = [
-            'data' => 0,
+            'revenuePrePayMonth' => $revenuePrePayMonth,
+            'revenuePrePayWeek' => $revenuePrePayWeek,
+            'paymentWeek' => $paymentWeek,
+            'paymentMonth' => $paymentMonth,
         ];
-        return view('report/debt', $shared);
+        $output = [
+            'success' => true,
+            'message' => view('report/revenue', $shared)->render()
+        ];
+        return response()->json($output);
+
     }
 }

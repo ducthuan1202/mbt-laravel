@@ -14,6 +14,7 @@ class UserController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
@@ -54,6 +55,7 @@ class UserController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)

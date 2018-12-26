@@ -91,13 +91,16 @@ class Customer extends Model
         /**
          * @var $userLogin User
          */
-        $data = DB::table('customers')
+        $model = DB::table('customers')
             ->select('status AS name', DB::raw("COUNT(status) AS value"))
             ->groupBy('status');
 
         $userLogin = $this->getUserLogin();
-        $data = $data->where('user_id', $userLogin->id);
-        return $data;
+        if($userLogin->role !== User::ADMIN_ROLE){
+            $model = $model->where('user_id', $userLogin->id);
+        }
+
+        return $model->get();
     }
 
     // TODO:  QUERY TO DATABASE =====
@@ -269,6 +272,7 @@ class Customer extends Model
         $list = $this->getStatus();
         $label = [];
         $value = [];
+
         foreach ($data as $item):
             if($item->name === self::BUY_STATUS){
                 $label[] = $list[self::BUY_STATUS];
@@ -290,6 +294,7 @@ class Customer extends Model
                 ];
             }
         endforeach;
+
 
         return \GuzzleHttp\json_encode([
             'label' => $label,

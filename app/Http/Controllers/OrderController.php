@@ -48,7 +48,6 @@ class OrderController extends Controller
 
     public function shipped(Request $request)
     {
-        $this->authorize('admin');
         $searchParams = [
             'customer' => null,
             'user' => null,
@@ -75,7 +74,6 @@ class OrderController extends Controller
 
     public function noShipped(Request $request)
     {
-        $this->authorize('admin');
         $searchParams = [
             'customer' => null,
             'user' => null,
@@ -102,7 +100,6 @@ class OrderController extends Controller
 
     public function cancel(Request $request)
     {
-        $this->authorize('admin');
         $searchParams = [
             'customer' => null,
             'user' => null,

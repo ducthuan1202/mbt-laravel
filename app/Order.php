@@ -4,6 +4,7 @@ namespace App;
 
 use App\Helpers\Common;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -118,6 +119,11 @@ class Order extends Model
         'status' => 'required',
     ];
 
+    private function getUserLogin()
+    {
+        return Auth::user();
+    }
+
     public function checkBeforeSave()
     {
         if (!empty($this->start_date)) {
@@ -163,9 +169,17 @@ class Order extends Model
     // TODO:  QUERY TO DATABASE =====
     public function buildQuerySearch($searchParams = [])
     {
+        /**
+         * @var $userLogin User
+         */
         $model = $this->with(['user', 'customer', 'customer.city', 'debt', 'payments' => function ($query) {
             $query->where('status', PaymentSchedule::PAID_STATUS);
         }]);
+
+        $userLogin = Auth::user();
+        if ($userLogin->role !== User::ADMIN_ROLE) {
+            $model = $model->where('user_id', $userLogin->id);
+        }
 
         // filter by user
         if (isset($searchParams['user']) && !empty($searchParams['user'])) {
@@ -264,9 +278,9 @@ class Order extends Model
             self::CANCEL_STATUS => 0,
         ];
 
-        if(!$data ||count($data)<1){
-        } else{
-            foreach ($data as $item){
+        if (!$data || count($data) < 1) {
+        } else {
+            foreach ($data as $item) {
                 $count[$item->status] = $item->value;
             }
         }
@@ -323,6 +337,15 @@ class Order extends Model
         }
 
         return $data;
+    }
+
+    public function getPrePay($date){
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        return Order::whereBetween('start_date', [$startDate, $endDate])
+            ->get();
     }
 
     // TODO:  LIST DATA =====
@@ -445,9 +468,10 @@ class Order extends Model
         return Common::formatMoney($this->vat);
     }
 
-    public function formatPaymentPreShip(){
+    public function formatPaymentPreShip()
+    {
         $data = $this->listPaymentPreShip();
-        if(isset($data[$this->payment_pre_shipped])){
+        if (isset($data[$this->payment_pre_shipped])) {
             return $data[$this->payment_pre_shipped];
         }
         return 'n/a';
@@ -477,7 +501,8 @@ class Order extends Model
         return Common::UNKNOWN_TEXT;
     }
 
-    public function getTotalMoneyWithoutPayment(){
+    public function getTotalMoneyWithoutPayment()
+    {
         return $this->total_money + $this->vat - $this->prepay;
     }
 

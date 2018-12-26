@@ -5,6 +5,7 @@ namespace App;
 use App\Helpers\Common;
 use App\Helpers\Messages;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -106,6 +107,11 @@ class PriceQuotation extends Model
         'status' => 'required',
     ];
 
+    private function getUserLogin(){
+        return Auth::user();
+    }
+
+
     public function checkBeforeSave()
     {
 
@@ -185,6 +191,11 @@ class PriceQuotation extends Model
     private function buildQuerySearch($searchParams = [])
     {
         $model = $this->with(['customer', 'user', 'customer.city', 'order']);
+
+        $userLogin = $this->getUserLogin();
+        if($userLogin && $userLogin->role !== User::ADMIN_ROLE){
+            $model = $model->where('user_id', $userLogin->id);
+        }
 
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {

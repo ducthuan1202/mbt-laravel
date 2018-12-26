@@ -45,11 +45,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('payment-schedules/ajax/{orderId}', 'PaymentScheduleController@saveForm')->name('payment-schedules.save_form');
 
     //report
-    Route::get('/report/customers', 'ReportController@customers')->name('report.customers');
-    Route::get('/report/orders', 'ReportController@orders')->name('report.orders');
-    Route::get('/report/quotations', 'ReportController@quotations')->name('report.quotations');
-    Route::get('/report/cares', 'ReportController@cares')->name('report.cares');
-    Route::get('/report/debts', 'ReportController@debts')->name('report.debts');
+    Route::get('/report', 'ReportController@index')->name('report.index');
+    Route::get('/report/revenue', 'ReportController@revenue')->name('report.revenue');
 
     // resource
     Route::resource('cities', 'CityController')->except(['show']);

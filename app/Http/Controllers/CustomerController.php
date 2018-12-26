@@ -116,6 +116,10 @@ class CustomerController extends Controller
         return view('customer.edit', $shared);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show($id)
     {
         $model = $this->finById($id);
@@ -131,6 +135,7 @@ class CustomerController extends Controller
 
         $priceQuotationModel = new PriceQuotation();
         $priceQuotationModel->customer_id = $model->id;
+
         $debtModel = new Debt();
         $debtModel->customer_id = $model->id;
 

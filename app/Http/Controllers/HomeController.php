@@ -29,9 +29,9 @@ class HomeController extends Controller
         $customerModel = new Customer();
         $eChartCustomerData = $customerModel->countCustomerByStatus();
 
+
         $userModel = new User();
         $eChartData = $userModel->countCustomerByUser();
-
         $debtModel = new Debt();
         $shared = [
             'customerCount' => Customer::countNumber(),

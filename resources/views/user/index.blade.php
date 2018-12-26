@@ -41,7 +41,9 @@
                             <th>Số điện thoại - email</th>
                             <th>Chức danh</th>
                             <th>Trạng thái</th>
-                            <th></th>
+                            @can('admin')
+                                <th></th>
+                            @endif
                         </tr>
                         </thead>
                         <tbody>
@@ -61,16 +63,16 @@
                                     </td>
                                     <td>{!! $item->formatRolesText() !!}</td>
                                     <td>{!! $item->formatStatus() !!}</td>
-                                    <td class="text-right" style="min-width: 150px">
-                                        <a href="{{route('users.edit', $item->id)}}" class="btn btn-info btn-xs">
-                                            <i class="fa fa-pencil"></i> Sửa
-                                        </a>
-                                        @can('admin')
+                                    @can('admin')
+                                        <td class="text-right" style="min-width: 150px">
+                                            <a href="{{route('users.edit', $item->id)}}" class="btn btn-info btn-xs">
+                                                <i class="fa fa-pencil"></i> Sửa
+                                            </a>
                                             <a onclick="MBT_User.delete({{$item->id}})" class="btn btn-danger btn-xs">
                                                 <i class="fa fa-trash-o"></i> Xóa
                                             </a>
-                                        @endif
-                                    </td>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         @else

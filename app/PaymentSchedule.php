@@ -77,6 +77,17 @@ class PaymentSchedule extends Model
     public function syncWithDebt(){
 
     }
+
+    public function getPrePay($date){
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        return self::whereBetween('payment_date', [$startDate, $endDate])
+            ->where('status', PaymentSchedule::PENDING_STATUS)
+            ->get();
+    }
+
     // TODO:  LIST DATA =====
     public function listStatus($addAll = false)
     {

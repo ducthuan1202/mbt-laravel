@@ -70,14 +70,7 @@
                 <ul class="nav side-menu">
                     @can('admin')
                         <li>
-                            <a><i class="fa fa-edit"></i> BÁO CÁO <span class="fa fa-chevron-down"></span></a>
-                            <ul class="nav child_menu">
-                                <li><a href="{{route('report.customers')}}">Khách hàng</a></li>
-                                <li><a href="{{route('report.cares')}}">CSKH</a></li>
-                                <li><a href="{{route('report.quotations')}}">Báo giá</a></li>
-                                <li><a href="{{route('report.orders')}}">Đơn hàng</a></li>
-                                <li><a href="{{route('report.debts')}}">Công nợ</a></li>
-                            </ul>
+                            <a href="{{route('report.index')}}"><i class="fa fa-edit"></i> BÁO CÁO </a>
                         </li>
                     @endcan
                 </ul>

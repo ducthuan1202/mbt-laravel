@@ -52,7 +52,6 @@
                             <th>Khách hàng</th>
                             <th>Khu vực</th>
                             <th>Ngày tạo</th>
-                            <th>Đơn hàng</th>
                             <th>Số nợ</th>
                             <th>Nhân viên KD</th>
                             <th>Kiểu công nợ</th>
@@ -69,7 +68,6 @@
                                     <td>{!! $item->formatCustomer() !!}</td>
                                     <td>{{$item->formatCustomerCity()}}</td>
                                     <td>{{$item->formatDateCreate()}}</td>
-                                    <td>{{$item->formatOrder()}}</td>
                                     <td>{{$item->formatMoney()}}</td>
                                     <td>{{$item->formatCustomerUser()}}</td>
                                     <td>{!! $item->formatType() !!}</td>
