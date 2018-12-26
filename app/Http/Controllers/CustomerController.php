@@ -33,7 +33,6 @@ class CustomerController extends Controller
 
         // get dropdown list
         $userModel = new User();
-        $cityModel = new City();
         $model = new Customer();
 
         $shared = [
@@ -276,6 +275,11 @@ class CustomerController extends Controller
         $cityId = $request->get('cityId');
 
         $customerQuery = Customer::select('id', 'name', 'city_id');
+
+        $userLogin = $this->getUserLogin();
+        if($userLogin->role !== User::ADMIN_ROLE){
+            $customerQuery = $customerQuery->where('user_id', $userLogin->id);
+        }
 
         if (!empty($userId)) {
             $customerQuery = $customerQuery->where('user_id', $userId);

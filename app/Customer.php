@@ -5,6 +5,7 @@ namespace App;
 use App\Helpers\Common;
 use App\Helpers\Messages;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -66,6 +67,9 @@ class Customer extends Model
         'status' => 'required',
     ];
 
+    private function getUserLogin(){
+        return Auth::user();
+    }
     // TODO:  RELATIONSHIP =====
     public function city()
     {
@@ -84,11 +88,15 @@ class Customer extends Model
 
     public function countCustomerByStatus()
     {
-
+        /**
+         * @var $userLogin User
+         */
         $data = DB::table('customers')
             ->select('status AS name', DB::raw("COUNT(status) AS value"))
-            ->groupBy('status')
-            ->get();
+            ->groupBy('status');
+
+        $userLogin = $this->getUserLogin();
+        $data = $data->where('user_id', $userLogin->id);
         return $data;
     }
 
@@ -110,7 +118,17 @@ class Customer extends Model
 
     private function buildQuerySearch($searchParams = [])
     {
+
+        /**
+         * @var $userLogin User
+         */
         $model = $this->with(['city', 'user']);
+
+        $userLogin = Auth::user();
+        if($userLogin->role !== User::ADMIN_ROLE){
+            $model = $model->where('user_id', $userLogin->id);
+        }
+
         // filter by keyword
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where(function ($query) use ($searchParams) {

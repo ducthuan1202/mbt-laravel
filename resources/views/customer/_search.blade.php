@@ -4,11 +4,18 @@
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Nhân viên</label>
-                    <select class="form-control chosen-select" name="user" id="user_id" onchange="getCitiesByUser()">
+                    @can('admin')
+                        <select class="form-control chosen-select" name="user" id="user_id" onchange="getCitiesByUser()">
                         @foreach($users as $user)
                             <option value="{{ $user['id'] }}" {{ $user['id'] == $searchParams['user'] ? 'selected' : '' }}>{{$user['name']}}</option>
                         @endforeach
-                    </select>
+                        </select>
+                    @elsecan('employee')
+                        @php $userLogin = \Illuminate\Support\Facades\Auth::user(); @endphp
+                        <select class="form-control chosen-select" name="user" id="user_id">
+                            <option value="{{ $userLogin->id}}" selected>{{$userLogin->name}}</option>
+                        </select>
+                    @endcan
                 </div>
             </div>
 

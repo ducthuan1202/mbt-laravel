@@ -31,9 +31,11 @@
                     <li>
                         <a href="{{route('cities.index')}}"><i class="fa fa-map-marker"></i> Khu Vực</a>
                     </li>
-                    <li>
-                        <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Nhân Sự</a>
-                    </li>
+                    @can('admin')
+                        <li>
+                            <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Nhân Sự</a>
+                        </li>
+                    @endcan
                     <li>
                         <a href="{{route('customers.index')}}"><i class="fa fa-users"></i> Khách Hàng</a>
                     </li>
@@ -43,7 +45,6 @@
                     <li>
                         <a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Báo Giá</a>
                     </li>
-                    @can('admin')
                     <li>
                         <a><i class="fa fa-shopping-cart"></i> Đơn Hàng <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
@@ -52,13 +53,14 @@
                             <li><a href="{{route('orders.cancel')}}">Đã hủy</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a><i class="fa fa-slideshare"></i> Công Nợ <span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
-                            <li><a href="{{route('debts.list_old')}}">Công nợ cũ</a></li>
-                            <li><a href="{{route('debts.list_new')}}">Công nợ mới</a></li>
-                        </ul>
-                    </li>
+                    @can('admin')
+                        <li>
+                            <a><i class="fa fa-slideshare"></i> Công Nợ <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li><a href="{{route('debts.list_old')}}">Công nợ cũ</a></li>
+                                <li><a href="{{route('debts.list_new')}}">Công nợ mới</a></li>
+                            </ul>
+                        </li>
                     @endcan
                 </ul>
 

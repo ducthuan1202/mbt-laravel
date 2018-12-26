@@ -12,7 +12,6 @@
         <div class="x_panel">
             <div class="x_title">
                 <h2>Khách Hàng</h2>
-
                 <a class="btn btn-success pull-right" href="{{route('customers.create')}}">
                     <i class="fa fa-plus"></i> Thêm mới
                 </a>
@@ -50,10 +49,10 @@
                             <th>No.</th>
                             <th style="width: 150px">Họ tên</th>
                             <th style="width: 150px">Số điện thoại</th>
-                            <th style="width: 250px">Chức vụ - Công ty</th>
-                            <th style="width: 250px">Khu vực</th>
-                            <th style="width: 180px">Nhân viên KD</th>
-                            <th class="text-right">Ngày tạo</th>
+                            <th>Chức vụ - Công ty</th>
+                            <th style="width: 100px">Khu vực</th>
+                            <th style="width: 150px">Nhân viên KD</th>
+                            <th class="text-right" style="width: 80px">Ngày tạo</th>
                             <th></th>
                         </tr>
                         </thead>
