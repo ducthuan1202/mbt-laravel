@@ -12,11 +12,10 @@
         <div class="x_panel">
             <div class="x_title">
                 <h2>Báo Giá</h2>
-                @can('admin')
-                    <a class="btn btn-success pull-right" href="{{route('quotations.create')}}">
-                        <i class="fa fa-plus"></i> Thêm mới
-                    </a>
-                @endcan
+
+                <a class="btn btn-success pull-right" href="{{route('quotations.create')}}">
+                    <i class="fa fa-plus"></i> Thêm mới
+                </a>
                 <div class="clearfix"></div>
             </div>
 

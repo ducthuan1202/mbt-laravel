@@ -39,7 +39,7 @@ class PaymentSchedule extends Model
      *
      * @var array
      */
-    protected $fillable = ['order_id', 'money', 'payment_date', 'status','note'];
+    protected $fillable = ['order_id', 'money', 'payment_date', 'status', 'note'];
 
     public $validateMessage = [
         'order_id.required' => 'Chọn đơn hàng cần lên lịch thanh toán.',
@@ -74,16 +74,14 @@ class PaymentSchedule extends Model
             ->orderBy('payment_date', 'asc')->get();
     }
 
-    public function syncWithDebt(){
-
-    }
-
-    public function getPrePay($date){
+    public function getPayment($date)
+    {
         $date = Common::extractDate($date);
         $startDate = Common::dmY2Ymd($date[0]);
         $endDate = Common::dmY2Ymd($date[1]);
 
-        return self::whereBetween('payment_date', [$startDate, $endDate])
+        return self::with(['order'])
+            ->whereBetween('payment_date', [$startDate, $endDate])
             ->where('status', PaymentSchedule::PENDING_STATUS)
             ->get();
     }
@@ -92,7 +90,7 @@ class PaymentSchedule extends Model
     public function listStatus($addAll = false)
     {
         $data = [];
-        if($addAll){
+        if ($addAll) {
             $data[null] = 'Tất cả';
         }
         $data[self::PENDING_STATUS] = 'Hẹn thanh toán';
@@ -116,7 +114,8 @@ class PaymentSchedule extends Model
         return Common::formatMoney($this->money);
     }
 
-    public function formatDate(){
+    public function formatDate()
+    {
         return Common::formatDate($this->payment_date);
     }
 

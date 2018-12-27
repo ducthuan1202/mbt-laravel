@@ -47,4 +47,17 @@ class Common
     public static function formatNumber($number){
         return number_format($number);
     }
+
+    public static function getDateRangeOfThisWeek(){
+        $startTime = strtotime('this week', time());
+        $startOfWeek = date('Y-m-d', $startTime);
+        $endOfWeek = date('Y-m-d', $startTime + 60*60*24*7);
+        return sprintf('%s - %s', $startOfWeek, $endOfWeek);
+    }
+
+    public static function getDateRangeOfThisMonth(){
+        $startOfWeek = date('Y-m-01');
+        $endOfWeek = date('Y-m-t', time());
+        return sprintf('%s - %s', $startOfWeek, $endOfWeek);
+    }
 }

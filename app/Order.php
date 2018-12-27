@@ -76,12 +76,14 @@ class Order extends Model
 
     public $validateMessage = [
         'user_id.required' => 'Chọn nhân viên kinh doanh.',
+        'user_id.min' => 'Chọn nhân viên kinh doanh.',
         'customer_id.required' => 'Chọn khách hàng.',
+        'customer_id.min' => 'Chọn khách hàng.',
         'amount.required' => 'Số lượng sản phẩm không thể bỏ trống.',
-        'amount.numeric' => 'Số lượng phải là kiểu số.',
+        'amount.integer' => 'Số lượng phải là kiểu số.',
         'price.required' => 'Giá báo không thể bỏ trống.',
-        'price.numeric' => 'Giá báo phải là kiểu số.',
-        'power.required' => 'Công suất sản phẩm không thể bỏ trống.',
+        'price.integer' => 'Giá báo phải là kiểu số.',
+        'power.integer' => 'Công suất sản phẩm không thể bỏ trống.',
         'voltage_input.required' => 'Điện áp đầu vào không thể bỏ trống.',
         'voltage_output.required' => 'Điện áp đầu ra không thể bỏ trống.',
         'standard_output.required' => 'Tiêu chuẩn máy không thể bỏ trống.',
@@ -99,10 +101,10 @@ class Order extends Model
     ];
 
     public $validateRules = [
-        'user_id' => 'required',
-        'customer_id' => 'required',
-        'amount' => 'required|numeric',
-        'price' => 'required|numeric',
+        'user_id' => 'required|integer|min:1',
+        'customer_id' => 'required|integer|min:1',
+        'amount' => 'required|integer',
+        'price' => 'required|integer',
         'power' => 'required',
         'voltage_input' => 'required',
         'voltage_output' => 'required',
@@ -339,12 +341,14 @@ class Order extends Model
         return $data;
     }
 
-    public function getPrePay($date){
+    public function getPrePay($date)
+    {
         $date = Common::extractDate($date);
         $startDate = Common::dmY2Ymd($date[0]);
         $endDate = Common::dmY2Ymd($date[1]);
 
-        return Order::whereBetween('start_date', [$startDate, $endDate])
+        return Order::with(['customer'])
+            ->whereBetween('start_date', [$startDate, $endDate])
             ->get();
     }
 

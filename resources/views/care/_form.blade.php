@@ -2,6 +2,7 @@
     /**
      * @var $model \App\Care
      */
+$userLogin = \Illuminate\Support\Facades\Auth::user();
 $cityId = old('city_id') ? old('city_id') : 0;
 $customerId = old('customer_id') ? old('customer_id') : ($model->customer_id ? $model->customer_id : 0);
 @endphp
@@ -22,11 +23,18 @@ $customerId = old('customer_id') ? old('customer_id') : ($model->customer_id ? $
     <div class="col-md-6">
         <div class="form-group {{$errors->has('user_id') ? 'has-error' : ''}}">
             <label>Nhân viên kinh doanh</label>
-            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesByUser()">
-                @foreach($users as $user)
-                    <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id || $user['id'] == old('user_id') ? 'selected' : '' }}>{{$user['name']}}</option>
-                @endforeach
-            </select>
+
+            @can('admin')
+                <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesByUser()">
+                    @foreach($users as $user)
+                        <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id || $user['id'] == old('user_id') ? 'selected' : '' }}>{{$user['name']}}</option>
+                    @endforeach
+                </select>
+            @elsecan('employee')
+                <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesByUser()">
+                    <option value="{{ $userLogin->id}}" selected>{{$userLogin->name}}</option>
+                </select>
+            @endcan
             @if ($errors->has('user_id')) <span class="help-block">{{ $errors->first('user_id') }}</span> @endif
         </div>
 

@@ -2,6 +2,7 @@
     /**
      * @var $model \App\PriceQuotation
      */
+ $userLogin = \Illuminate\Support\Facades\Auth::user();
 $userId = isset($model->customer) ? $model->customer->user_id : 0;
 $cityId = isset($model->customer) ? $model->customer->city_id : 0;
 @endphp
@@ -18,19 +19,23 @@ $cityId = isset($model->customer) ? $model->customer->city_id : 0;
 
 {{csrf_field()}}
 
-
-
 <div class="row">
     <div class="col-xs-12 col-sm-5 col-md-5">
         <h3>Thông tin khách hàng</h3>
         <div class="ln_solid"></div>
         <div class="form-group">
             <label>Nhân viên kinh doanh</label>
-            <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesAndCustomersByUser()">
-                @foreach($users as $user)
-                    <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id ? 'selected' : '' }}>{{$user['name']}}</option>
-                @endforeach
-            </select>
+            @can('admin')
+                <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesAndCustomersByUser()">
+                    @foreach($users as $user)
+                        <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id ? 'selected' : '' }}>{{$user['name']}}</option>
+                    @endforeach
+                </select>
+            @else
+                <select class="form-control chosen-select" name="user_id" id="user_id" onchange="getCitiesAndCustomersByUser()">
+                    <option value="{{ $userLogin->id}}" selected>{{$userLogin->name}}</option>
+                </select>
+            @endcan
         </div>
 
         <div class="row">
@@ -146,7 +151,6 @@ $cityId = isset($model->customer) ? $model->customer->city_id : 0;
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6">
-
                 <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
                     <label>Bảo hành</label>
                     <div class="input-group">
@@ -157,13 +161,14 @@ $cityId = isset($model->customer) ? $model->customer->city_id : 0;
                 </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6">
-                <div class="form-group">
+                <div class="form-group {{$errors->has('status') ? 'has-error' : ''}}">
                     <label>Trạng Thái</label>
                     <select class="form-control chosen-select" name="status" id="status" onchange="MBT_PriceQuotation.statusOnchange()">
                         @foreach($model->listStatus() as $key => $val)
                             <option value="{{ $key }}" {{ ($key == $model->status || $key == old('status')) ? 'selected' : '' }}>{!! $val !!}</option>
                         @endforeach
                     </select>
+                    @if ($errors->has('status')) <span class="help-block">{{ $errors->first('status') }}</span> @endif
                 </div>
 
             </div>

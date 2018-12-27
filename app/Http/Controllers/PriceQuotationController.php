@@ -81,6 +81,7 @@ class PriceQuotationController extends Controller
     {
         $model = new PriceQuotation();
         $this->validate($request, $model->validateRules, $model->validateMessage);
+
         $model->fill($request->all());
         $model->checkBeforeSave();
         if($model->save()){

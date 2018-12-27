@@ -42,15 +42,17 @@ class Care extends Model
 
     public $validateMessage = [
         'user_id.required' => 'Chọn nhân viên chăm sóc.',
+        'user_id.min' => 'Chọn nhân viên chăm sóc.',
         'customer_id.required' => 'Chọn khách hàng.',
+        'customer_id.min' => 'Chọn khách hàng.',
         'customer_note.required' => 'Mô tả khách hàng không thể bỏ trống.',
         'call_date.required' => 'Chọn ngày chăm sóc.',
         'status.required' => 'Nội dung cuộc chăm sóc không thể bỏ trống.',
     ];
 
     public $validateRules = [
-        'user_id' => 'required',
-        'customer_id' => 'required',
+        'user_id' => 'required|integer|min:1',
+        'customer_id' => 'required|integer|min:1',
         'customer_note' => 'required',
         'start_date' => 'required',
         'end_date' => 'required',

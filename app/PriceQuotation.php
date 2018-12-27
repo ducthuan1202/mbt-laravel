@@ -73,9 +73,13 @@ class PriceQuotation extends Model
 
     public $validateMessage = [
         'user_id.required' => 'Chọn nhân viên kinh doanh.',
+        'user_id.min' => 'Chọn nhân viên kinh doanh.',
         'customer_id.required' => 'Chọn khách hàng.',
+        'customer_id.min' => 'Chọn khách hàng.',
         'amount.required' => 'Số lượng không thể bỏ trống.',
+        'amount.min' => 'Số lượng phải là số và lớn hơn 0.',
         'price.required' => 'Giá báo không thể bỏ trống.',
+        'price.min' => 'Giá báo phải là số và lớn hơn 0.',
         'quotations_date.required' => 'Ngày báo giá không thể bỏ trống.',
         'power.required' => 'Công suất không thể bỏ trống.',
         'voltage_input.required' => 'Điện áp đầu vào không thể bỏ trống.',
@@ -90,10 +94,10 @@ class PriceQuotation extends Model
     ];
 
     public $validateRules = [
-        'user_id' => 'required',
-        'customer_id' => 'required',
-        'amount' => 'required',
-        'price' => 'required',
+        'user_id' => 'required|integer|min:1',
+        'customer_id' => 'required|integer|min:1',
+        'amount' => 'required|integer|min:1',
+        'price' => 'required|integer|min:1',
         'quotations_date' => 'required',
         'power' => 'required',
         'voltage_input' => 'required',
@@ -110,7 +114,6 @@ class PriceQuotation extends Model
     private function getUserLogin(){
         return Auth::user();
     }
-
 
     public function checkBeforeSave()
     {
