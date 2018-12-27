@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Debt;
 use App\Helpers\Common;
 use App\PaymentSchedule;
 use Illuminate\Http\Request;
@@ -15,22 +16,35 @@ class ReportController extends Controller
 
         $thisWeek = Common::getDateRangeOfThisWeek();
         $thisMonth = Common::getDateRangeOfThisMonth();
+        $nextWeek = Common::getDateRangeOfNextWeek();
+        $nextMonth = Common::getDateRangeOfNextMonth();
 
-        // order pre pay
+        // prepay this week
         $order = new Order();
         $revenuePrePayWeek = $order->getPrePay($thisWeek);
         $revenuePrePayMonth = $order->getPrePay($thisMonth);
 
-        // payment schedule
+        // payment schedule this month
         $paymentSchedule = new PaymentSchedule();
-        $paymentWeek = $paymentSchedule->getPayment($thisWeek);
-        $paymentMonth = $paymentSchedule->getPayment($thisMonth);
+        $paymentWeek = $paymentSchedule->getPaymentPaid($thisWeek);
+        $paymentMonth = $paymentSchedule->getPaymentPaid($thisMonth);
+        $paymentNextWeek = $paymentSchedule->getPaymentNextTime($nextWeek);
+        $paymentNextMonth = $paymentSchedule->getPaymentNextTime($nextMonth);
+
+        // debt next week
+        $debt = new Debt();
+        $debtNextWeek = $debt->getDebtNextTime($nextWeek);
+        $debtNextMonth= $debt->getDebtNextTime($nextMonth);
 
         $shared = [
             'revenuePrePayMonth' => $revenuePrePayMonth,
             'revenuePrePayWeek' => $revenuePrePayWeek,
             'paymentWeek' => $paymentWeek,
             'paymentMonth' => $paymentMonth,
+            'paymentNextWeek' => $paymentNextWeek,
+            'debtNextWeek' => $debtNextWeek,
+            'paymentNextMonth' => $paymentNextMonth,
+            'debtNextMonth' => $debtNextMonth,
         ];
 
         return view('report/index', $shared);

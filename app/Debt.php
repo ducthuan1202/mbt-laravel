@@ -48,16 +48,20 @@ class Debt extends Model
     protected $fillable = ['customer_id', 'order_id', 'total_money', 'status', 'type', 'date_create', 'date_pay'];
 
     public $validateMessage = [
+        'user_id.required' => 'Chọn nhân viên chăm sóc.',
+        'user_id.min' => 'Chọn nhân viên chăm sóc.',
+        'customer_id.required' => 'Chọn khách hàng.',
+        'customer_id.integer' => 'Chọn khách hàng.',
+        'customer_id.min' => 'Chọn khách hàng.',
         'total_money.required' => 'Số tiền dư nợ không thể bỏ trống.',
-        'total_money.numeric' => 'Số tiền dư nợ phải là kiểu số.',
-        'status.required' => 'Kiểu công nợ không thể bỏ trống.',
-        'type.required' => 'Tình trạng thanh toán không thể bỏ trống.',
+        'total_money.integer' => 'Số tiền dư nợ không thể bỏ trống.',
+        'total_money.min' => 'Số tiền dư nợ không thể bỏ trống.',
     ];
 
     public $validateRules = [
-        'total_money' => 'required|numeric',
-        'status' => 'required',
-        'type' => 'required',
+        'user_id' => 'required|integer|min:1',
+        'customer_id' => 'required|integer|min:1',
+        'total_money' => 'required|integer|min:1',
     ];
 
     public function checkBeforeSave()
@@ -145,6 +149,19 @@ class Debt extends Model
             return $data[0]->count;
         }
         return 0;
+    }
+
+    public function getDebtNextTime($date)
+    {
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        return self::with(['customer'])
+            ->where('status', Debt::OLD_STATUS)
+            ->whereBetween('date_pay', [$startDate, $endDate])
+            ->where('type', Debt::NOT_PAY_TYPE)
+            ->get();
     }
 
     // TODO: LIST DROPDOWN =========

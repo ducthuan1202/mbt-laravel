@@ -138,7 +138,11 @@ class DebtController extends Controller
     {
         $this->authorize('admin');
         $model = new Debt();
-        $this->validate($request, ['total_money' => 'required|numeric',], $model->validateMessage);
+        $this->validate($request, [
+            'user_id' => 'required|integer|min:1',
+            'customer_id' => 'required|integer|min:1',
+            'total_money' => 'required|integer|min:1',
+        ], $model->validateMessage);
         $model->fill($request->all());
         $model->checkBeforeSave();
         $model->save();
@@ -158,6 +162,7 @@ class DebtController extends Controller
         $cityModel = new City();
         $userModel = new User();
         $model = $this->finById($id);
+
         $shared = [
             "model" => $model,
             'cities' => $cityModel->getDropDownList(),

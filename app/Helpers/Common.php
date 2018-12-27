@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 
+use function GuzzleHttp\Psr7\str;
+
 class Common
 {
     const UNKNOWN_TEXT = 'không xác định';
@@ -55,9 +57,21 @@ class Common
         return sprintf('%s - %s', $startOfWeek, $endOfWeek);
     }
 
+    public static function getDateRangeOfNextWeek(){
+        $startTime = strtotime('next week', time());
+        $startOfWeek = date('Y-m-d', $startTime);
+        $endOfWeek = date('Y-m-d', strtotime('+6 day', $startTime));
+        return sprintf('%s - %s', $startOfWeek, $endOfWeek);
+    }
+
     public static function getDateRangeOfThisMonth(){
         $startOfWeek = date('Y-m-01');
         $endOfWeek = date('Y-m-t', time());
+        return sprintf('%s - %s', $startOfWeek, $endOfWeek);
+    }
+    public static function getDateRangeOfNextMonth(){
+        $startOfWeek = date('Y-m-01', strtotime( '+1 month'));
+        $endOfWeek = date('Y-m-t', strtotime( '+1 month'));
         return sprintf('%s - %s', $startOfWeek, $endOfWeek);
     }
 }
