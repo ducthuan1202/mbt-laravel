@@ -70,7 +70,7 @@
                 <ul class="nav side-menu">
                     @can('admin')
                         <li>
-                            <a href="{{route('report.index')}}"><i class="fa fa-edit"></i> BÁO CÁO </a>
+                            <a href="{{route('report.index')}}"><i class="fa fa-bar-chart-o"></i> BÁO CÁO </a>
                         </li>
                     @endcan
                 </ul>
