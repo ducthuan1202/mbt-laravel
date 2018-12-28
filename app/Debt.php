@@ -151,8 +151,7 @@ class Debt extends Model
         return 0;
     }
 
-    public function getDebtThisTime($date)
-    {
+    private function getDebt($date){
         $date = Common::extractDate($date);
         $startDate = Common::dmY2Ymd($date[0]);
         $endDate = Common::dmY2Ymd($date[1]);
@@ -160,22 +159,19 @@ class Debt extends Model
         return self::with(['customer'])
             ->where('status', Debt::OLD_STATUS)
             ->whereBetween('date_pay', [$startDate, $endDate])
+            ->orderBy('date_pay','asc');
+    }
+    public function getDebtThisTime($date)
+    {
+        return $this->getDebt($date)
             ->where('type', Debt::HAS_PAY_TYPE)
-            ->orderBy('date_pay','asc')
             ->get();
     }
 
     public function getDebtNextTime($date)
     {
-        $date = Common::extractDate($date);
-        $startDate = Common::dmY2Ymd($date[0]);
-        $endDate = Common::dmY2Ymd($date[1]);
-
-        return self::with(['customer'])
-            ->where('status', Debt::OLD_STATUS)
-            ->whereBetween('date_pay', [$startDate, $endDate])
+        return $this->getDebt($date)
             ->where('type', Debt::NOT_PAY_TYPE)
-            ->orderBy('date_pay','asc')
             ->get();
     }
 

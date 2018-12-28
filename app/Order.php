@@ -362,6 +362,7 @@ class Order extends Model
 
         return Order::with(['customer'])
             ->whereBetween('start_date', [$startDate, $endDate])
+            ->orderBy('start_date', 'desc')
             ->get();
     }
 

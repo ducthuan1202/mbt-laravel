@@ -74,26 +74,25 @@ class PaymentSchedule extends Model
             ->orderBy('payment_date', 'asc')->get();
     }
 
-    public function getPaymentPaid($date)
-    {
+    private function getPayment($date){
         $date = Common::extractDate($date);
         $startDate = Common::dmY2Ymd($date[0]);
         $endDate = Common::dmY2Ymd($date[1]);
 
         return self::with(['order', 'order.customer','order.customer.city','order.user' ])
             ->whereBetween('payment_date', [$startDate, $endDate])
+            ->orderBy('payment_date', 'desc');
+    }
+    public function getPaymentPaid($date)
+    {
+        return $this->getPayment($date)
             ->where('status', PaymentSchedule::PAID_STATUS)
             ->get();
     }
 
     public function getPaymentNextTime($date)
     {
-        $date = Common::extractDate($date);
-        $startDate = Common::dmY2Ymd($date[0]);
-        $endDate = Common::dmY2Ymd($date[1]);
-
-        return self::with(['order', 'order.customer', 'order.customer.city', 'order.user'])
-            ->whereBetween('payment_date', [$startDate, $endDate])
+        return $this->getPayment($date)
             ->where('status', PaymentSchedule::PENDING_STATUS)
             ->get();
     }

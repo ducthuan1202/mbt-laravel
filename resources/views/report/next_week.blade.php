@@ -28,11 +28,11 @@
                                     <tr class="headings">
                                         <th style="vertical-align: middle">No.</th>
                                         <th style="vertical-align: middle">Ngày hẹn thanh toán</th>
+                                        <th style="vertical-align: middle">Số tiền</th>
                                         <th style="vertical-align: middle">Khách hàng</th>
                                         <th style="vertical-align: middle">Khu vực</th>
-                                        <th style="vertical-align: middle">Số tiền</th>
                                         <th style="vertical-align: middle">NVKD</th>
-                                        <th style="vertical-align: middle">Trạng thái</th>
+                                        <th style="vertical-align: middle">Ghi chú</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -41,16 +41,16 @@
                                         <tr>
                                             <td style="width: 50px">{{$index + 1}}</td>
                                             <td>{{$item->formatDatePay()}}</td>
+                                            <td>{{$item->formatMoney()}}</td>
                                             <td>{!! $item->formatCustomer() !!}</td>
                                             <td>{{$item->formatCustomerCity()}}</td>
-                                            <td>{{$item->formatMoney()}}</td>
                                             <td>{{$item->formatCustomerUser()}}</td>
-                                            <td>{!! $item->formatType() !!}</td>
+                                            <td>{{$item->note}}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
-                                        <td colspan="4" class="bg-info text-right">Tổng</td>
-                                        <td colspan="3" class="bg-warning">{{Common::formatMoney($_sumTmp)}}</td>
+                                        <td colspan="2" class="bg-info text-right">Tổng</td>
+                                        <td colspan="5" class="bg-warning">{{Common::formatMoney($_sumTmp)}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -75,10 +75,10 @@
                                     <tr class="headings">
                                         <th style="vertical-align: middle">No.</th>
                                         <th style="vertical-align: middle">Ngày hẹn thanh toán</th>
-                                        <th style="vertical-align: middle">Đơn hàng</th>
+                                        <th style="vertical-align: middle">Số tiền</th>
                                         <th style="vertical-align: middle">Khách hàng</th>
                                         <th style="vertical-align: middle">Khu vực</th>
-                                        <th style="vertical-align: middle">Số tiền</th>
+                                        <th style="vertical-align: middle">Đơn hàng</th>
                                         <th style="vertical-align: middle">Ghi chú</th>
                                         <th style="vertical-align: middle">NVKD</th>
                                     </tr>
@@ -89,17 +89,17 @@
                                         <tr>
                                             <td style="width: 50px">{{$index + 1}}</td>
                                             <td>{{$item->formatDate() }}</td>
-                                            <td>{{$item->order->code}}</td>
+                                            <td>{!! $item->formatMoney() !!}</td>
                                             <td>{!! $item->order->formatCustomer() !!}</td>
                                             <td>{!! $item->order->formatCustomerCity() !!}</td>
-                                            <td>{!! $item->formatMoney() !!}</td>
+                                            <td>{{$item->order->code}}</td>
                                             <td>{{$item->note}}</td>
                                             <td>{{$item->order->user->name}}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
-                                        <td colspan="5" class="bg-info text-right">Tổng</td>
-                                        <td colspan="3" class="bg-warning">{{Common::formatMoney($_sumTmp)}}</td>
+                                        <td colspan="2" class="bg-info text-right">Tổng</td>
+                                        <td colspan="6" class="bg-warning">{{Common::formatMoney($_sumTmp)}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
