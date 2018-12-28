@@ -70,7 +70,7 @@
                 <ul class="nav side-menu">
                     @can('admin')
                         <li>
-                            <a><i class="fa fa-bar-chart-o"></i> BÁO CÁO </a>
+                            <a><i class="fa fa-bar-chart-o"></i> BÁO CÁO DOANH THU<span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
                                 <li><a href="{{route('report.this_week')}}">Tuần này</a></li>
                                 <li><a href="{{route('report.next_week')}}">Tuần sau</a></li>
