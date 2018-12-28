@@ -1,5 +1,10 @@
 @php
-use App\Helpers\Common;
+    use App\Helpers\Common;
+/**
+* @var $totalMoney integer
+* @var $totalMoneyDebt integer
+*/
+
 @endphp
 @extends('layouts.main')
 
@@ -7,21 +12,21 @@ use App\Helpers\Common;
     <!-- page content -->
     <div class="right_col" role="main">
 
-        <div class="well" style="margin-top: 70px">
+        <div class="well hidden" style="margin-top: 70px">
 
             <!-- top tiles -->
             <div class="row tile_count">
                 <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count">
                     <span class="count_top"><i class="fa fa-user"></i> Tổng giá trị đơn hàng</span>
-                    <div class="count green">{{Common::formatMoney($totalMoney)}}</div>
+                    <div class="count green">{{Common::formatMoney(0)}}</div>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count">
                     <span class="count_top"><i class="fa fa-user"></i> Tổng công nợ</span>
-                    <div class="count">{{Common::formatMoney($totalMoneyDebt)}}</div>
+                    <div class="count">{{Common::formatMoney(0)}}</div>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count">
                     <span class="count_top"><i class="fa fa-clock-o"></i> Tổng tiền thu về</span>
-                    <div class="count">{{Common::formatMoney($totalMoney - $totalMoneyDebt)}}</div>
+                    <div class="count">{{Common::formatMoney(0)}}</div>
                 </div>
             </div>
             <!-- /top tiles -->
@@ -74,7 +79,7 @@ use App\Helpers\Common;
 
         </div>
 
-        <div class="row">
+        <div class="row hidden">
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel tile">
                     <div class="x_title">
@@ -136,7 +141,7 @@ use App\Helpers\Common;
     <script src="{{ asset('/template/vendors/echarts/dist/echarts.min.js') }}"></script>
     <script src="{{ asset('/template/build/js/dashboard.js') }}"></script>
     <script>
-        init_echarts('eChartPieCustomerByUser',{!! $eChartData !!});
-        init_echarts('eChartPieCustomerByStatus',{!! $eChartCustomerData !!});
+        {{--init_echarts('eChartPieCustomerByUser',{!! $eChartData !!});--}}
+        {{--init_echarts('eChartPieCustomerByStatus',{!! $eChartCustomerData !!});--}}
     </script>
 @endsection

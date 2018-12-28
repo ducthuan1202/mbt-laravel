@@ -25,24 +25,23 @@ class HomeController extends Controller
     public function index()
     {
 
-        $orderModel = new Order();
-        $customerModel = new Customer();
-        $eChartCustomerData = $customerModel->countCustomerByStatus();
+//        $orderModel = new Order();
+//        $customerModel = new Customer();
+//        $eChartCustomerData = $customerModel->countCustomerByStatus();
 
 
-        $userModel = new User();
-        $eChartData = $userModel->countCustomerByUser();
-        $debtModel = new Debt();
+//        $userModel = new User();
+//        $eChartData = $userModel->countCustomerByUser();
+//        $debtModel = new Debt();
         $shared = [
             'customerCount' => Customer::countNumber(),
-            'userCount' => User::countNumber(),
             'cityCount' => City::countNumber(),
             'orderCount' => Order::countNumber(),
             'careCount' => Care::countNumber(),
-            'totalMoney' => $orderModel->sumTotalMoney(),
-            'totalMoneyDebt' => $debtModel->sumTotalMoney(),
-            'eChartData' => $userModel->eChartGenerateData($eChartData),
-            'eChartCustomerData' => $customerModel->eChartGenerateData($eChartCustomerData),
+//            'totalMoney' => $orderModel->sumTotalMoney(),
+//            'totalMoneyDebt' => $debtModel->sumTotalMoney(),
+//            'eChartData' => $userModel->eChartGenerateData($eChartData),
+//            'eChartCustomerData' => $customerModel->eChartGenerateData($eChartCustomerData),
         ];
 
         return view('pages/dashboard', $shared);

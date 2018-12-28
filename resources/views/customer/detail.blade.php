@@ -35,8 +35,16 @@
                             <td>{{$model->mobile}}</td>
                         </tr>
                         <tr>
+                            <td>Ngày sinh</td>
+                            <td>{{$model->formatBirthDay()}}</td>
+                        </tr>
+                        <tr>
                             <td>Địa chỉ</td>
-                            <td>{{$model->address. '-' .$model->formatCity()}}</td>
+                            <td>{{$model->address}}</td>
+                        </tr>
+                        <tr>
+                            <td>Khu vực</td>
+                            <td>{{$model->formatCity()}}</td>
                         </tr>
                         <tr>
                             <td>Công ty</td>
@@ -53,6 +61,10 @@
                         <tr>
                             <td>Trạng thái</td>
                             <td>{!! $model->formatStatus() !!}</td>
+                        </tr>
+                        <tr>
+                            <td>Ghi chú</td>
+                            <td>{{$model->note}}</td>
                         </tr>
 
                     </table>
@@ -77,7 +89,6 @@
                                     <th>Mã ĐH</th>
                                     <th>Ngày vào sản xuất</th>
                                     <th>Giá trị đơn hàng</th>
-                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -86,7 +97,6 @@
                                             <td><b class="text-success">{{$item->code}}</b></td>
                                             <td>{{$item->formatStartDate()}}</td>
                                             <td>{{$item->formatTotalMoney()}}</td>
-                                            <td class="text-right"><a href="#" class="btn btn-xs btn-info">Xem</a> </td>
                                         </tr>
                                     @endforeach
 
@@ -121,7 +131,6 @@
                                         <th>Nội dung</th>
                                         <th>Ngày gọi</th>
                                         <th>Ngày hẹn</th>
-                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -130,7 +139,6 @@
                                             <td>{{$item->formatStatus()}}</td>
                                             <td>{{$item->formatStartDate()}}</td>
                                             <td>{{$item->formatEndDate()}}</td>
-                                            <td class="text-right"><a href="#" class="btn btn-xs btn-info">Xem</a> </td>
                                         </tr>
                                     @endforeach
 
@@ -169,7 +177,6 @@
                                         <th>Số lượng</th>
                                         <th>Thành tiền</th>
                                         <th>Tình trạng</th>
-                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -181,7 +188,6 @@
                                             <td>{{$item->amount}}</td>
                                             <td>{{$item->formatTotalMoney()}}</td>
                                             <td>{!! $item->formatStatus() !!}</td>
-                                            <td class="text-right"><a href="#" class="btn btn-xs btn-info">Xem</a> </td>
                                         </tr>
                                     @endforeach
 
@@ -215,7 +221,6 @@
                                         <th>Số tiền</th>
                                         <th>Trạng thái</th>
                                         <th>Đơn hàng (nếu có)</th>
-                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -224,7 +229,6 @@
                                             <td>{{$item->formatMoney()}}</td>
                                             <td>{!! $item->formatStatus() !!}</td>
                                             <td>{!! $item->formatOrder() !!}</td>
-                                            <td class="text-right"><a href="#" class="btn btn-xs btn-info">Xem</a> </td>
                                         </tr>
                                     @endforeach
 

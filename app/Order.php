@@ -244,7 +244,7 @@ class Order extends Model
             ->join($customerTbl, "$customerTbl.id", "=", "$orderTbl.customer_id")
             ->join($cityTbl, "$customerTbl.city_id", "=", "$cityTbl.id")
             ->join($userTbl, "$userTbl.id", "=", "$orderTbl.user_id")
-            ->select(DB::raw("COUNT($orderTbl.id) AS 'value', $orderTbl.status"));
+            ->select(DB::raw("COUNT($orderTbl.id) AS 'value', SUM(total_money) as 'total', $orderTbl.status"));
 
         if (isset($searchParams['date']) && !empty($searchParams['date'])) {
             $d = Common::extractDate($searchParams['date']);
@@ -275,17 +275,30 @@ class Order extends Model
         $data = $query->groupBy("$orderTbl.status")->get();
 
         $count = [
-            self::SHIPPED_STATUS => 0,
-            self::NOT_SHIPPED_STATUS => 0,
-            self::CANCEL_STATUS => 0,
+            self::SHIPPED_STATUS => [
+                'count' => 0,
+                'total'=>0
+            ],
+            self::NOT_SHIPPED_STATUS => [
+                'count' => 0,
+                'total'=>0
+            ],
+            self::CANCEL_STATUS => [
+                'count' => 0,
+                'total'=>0
+            ],
         ];
 
         if (!$data || count($data) < 1) {
         } else {
             foreach ($data as $item) {
-                $count[$item->status] = $item->value;
+                $count[$item->status] = [
+                    'count'=>$item->value,
+                    'total'=>$item->total,
+                ];
             }
         }
+
         return $count;
     }
 
@@ -365,6 +378,8 @@ class Order extends Model
         $data['3079'] = 'Tiêu chẩn 3079';
         $data['2608'] = 'Tiêu chẩn 2608';
         $data['qđ62'] = 'Tiêu chẩn qđ 62';
+        $data['6306'] = 'Tiêu chẩn 6306';
+        $data['po'] = 'Tiêu chẩn Po';
         return $data;
     }
 

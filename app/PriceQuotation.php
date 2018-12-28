@@ -206,6 +206,11 @@ class PriceQuotation extends Model
         }
 
         // filter by customer
+        if (isset($searchParams['user']) && !empty($searchParams['user'])) {
+            $model = $model->where('user_id', $searchParams['user']);
+        }
+
+        // filter by customer
         if (isset($searchParams['customer']) && !empty($searchParams['customer'])) {
             $model = $model->where('customer_id', $searchParams['customer']);
         }
@@ -266,6 +271,8 @@ class PriceQuotation extends Model
         $data['3079'] = 'Tiêu chẩn 3079';
         $data['2608'] = 'Tiêu chẩn 2608';
         $data['qđ62'] = 'Tiêu chẩn qđ 62';
+        $data['6306'] = 'Tiêu chẩn 6306';
+        $data['po'] = 'Tiêu chẩn Po';
         return $data;
     }
 

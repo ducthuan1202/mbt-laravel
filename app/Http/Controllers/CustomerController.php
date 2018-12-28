@@ -85,6 +85,7 @@ class CustomerController extends Controller
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
 
+        $model->checkBeforeSave();
         if ($model->save()) {
             $model->code = $model->generateUniqueCode();
             $model->save();
@@ -165,6 +166,7 @@ class CustomerController extends Controller
         $model = $this->finById($id);
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
+        $model->checkBeforeSave();
         $model->save();
         return redirect()
             ->route('customers.index')

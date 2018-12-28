@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\DB;
  * @property string name
  * @property string position
  * @property string mobile
+ * @property string birthday
+ * @property string note
  * @property integer average_sale
  * @property string status
  *
@@ -48,7 +50,7 @@ class Customer extends Model
      */
     protected $fillable = [
         'code', 'city_id', 'user_id', 'company', 'address',
-        'name', 'position', 'mobile', 'average_sale', 'status'
+        'name', 'position', 'mobile', 'average_sale', 'status', 'birthday', 'note'
     ];
 
     public $validateMessage = [
@@ -66,6 +68,13 @@ class Customer extends Model
         'mobile' => 'required',
         'status' => 'required',
     ];
+
+    public function checkBeforeSave()
+    {
+        if (!empty($this->birthday)) {
+            $this->birthday = Common::dmY2Ymd($this->birthday);
+        }
+    }
 
     private function getUserLogin(){
         return Auth::user();
@@ -240,6 +249,10 @@ class Customer extends Model
 
     public function formatCreatedAt(){
         return Common::formatDate($this->created_at);
+    }
+
+    public function formatBirthDay(){
+        return Common::formatDate($this->birthday);
     }
 
     public function formatStatus()

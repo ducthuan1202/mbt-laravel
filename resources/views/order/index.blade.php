@@ -29,22 +29,39 @@
                 @include('order._search')
 
                 <div class="row tile_count text-center" style="margin-top: 0;">
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
-                        <span class="count_top">Tổng số</span>
-                        <div class="count blue">{{Common::formatNumber($data->total())}}</div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                    @if($searchParams['status'] == \App\Order::SHIPPED_STATUS)
+                    <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                         <span class="count_top">ĐÃ GIAO</span>
-                        <div class="count green">{{$count[\App\Order::SHIPPED_STATUS]}}</div>
+                        <div class="count red">{{$count[\App\Order::SHIPPED_STATUS]['count']}}</div>
                     </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
-                        <span class="count_top">CHƯA GIAO</span>
-                        <div class="count ">{{$count[\App\Order::NOT_SHIPPED_STATUS]}}</div>
+                    <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                        <span class="count_top">TỔNG GIÁ TRỊ</span>
+                        <div class="count green">{{Common::formatMoney($count[\App\Order::SHIPPED_STATUS]['total'])}}</div>
                     </div>
-                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
-                        <span class="count_top">ĐÃ HỦY</span>
-                        <div class="count ">{{$count[\App\Order::CANCEL_STATUS]}}</div>
-                    </div>
+                    @endif
+
+                    @if($searchParams['status'] == \App\Order::NOT_SHIPPED_STATUS)
+                        <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                            <span class="count_top">CHƯA GIAO</span>
+                            <div class="count red">{{$count[\App\Order::NOT_SHIPPED_STATUS]['count']}}</div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                            <span class="count_top">TỔNG GIÁ TRỊ</span>
+                            <div class="count green">{{Common::formatMoney($count[\App\Order::NOT_SHIPPED_STATUS]['total'])}}</div>
+                        </div>
+                    @endif
+
+                    @if($searchParams['status'] == \App\Order::CANCEL_STATUS)
+                        <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                            <span class="count_top">ĐÃ HỦY</span>
+                            <div class="count red">{{$count[\App\Order::CANCEL_STATUS]['count']}}</div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                            <span class="count_top">TỔNG GIÁ TRỊ</span>
+                            <div class="count green">{{Common::formatMoney($count[\App\Order::CANCEL_STATUS]['total'])}}</div>
+                        </div>
+                    @endif
+
                 </div>
 
                 @if($message = Session::get('success'))
@@ -58,6 +75,8 @@
                                 <th style="vertical-align: middle">No.</th>
                                 <th style="vertical-align: middle">Khách hàng</th>
                                 <th style="vertical-align: middle">Khu vực</th>
+                                <th style="vertical-align: middle">Công suất</th>
+                                <th style="vertical-align: middle">Số lượng</th>
                                 <th style="vertical-align: middle">Tạm ứng</th>
                                 <th style="vertical-align: middle">Đã thanh toán</th>
                                 <th style="vertical-align: middle">Công nợ</th>
@@ -76,6 +95,11 @@
                                         <td style="width: 50px">{{$index + 1}}</td>
                                         <td><b style="color:#ff5722">{!! $item->formatCustomer('<br/>') !!}</b></td>
                                         <td>{!! $item->formatCustomerCity() !!}</td>
+                                        <td>
+                                            {{$item->power }} kvA <br/>
+                                            {{$item->voltage_input }} - {{$item->voltage_output }} kv
+                                        </td>
+                                        <td>{{$item->amount .' '. ($item->product_type == \App\Order::CABIN_SKIN ? 'tủ' : 'máy') }} </td>
                                         <td>{{$item->formatPrePay() }}</td>
                                         <td>{{$item->formatPayment() }}</td>
                                         <td>{{$item->formatDebt() }}</td>

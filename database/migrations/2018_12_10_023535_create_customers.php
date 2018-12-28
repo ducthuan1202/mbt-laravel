@@ -23,6 +23,8 @@ class CreateCustomers extends Migration
             $table->string('name', 63);
             $table->string('position',63)->nullable()->comment('Chức vụ');
             $table->string('mobile');
+            $table->string('birthday')->nullable();
+            $table->string('note')->nullable();
             $table->integer('average_sale')->nullable()->comment('doanh số trung bình');
             $table->boolean('status')->comment('[1:đã mua, 2:chưa mua]');
             $table->timestamps();

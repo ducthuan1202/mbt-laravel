@@ -19,14 +19,16 @@
 <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-6">
 
-        <div class="form-group">
+        <div class="form-group {{$errors->has('name') ? 'has-error' : ''}}">
             <label>Họ tên</label>
             <input type="text" class="form-control" name="name" value="{{old('name') ? old('name') : $model->name}}" required/>
+            @if ($errors->has('name')) <span class="help-block">{{ $errors->first('name') }}</span> @endif
         </div>
 
-        <div class="form-group">
+        <div class="form-group {{$errors->has('mobile') ? 'has-error' : ''}}">
             <label>Số điện thoại</label>
             <input type="text" class="form-control" name="mobile" value="{{old('mobile') ? old('mobile') : $model->mobile}}" required/>
+            @if ($errors->has('mobile')) <span class="help-block">{{ $errors->first('mobile') }}</span> @endif
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -34,11 +36,19 @@
                     <label>Chức vụ</label>
                     <input type="text" class="form-control" name="position" value="{{old('position') ? old('position') : $model->position}}"/>
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
                     <label>Công ty KH</label>
                     <input type="text" class="form-control" name="company" value="{{old('company') ? old('company') : $model->company}}"/>
+                </div>
+                <div class="form-group">
+                    <label>Ngày sinh</label>
+                    <input type="text" class="form-control drp-birthday" name="birthday" value="{{old('birthday') ? old('birthday') : $model->formatBirthDay()}}" readonly/>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <label>Đặc điểm</label>
+                    <textarea class="form-control" name="note" rows="7">{{old('note') ? old('note') : $model->note}}</textarea>
                 </div>
             </div>
         </div>
@@ -46,25 +56,27 @@
 
     <div class="col-xs-12 col-sm-6 col-md-6">
 
-        <div class="form-group">
+        <div class="form-group {{$errors->has('user_id') ? 'has-error' : ''}}">
             <label>NVKD chăm sóc</label>
             <select class="form-control chosen-select" name="user_id">
                 @foreach($users as $user)
                     <option value="{{ $user['id'] }}" {{ $user['id'] == $model->user_id || $user['id'] == old('user_id') ? 'selected' : '' }}>{{$user['name']}}</option>
                 @endforeach
             </select>
+            @if ($errors->has('user_id')) <span class="help-block">{{ $errors->first('user_id') }}</span> @endif
         </div>
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6">
 
-                <div class="form-group">
+                <div class="form-group {{$errors->has('city_id') ? 'has-error' : ''}}">
                     <label>Khu vực</label>
                     <select class="form-control chosen-select" name="city_id">
                         @foreach($cities as $city)
                             <option value="{{ $city['id'] }}" {{ $city['id'] == $model->city_id || $city['id'] == old('city_id') ? 'selected' : '' }}>{{$city['name']}}</option>
                         @endforeach
                     </select>
+                    @if ($errors->has('city_id')) <span class="help-block">{{ $errors->first('city_id') }}</span> @endif
                 </div>
                 <div class="form-group">
                     <label>Địa chỉ</label>

@@ -69,6 +69,7 @@ class OrderController extends Controller
             'users' => $userModel->getDropDownList(true),
         ];
 
+
         return view('order.index', $shared);
     }
 

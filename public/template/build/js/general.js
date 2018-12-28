@@ -159,11 +159,33 @@ function initDateRangePickerSingle() {
     $('.drp-single').daterangepicker({
         autoUpdateInput: false,
         singleDatePicker: true,
+        showDropdowns: true,
         singleClasses: "picker_4",
         locale: _generateLocale(),
     });
 
     $('.drp-single').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format(__FORMAT_DATE__));
+    });
+
+}
+
+function initDateRangePickerBirthDay() {
+
+    if (typeof ($.fn.daterangepicker) === 'undefined') {
+        return;
+    }
+
+    $('.drp-birthday').daterangepicker({
+        minDate: '01/01/1950',
+        maxDate: moment().subtract(15, 'year'),
+        autoUpdateInput: false,
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: _generateLocale(),
+    });
+
+    $('.drp-birthday').on('apply.daterangepicker', function (ev, picker) {
         $(this).val(picker.startDate.format(__FORMAT_DATE__));
     });
 
@@ -199,52 +221,6 @@ function initDateRangePickerMulti() {
     $('.drp-multi').on('apply.daterangepicker', function (ev, picker) {
         $(this).val(picker.startDate.format(__FORMAT_DATE__) + ' - ' + picker.endDate.format(__FORMAT_DATE__));
     });
-}
-
-function initDateRangePickerReport() {
-
-    if( typeof ($.fn.daterangepicker) === 'undefined'){ return; }
-    var dateReport = $('#dateReport');
-    var spanDateReport = $('#dateReport span');
-
-    var cb = function(start, end, label) {
-        spanDateReport.html(start.format(__FORMAT_DATE__) + ' - ' + end.format(__FORMAT_DATE__));
-    };
-
-    var optionSet1 = {
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        minDate: '01/01/2016',
-        maxDate: '12/31/2020',
-        dateLimit: {
-            days: 60
-        },
-        showDropdowns: true,
-        showWeekNumbers: true,
-        timePicker: false,
-        timePickerIncrement: 2,
-        timePicker12Hour: true,
-        ranges: _generateDateRange(),
-        opens: 'left',
-        buttonClasses: ['btn btn-default'],
-        applyClass: 'btn-small btn-primary',
-        cancelClass: 'btn-small',
-        format: __FORMAT_DATE__,
-        locale: _generateLocale()
-    };
-
-    spanDateReport.html(moment().subtract(29, 'days').format(__FORMAT_DATE__) + ' - ' + moment().format(__FORMAT_DATE__));
-    dateReport.daterangepicker(optionSet1, cb);
-    $('#options1').click(function() {
-        dateReport.data('daterangepicker').setOptions(optionSet1, cb);
-    });
-    $('#options2').click(function() {
-        dateReport.data('daterangepicker').setOptions(optionSet2, cb);
-    });
-    $('#destroy').click(function() {
-        dateReport.data('daterangepicker').remove();
-    });
-
 }
 
 function initSelect2() {
@@ -327,7 +303,7 @@ function getCitiesAndCustomersByUser(){
 function initialize() {
     initDateRangePickerSingle();
     initDateRangePickerMulti();
-    // initDateRangePickerReport();
+    initDateRangePickerBirthDay();
     initSelect2();
 }
 
