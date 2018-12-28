@@ -151,6 +151,20 @@ class Debt extends Model
         return 0;
     }
 
+    public function getDebtThisTime($date)
+    {
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        return self::with(['customer'])
+            ->where('status', Debt::OLD_STATUS)
+            ->whereBetween('date_pay', [$startDate, $endDate])
+            ->where('type', Debt::HAS_PAY_TYPE)
+            ->orderBy('date_pay','asc')
+            ->get();
+    }
+
     public function getDebtNextTime($date)
     {
         $date = Common::extractDate($date);
@@ -161,6 +175,7 @@ class Debt extends Model
             ->where('status', Debt::OLD_STATUS)
             ->whereBetween('date_pay', [$startDate, $endDate])
             ->where('type', Debt::NOT_PAY_TYPE)
+            ->orderBy('date_pay','asc')
             ->get();
     }
 
@@ -181,7 +196,7 @@ class Debt extends Model
     {
         $data = [];
         if ($addAll) {
-            $data = [null => 'Tất cả'];
+            $data = ['0' => 'Tất cả'];
         }
         $data[self::HAS_PAY_TYPE] = 'Đã thanh toán xong';
         $data[self::NOT_PAY_TYPE] = 'Chưa thanh toán';
@@ -218,7 +233,7 @@ class Debt extends Model
                 $output = $arr[self::HAS_PAY_TYPE];
                 $cls = 'btn-success';
                 break;
-            case  self::NOT_PAY_TYPE:
+            case self::NOT_PAY_TYPE:
                 $output = $arr[self::NOT_PAY_TYPE];
                 $cls = 'btn-warning';
                 break;

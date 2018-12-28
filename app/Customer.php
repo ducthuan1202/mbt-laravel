@@ -145,6 +145,7 @@ class Customer extends Model
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where(function ($query) use ($searchParams) {
                 $query->where('name', 'like', "%{$searchParams['keyword']}%")
+                    ->orWhere('company', 'like', "%{$searchParams['keyword']}%")
                     ->orWhere('mobile', 'like', "%{$searchParams['keyword']}%");
             });
         }

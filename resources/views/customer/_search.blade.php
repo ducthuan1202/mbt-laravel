@@ -1,6 +1,7 @@
 <div class="well" style="overflow: auto">
     <form class="form" action="{{route('customers.index')}}" method="GET">
         <div class="row">
+
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label>Nhân viên</label>
@@ -41,7 +42,7 @@
 
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
                 <div class="form-group">
-                    <label>Tên hoặc SĐT</label>
+                    <label>Tên, SĐT, công ty</label>
                     <input type="text" class="form-control" name="keyword" value="{{$searchParams['keyword'] ? $searchParams['keyword'] : ''}}"/>
                 </div>
             </div>

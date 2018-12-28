@@ -70,7 +70,13 @@
                 <ul class="nav side-menu">
                     @can('admin')
                         <li>
-                            <a href="{{route('report.index')}}"><i class="fa fa-bar-chart-o"></i> BÁO CÁO </a>
+                            <a><i class="fa fa-bar-chart-o"></i> BÁO CÁO </a>
+                            <ul class="nav child_menu">
+                                <li><a href="{{route('report.this_week')}}">Tuần này</a></li>
+                                <li><a href="{{route('report.next_week')}}">Tuần sau</a></li>
+                                <li><a href="{{route('report.this_month')}}">Tháng này</a></li>
+                                <li><a href="{{route('report.next_month')}}">Tháng sau</a></li>
+                            </ul>
                         </li>
                     @endcan
                 </ul>

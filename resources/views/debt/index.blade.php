@@ -70,8 +70,8 @@
                                     <td>{{$item->formatDateCreate()}}</td>
                                     <td>{{$item->formatMoney()}}</td>
                                     <td>{{$item->formatCustomerUser()}}</td>
-                                    <td>{!! $item->formatType() !!}</td>
                                     <td>{!! $item->formatStatus() !!}</td>
+                                    <td>{!! $item->formatType() !!}</td>
                                     <td class="text-right">
                                         @can('admin')
                                             @if($item->status == \App\Debt::OLD_STATUS)
@@ -94,7 +94,7 @@
                 </div>
 
                 @if(count($data))
-                    <div role="pagination">{{$data->links()}}</div>
+                    <div role="pagination">{{$data->appends($searchParams)->links()}}</div>
                 @endif
             </div>
         </div>

@@ -80,7 +80,7 @@ class PaymentSchedule extends Model
         $startDate = Common::dmY2Ymd($date[0]);
         $endDate = Common::dmY2Ymd($date[1]);
 
-        return self::with(['order'])
+        return self::with(['order', 'order.customer','order.customer.city','order.user' ])
             ->whereBetween('payment_date', [$startDate, $endDate])
             ->where('status', PaymentSchedule::PAID_STATUS)
             ->get();
@@ -92,7 +92,7 @@ class PaymentSchedule extends Model
         $startDate = Common::dmY2Ymd($date[0]);
         $endDate = Common::dmY2Ymd($date[1]);
 
-        return self::with(['order'])
+        return self::with(['order', 'order.customer', 'order.customer.city', 'order.user'])
             ->whereBetween('payment_date', [$startDate, $endDate])
             ->where('status', PaymentSchedule::PENDING_STATUS)
             ->get();

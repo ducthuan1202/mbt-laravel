@@ -157,10 +157,11 @@ function initDateRangePickerSingle() {
     }
 
     $('.drp-single').daterangepicker({
+        minDate: '01/01/2015',
+        maxDate: moment().add(5, 'year'),
         autoUpdateInput: false,
         singleDatePicker: true,
         showDropdowns: true,
-        singleClasses: "picker_4",
         locale: _generateLocale(),
     });
 

@@ -72,6 +72,15 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
             </div>
         </div>
 
+        <div class="form-group {{$errors->has('status') ? 'has-error' : ''}}">
+            <label>Khách hàng</label>
+            <select class="form-control chosen-select" name="type"/>
+            @foreach($model->listType() as $key => $val)
+                <option value="{{ $key }}" {{ $key == $model->type || $key == old('type') ? 'selected' : '' }}>{{$val}}</option>
+            @endforeach
+            </select>
+            @if ($errors->has('status')) <span class="help-block">{{ $errors->first('status') }}</span> @endif
+        </div>
     </div>
 </div>
 

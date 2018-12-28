@@ -24,9 +24,9 @@ use \App\Helpers\Common;
                     <div class="x_content">
                         @if($revenuePrePayWeek && count($revenuePrePayWeek))
                             @php $_sumTmp = 0 @endphp
-                            <h2>Tạm ứng đơn hàng</h2>
+                            <h4 class="text-center">Tạm ứng đơn hàng</h4>
                             <div class="table-responsive">
-                                <table class="table table-striped jambo_table bulk_action">
+                                <table class="table jambo_table bulk_action">
                                     <thead>
                                     <tr class="headings">
                                         <th style="vertical-align: middle">No.</th>
@@ -58,9 +58,9 @@ use \App\Helpers\Common;
 
                         @if($paymentWeek && count($paymentWeek))
                             @php $_sumTmp = 0 @endphp
-                            <h2>Thanh toán công nợ</h2>
+                            <h4 class="text-center">Thanh toán công nợ</h4>
                             <div class="table-responsive">
-                                <table class="table table-striped jambo_table bulk_action">
+                                <table class="table jambo_table bulk_action">
                                     <thead>
                                         <tr class="headings">
                                             <th style="vertical-align: middle">No.</th>
@@ -103,9 +103,9 @@ use \App\Helpers\Common;
                     <div class="x_content">
                         @if($revenuePrePayMonth && count($revenuePrePayMonth))
                             @php $_sumTmp = 0 @endphp
-                            <h2>Tạm ứng đơn hàng</h2>
+                            <h4 class="text-center">Tạm ứng đơn hàng</h4>
                             <div class="table-responsive">
-                                <table class="table table-striped jambo_table bulk_action">
+                                <table class="table jambo_table bulk_action">
                                     <thead>
                                     <tr class="headings">
                                         <th style="vertical-align: middle">No.</th>
@@ -137,9 +137,9 @@ use \App\Helpers\Common;
 
                         @if($paymentMonth && count($paymentMonth))
                             @php $_sumTmp = 0 @endphp
-                            <h2>Thanh toán công nợ</h2>
+                            <h4 class="text-center">Thanh toán công nợ</h4>
                             <div class="table-responsive">
-                                <table class="table table-striped jambo_table bulk_action">
+                                <table class="table jambo_table bulk_action">
                                     <thead>
                                     <tr class="headings">
                                         <th style="vertical-align: middle">No.</th>

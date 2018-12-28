@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Debt;
 use App\Helpers\Common;
-use App\PaymentSchedule;
-use Illuminate\Http\Request;
 use App\Order;
+use App\PaymentSchedule;
 
 class ReportController extends Controller
 {
@@ -50,33 +49,79 @@ class ReportController extends Controller
         return view('report/index', $shared);
     }
 
-    public function revenue(Request $request)
+    private function calculatorThis($date)
     {
+
+        // prepay this week
         $order = new Order();
+        $revenue = $order->getPrePay($date);
 
-        $thisWeek = $request->get('thisWeek');
-        $thisMonth = $request->get('thisMonth');
-
-        // order pre pay
-        $revenuePrePayWeek = $order->getPrePay($thisWeek);
-        $revenuePrePayMonth = $order->getPrePay($thisMonth);
-
-        // payment schedule
+        // payment schedule this month
         $paymentSchedule = new PaymentSchedule();
-        $paymentWeek = $paymentSchedule->getPrePay($thisWeek);
-        $paymentMonth = $paymentSchedule->getPrePay($thisMonth);
+        $payment = $paymentSchedule->getPaymentPaid($date);
 
-        $shared = [
-            'revenuePrePayMonth' => $revenuePrePayMonth,
-            'revenuePrePayWeek' => $revenuePrePayWeek,
-            'paymentWeek' => $paymentWeek,
-            'paymentMonth' => $paymentMonth,
+        // debt
+        $debt = new Debt();
+        $debtPaid = $debt->getDebtThisTime($date);
+
+        return [
+            'revenue' => $revenue,
+            'payment' => $payment,
+            'debtPaid'=>$debtPaid
         ];
-        $output = [
-            'success' => true,
-            'message' => view('report/revenue', $shared)->render()
-        ];
-        return response()->json($output);
 
     }
+
+    private function calculatorNext($date)
+    {
+        // debt next week
+        $debt = new Debt();
+        $revenue = $debt->getDebtNextTime($date);
+
+        // payment schedule this month
+        $paymentSchedule = new PaymentSchedule();
+        $payment = $paymentSchedule->getPaymentNextTime($date);
+
+        return [
+            'revenue' => $revenue,
+            'payment' => $payment,
+        ];
+
+    }
+
+    public function thisWeek()
+    {
+        $date = Common::getDateRangeOfThisWeek();
+
+        $data = $this->calculatorThis($date);
+
+        return view('report/this_week', $data);
+    }
+
+    public function nextWeek()
+    {
+        $date = Common::getDateRangeOfNextWeek();
+
+        $data = $this->calculatorNext($date);
+
+        return view('report/next_week', $data);
+    }
+
+    public function thisMonth()
+    {
+
+        $date = Common::getDateRangeOfThisMonth();
+        $data = $this->calculatorThis($date);
+
+        return view('report/this_month', $data);
+    }
+
+    public function nextMonth()
+    {
+        $date = Common::getDateRangeOfNextMonth();
+        $data = $this->calculatorNext($date);
+
+        return view('report/next_month', $data);
+    }
+
 }

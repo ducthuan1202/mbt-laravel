@@ -67,7 +67,7 @@
                 </div>
 
                 @if(count($data))
-                    <div role="pagination">{{$data->links()}}</div>
+                    <div role="pagination">{{$data->appends($searchParams)->links()}}</div>
                 @endif
             </div>
         </div>
