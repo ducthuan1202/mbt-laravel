@@ -1,17 +1,17 @@
 @php
-    use \App\Helpers\Common;
-    /**
-    * @var $revenue \App\Order[]
-    * @var $payment \App\PaymentSchedule[]
-    * @var $debtPaid \App\Debt[]
-    */
+use \App\Helpers\Common;
+/**
+* @var $revenue \App\Order[]
+* @var $payment \App\PaymentSchedule[]
+* @var $debtPaid \App\Debt[]
+*/
 @endphp
 @extends('layouts.main')
 
 @section('content')
     <div class="right_col" role="main">
 
-        <h1>Tháng này</h1>
+        <h1>Tuần này</h1>
 
         <div class="x_panel tile">
             <div class="x_title">
@@ -90,7 +90,7 @@
                                     <td>{{$item->formatPrePay() }}</td>
                                     <td>{{$item->formatCustomer() }}</td>
                                     <td>{!! $item->formatUser() !!}</td>
-                                    <td><b style="color:#ff5722">{{$item->code}}</b></td>
+                                    <td><a href="{{route('payment-schedules.index', $item->id)}}" style="text-decoration: underline">{{$item->code}}</a></td>
                                     <td>{{$item->formatUser()}}</td>
                                 </tr>
                             @endforeach
@@ -137,7 +137,7 @@
                                     <td>{{$item->formatMoney()}}</td>
                                     <td>{{$item->order->formatCustomer() }}</td>
                                     <td>{{$item->order->formatCustomerCity()}}</td>
-                                    <td>{{$item->order->code}}</td>
+                                    <td><a href="{{route('payment-schedules.index', $item->order->id)}}" style="text-decoration: underline">{{$item->order->code}}</a></td>
                                     <td>{{$item->order->formatUser()}}</td>
                                 </tr>
                             @endforeach

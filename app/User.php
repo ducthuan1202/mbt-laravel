@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helpers\Common;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,10 @@ use Illuminate\Support\Facades\Hash;
  * @property integer created_at
  * @property integer updated_at
  *
- * @property Customer customer
+ * @property Customer customers
+ * @property Care cares
+ * @property PriceQuotation quotations
+ * @property Order orders
  */
 class User extends Authenticatable
 {
@@ -74,9 +78,24 @@ class User extends Authenticatable
     ];
 
     // TODO:  RELATIONSHIP =====
-    public function customer()
+    public function customers()
     {
-        return $this->belongsTo(Customer::class, 'user_id', 'id');
+        return $this->hasMany(Customer::class, 'user_id', 'id');
+    }
+
+    public function cares()
+    {
+        return $this->hasMany(Care::class, 'user_id', 'id');
+    }
+
+    public function quotations()
+    {
+        return $this->hasMany(PriceQuotation::class, 'user_id', 'id');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id', 'id');
     }
 
     // TODO:  QUERY TO DATABASE =====
@@ -100,7 +119,7 @@ class User extends Authenticatable
         $userTbl = $this->getTable();
 
         return DB::table($userTbl)
-            ->select( "$userTbl.name AS name", DB::raw("COUNT($customerTbl.id) AS value"))
+            ->select("$userTbl.name AS name", DB::raw("COUNT($customerTbl.id) AS value"))
             ->leftJoin($customerTbl, "$customerTbl.user_id", '=', "$userTbl.id")
             ->where("$userTbl.role", self::EMPLOYEE_ROLE)
             ->groupBy("$userTbl.id")
@@ -136,6 +155,86 @@ class User extends Authenticatable
             array_unshift($data, $firstItem);
         }
         return $data;
+    }
+
+    public function getCustomersCreated($date, $userId = null)
+    {
+
+        $d = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($d[0]);
+        $endDate = Common::dmY2Ymd($d[1]);
+
+        $query = User::with(['customers' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }, 'customers.city'])
+            ->where('role', User::EMPLOYEE_ROLE);
+
+        if (!empty($userId)) {
+            $query = $query->where('id', $userId);
+            return $query->first();
+        } else {
+            return $query->get();
+        }
+    }
+
+    public function getCaresCreated($date, $userId = null)
+    {
+
+        $d = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($d[0]);
+        $endDate = Common::dmY2Ymd($d[1]);
+
+        $query = User::with(['cares' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('start_date', [$startDate, $endDate]);
+        }, 'cares.customer', 'cares.customer.city'])
+            ->where('role', User::EMPLOYEE_ROLE);
+
+        if (!empty($userId)) {
+            $query = $query->where('id', $userId);
+            return $query->first();
+        } else {
+            return $query->get();
+        }
+    }
+
+    public function getQuotationsCreated($date, $userId = null)
+    {
+
+        $d = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($d[0]);
+        $endDate = Common::dmY2Ymd($d[1]);
+
+        $query = User::with(['quotations' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('quotations_date', [$startDate, $endDate]);
+        }, 'quotations.customer', 'quotations.customer.city'])
+            ->where('role', User::EMPLOYEE_ROLE);
+
+        if (!empty($userId)) {
+            $query = $query->where('id', $userId);
+            return $query->first();
+        } else {
+            return $query->get();
+        }
+    }
+
+    public function getOrdersCreated($date, $userId = null)
+    {
+
+        $d = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($d[0]);
+        $endDate = Common::dmY2Ymd($d[1]);
+
+        $query = User::with(['orders' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('start_date', [$startDate, $endDate]);
+        }, 'orders.customer', 'orders.customer.city'])
+            ->where('role', User::EMPLOYEE_ROLE);
+
+        if (!empty($userId)) {
+            $query = $query->where('id', $userId);
+            return $query->first();
+        } else {
+            return $query->get();
+        }
     }
 
     // TODO:  LIST DATA =====
@@ -205,10 +304,10 @@ class User extends Authenticatable
 
     public function eChartGenerateData($data)
     {
-        if(!$data || isset($data['name'])|| isset($data['value'])){
+        if (!$data || isset($data['name']) || isset($data['value'])) {
             return \GuzzleHttp\json_encode([
-                'label'=> ['không có dữ liệu'],
-                'data'=> [
+                'label' => ['không có dữ liệu'],
+                'data' => [
                     ['không có dữ liệu' => 0]
                 ]
             ]);

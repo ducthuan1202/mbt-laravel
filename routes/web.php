@@ -45,11 +45,23 @@ Route::middleware(['auth'])->group(function () {
     Route::put('payment-schedules/ajax/{orderId}', 'PaymentScheduleController@saveForm')->name('payment-schedules.save_form');
 
     //report
-    Route::get('/report', 'ReportController@index')->name('report.index');
-    Route::get('/report/this-week', 'ReportController@thisWeek')->name('report.this_week');
-    Route::get('/report/next-week', 'ReportController@nextWeek')->name('report.next_week');
-    Route::get('/report/this-month', 'ReportController@thisMonth')->name('report.this_month');
-    Route::get('/report/next-month', 'ReportController@nextMonth')->name('report.next_month');
+    Route::get('/report', 'ReportController@overview')->name('report.overview');
+    Route::get('/report/customers', 'ReportController@customers')->name('report.customers');
+    Route::get('/report/{userId}/customers', 'ReportController@customersDetail')->name('report.customers_detail');
+
+    Route::get('/report/cares', 'ReportController@cares')->name('report.cares');
+    Route::get('/report/{userId}/cares', 'ReportController@caresDetail')->name('report.cares_detail');
+
+    Route::get('/report/quotations', 'ReportController@quotations')->name('report.quotations');
+    Route::get('/report/{userId}/quotations', 'ReportController@quotationsDetail')->name('report.quotations_detail');
+
+    Route::get('/report/orders', 'ReportController@orders')->name('report.orders');
+    Route::get('/report/{userId}/orders', 'ReportController@ordersDetail')->name('report.orders_detail');
+
+    Route::get('/report/tw/money', 'ReportController@thisWeekMoney')->name('report.tw.money');
+    Route::get('/report/nw/money', 'ReportController@nextWeekMoney')->name('report.nw.money');
+    Route::get('/report/tm/money', 'ReportController@thisMonthMoney')->name('report.tm.money');
+    Route::get('/report/nm/money', 'ReportController@nextMonthMoney')->name('report.nm.money');
 
     // resource
     Route::resource('cities', 'CityController')->except(['show']);

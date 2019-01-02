@@ -50,25 +50,30 @@ class Common
         return number_format($number);
     }
 
-    public static function getDateRangeOfThisWeek(){
-        $startTime = strtotime('this week', time());
-        $startOfWeek = date('Y-m-d', $startTime);
-        $endOfWeek = date('Y-m-d', $startTime + 60*60*24*7);
-        return sprintf('%s - %s', $startOfWeek, $endOfWeek);
+    // TODO: get time
+    public static function getDateRangeOfThisWeek($format = 'd/m/Y', $separator = ' - '){
+        $startTime = strtotime('this week');
+
+        $startOfWeek = date($format, $startTime);
+        $endOfWeek = date($format, strtotime('+6 day', $startTime));
+        return sprintf('%s%s%s', $startOfWeek, $separator, $endOfWeek);
     }
 
-    public static function getDateRangeOfNextWeek(){
-        $startTime = strtotime('next week', time());
-        $startOfWeek = date('Y-m-d', $startTime);
-        $endOfWeek = date('Y-m-d', strtotime('+6 day', $startTime));
-        return sprintf('%s - %s', $startOfWeek, $endOfWeek);
+    public static function getDateRangeOfNextWeek($format = 'd/m/Y', $separator = ' - '){
+        $startTime = strtotime('next week');
+
+        $startOfWeek = date($format, $startTime);
+        $endOfWeek = date($format, strtotime('+6 day', $startTime));
+        return sprintf('%s%s%s', $startOfWeek, $separator, $endOfWeek);
     }
+
 
     public static function getDateRangeOfThisMonth(){
         $startOfWeek = date('Y-m-01');
-        $endOfWeek = date('Y-m-t', time());
+        $endOfWeek = date('Y-m-t');
         return sprintf('%s - %s', $startOfWeek, $endOfWeek);
     }
+
     public static function getDateRangeOfNextMonth(){
         $startOfWeek = date('Y-m-01', strtotime( '+1 month'));
         $endOfWeek = date('Y-m-t', strtotime( '+1 month'));

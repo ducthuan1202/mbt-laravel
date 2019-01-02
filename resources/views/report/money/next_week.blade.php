@@ -92,7 +92,7 @@
                                             <td>{!! $item->formatMoney() !!}</td>
                                             <td>{!! $item->order->formatCustomer() !!}</td>
                                             <td>{!! $item->order->formatCustomerCity() !!}</td>
-                                            <td>{{$item->order->code}}</td>
+                                            <td><a href="{{route('payment-schedules.index', $item->order->id)}}" style="text-decoration: underline">{{$item->order->code}}</a></td>
                                             <td>{{$item->note}}</td>
                                             <td>{{$item->order->user->name}}</td>
                                         </tr>

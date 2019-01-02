@@ -145,7 +145,7 @@ class PriceQuotation extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     // TODO:  QUERY TO DATABASE =====
@@ -256,6 +256,17 @@ class PriceQuotation extends Model
     public function checkCustomerExist($id = 0)
     {
         return $this->where('customer_id', $id)->count();
+    }
+
+    public function countByDate($date = null){
+        if(empty($date)) return 0;
+
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        $data = self::whereBetween('quotations_date', [$startDate, $endDate])->count();
+        return $data;
     }
 
     // TODO:  LIST DATA =====

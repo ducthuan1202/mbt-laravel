@@ -366,6 +366,16 @@ class Order extends Model
             ->get();
     }
 
+    public function countByDate($date = null){
+        if(empty($date)) return 0;
+
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        $data = self::whereBetween('start_date', [$startDate, $endDate])->count();
+        return $data;
+    }
     // TODO:  LIST DATA =====
     public function listStandard($addAll = false)
     {
