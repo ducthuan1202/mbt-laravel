@@ -143,7 +143,7 @@
                                             <a href="{{route('payment-schedules.index', $item->order->id)}}" style="text-decoration: underline">{{$item->order->code}}</a>
                                         @endif
                                     </td>
-                                    <td>{{$item->order->formatUser()}}</td>
+                                    <td>{{isset($item->order) ?  $item->order->formatUser() : ''}}</td>
                                 </tr>
                             @endforeach
                             <tr>

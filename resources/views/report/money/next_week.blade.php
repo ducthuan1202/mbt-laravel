@@ -98,7 +98,7 @@
                                                 @endif
                                             </td>
                                             <td>{{$item->note}}</td>
-                                            <td>{{$item->order->user->name}}</td>
+                                            <td>{{isset($item->order) ?  $item->order->formatUser() : ''}}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
