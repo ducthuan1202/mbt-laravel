@@ -137,7 +137,6 @@
                                     <td>{{$item->formatMoney()}}</td>
                                     <td>{{isset($item->order) ? $item->order->formatCustomer() : ''}}</td>
                                     <td>{{isset($item->order) ? $item->order->formatCustomerCity() : ''}}</td>
-                                    <td>{{$item->order->code}}</td>
                                     <td>
                                         @if(isset($item->order))
                                             <a href="{{route('payment-schedules.index', $item->order->id)}}" style="text-decoration: underline">{{$item->order->code}}</a>
