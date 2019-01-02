@@ -111,7 +111,6 @@ class ReportController extends Controller
         return view('report.money.next_month', $data);
     }
 
-
     // report general
     public function overview(Request $request)
     {
@@ -143,7 +142,7 @@ class ReportController extends Controller
 
         $hasBuy = [];
         $noBuy = [];
-        foreach ($data->customer as $item) {
+        foreach ($data->customers as $item) {
             if ($item->status == Customer::BUY_STATUS) {
                 $hasBuy[] = $item;
             }
