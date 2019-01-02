@@ -140,8 +140,6 @@ use \App\Helpers\Common;
                                     <td>
                                         @if(isset($item->order))
                                             <a href="{{route('payment-schedules.index', $item->order->id)}}" style="text-decoration: underline">{{$item->order->code}}</a>
-                                        @else
-                                            {{$item->order->code}}
                                         @endif
                                     </td>
                                     <td>{{$item->order->formatUser()}}</td>
