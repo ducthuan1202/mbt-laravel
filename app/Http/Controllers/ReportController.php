@@ -81,6 +81,7 @@ class ReportController extends Controller
         $date = Common::getDateRangeOfThisWeek();
 
         $data = $this->calculatorThis($date);
+        dd($data);
 
         return view('report.money.this_week', $data);
     }
