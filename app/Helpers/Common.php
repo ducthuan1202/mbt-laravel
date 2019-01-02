@@ -67,16 +67,15 @@ class Common
         return sprintf('%s%s%s', $startOfWeek, $separator, $endOfWeek);
     }
 
-
-    public static function getDateRangeOfThisMonth(){
-        $startOfWeek = date('Y-m-01');
-        $endOfWeek = date('Y-m-t');
-        return sprintf('%s - %s', $startOfWeek, $endOfWeek);
+    public static function getDateRangeOfThisMonth($format = 'm/Y', $separator = ' - '){
+        $startOfWeek = date('01/'.$format);
+        $endOfWeek = date('t/'.$format);
+        return sprintf('%s%s%s', $startOfWeek, $separator, $endOfWeek);
     }
 
-    public static function getDateRangeOfNextMonth(){
-        $startOfWeek = date('Y-m-01', strtotime( '+1 month'));
-        $endOfWeek = date('Y-m-t', strtotime( '+1 month'));
-        return sprintf('%s - %s', $startOfWeek, $endOfWeek);
+    public static function getDateRangeOfNextMonth($format = 'd/m/Y', $separator = ' - '){
+        $startOfWeek = date('01/'.$format, strtotime( '+1 month'));
+        $endOfWeek = date('t/'.$format, strtotime( '+1 month'));
+        return sprintf('%s%s%s', $startOfWeek, $separator, $endOfWeek);
     }
 }

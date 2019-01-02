@@ -138,7 +138,13 @@
                                     <td>{{isset($item->order) ? $item->order->formatCustomer() : ''}}</td>
                                     <td>{{isset($item->order) ? $item->order->formatCustomerCity() : ''}}</td>
                                     <td>{{$item->order->code}}</td>
-                                    <td><a href="{{route('payment-schedules.index', $item->order->id)}}" style="text-decoration: underline">{{$item->order->code}}</a></td>
+                                    <td>
+                                        @if(isset($item->order))
+                                            <a href="{{route('payment-schedules.index', $item->order->id)}}" style="text-decoration: underline">{{$item->order->code}}</a>
+                                        @else
+                                            {{$item->order->code}}
+                                        @endif
+                                    </td>
                                     <td>{{$item->order->formatUser()}}</td>
                                 </tr>
                             @endforeach
