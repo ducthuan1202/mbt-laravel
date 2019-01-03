@@ -47,6 +47,9 @@ class HomeController extends Controller
         return view('pages/dashboard', $shared);
     }
 
+    /**
+     * updateCode
+     */
     public function updateCode()
     {
         $customers = Customer::select('id', 'code')->get();
@@ -56,8 +59,12 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * convertQuotations
+     */
     public function convertQuotations()
     {
+        return '';
         $data = DB::connection('mysql01')->select("select * from bao_gia where 1");
 
         foreach ($data as $item) {
@@ -85,8 +92,14 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     */
     public function importCustomer()
     {
+        return '';
         $cities = City::select('id', 'name')->get()->toArray();
         $users = User::select('id', 'name')->get()->toArray();
 
@@ -127,8 +140,14 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function exportExcel()
     {
+        return '';
         $spreadSheet = new Spreadsheet();
         $sheet = $spreadSheet->getActiveSheet();
         $sheet->setCellValue('A1', 'Hello');

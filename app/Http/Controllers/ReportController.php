@@ -15,6 +15,10 @@ use Illuminate\Http\Request;
 class ReportController extends Controller
 {
 
+    /**
+     * @param $date
+     * @return array
+     */
     private function calculatorThis($date)
     {
 
@@ -38,6 +42,10 @@ class ReportController extends Controller
 
     }
 
+    /**
+     * @param $date
+     * @return array
+     */
     private function calculatorNext($date)
     {
         // debt next week
@@ -56,6 +64,11 @@ class ReportController extends Controller
     }
 
     // TODO: report money
+
+    /**
+     * @param string $timeRange
+     * @return array
+     */
     private function byTime($timeRange = '')
     {
         $customer = new Customer();
@@ -77,6 +90,10 @@ class ReportController extends Controller
     }
 
     // report money
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function thisWeekMoney()
     {
         $date = Common::getDateRangeOfThisWeek();
@@ -86,6 +103,9 @@ class ReportController extends Controller
         return view('report.money.this_week', $data);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function nextWeekMoney()
     {
         $date = Common::getDateRangeOfNextWeek();
@@ -95,6 +115,9 @@ class ReportController extends Controller
         return view('report.money.next_week', $data);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function thisMonthMoney()
     {
 
@@ -104,6 +127,9 @@ class ReportController extends Controller
         return view('report.money.this_month', $data);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function nextMonthMoney()
     {
         $date = Common::getDateRangeOfNextMonth();
@@ -122,6 +148,11 @@ class ReportController extends Controller
     }
 
     // TODO: customers
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function customers(Request $request)
     {
         $date = $request->get('date');
@@ -134,6 +165,11 @@ class ReportController extends Controller
         return view('report.customers', $shared);
     }
 
+    /**
+     * @param Request $request
+     * @param $userId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function customersDetail(Request $request, $userId)
     {
         $user = new User();
@@ -165,6 +201,11 @@ class ReportController extends Controller
     }
 
     // TODO: cares
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function cares(Request $request)
     {
         $date = $request->get('date');
@@ -177,6 +218,11 @@ class ReportController extends Controller
         return view('report.cares', $shared);
     }
 
+    /**
+     * @param Request $request
+     * @param $userId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function caresDetail(Request $request, $userId)
     {
         $user = new User();
@@ -193,6 +239,11 @@ class ReportController extends Controller
     }
 
     // TODO: price quotations
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function quotations(Request $request)
     {
         $date = $request->get('date');
@@ -205,6 +256,11 @@ class ReportController extends Controller
         return view('report.quotations', $shared);
     }
 
+    /**
+     * @param Request $request
+     * @param $userId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function quotationsDetail(Request $request, $userId)
     {
         $user = new User();
@@ -221,6 +277,11 @@ class ReportController extends Controller
     }
 
     // TODO: orders
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function orders(Request $request)
     {
         $date = $request->get('date');
@@ -233,6 +294,11 @@ class ReportController extends Controller
         return view('report.orders', $shared);
     }
 
+    /**
+     * @param Request $request
+     * @param $userId
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function ordersDetail(Request $request, $userId)
     {
         $user = new User();

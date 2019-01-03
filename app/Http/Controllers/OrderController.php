@@ -7,6 +7,7 @@ use App\Customer;
 use App\Debt;
 use App\Helpers\Messages;
 use App\Order;
+use App\PaymentSchedule;
 use App\PriceQuotation;
 use App\User;
 use Illuminate\Http\Request;
@@ -146,15 +147,17 @@ class OrderController extends Controller
         $model = new Order();
         if ($priceQuotation) {
             $model->fill($priceQuotation->getAttributes());
-            $model->vat = 0;
-            $model->prepay = 0;
             $model->standard_real = $model->standard_output;
-            $model->status = Order::NOT_SHIPPED_STATUS;
             $message = sprintf('Thông tin đơn hàng hiện tại được lấy từ báo giá #%s ', $priceQuotation->code);
         } else {
+
+            $model->amount = 1;
             $message = sprintf('Không có báo giá phù hợp, đơn hàng phải nhập số liệu từ đầu');
         }
 
+        $model->vat = 0;
+        $model->prepay = 0;
+        $model->status = Order::NOT_SHIPPED_STATUS;
         $model->start_date = date('Y-m-d');
         $model->shipped_date = date('Y-m-d', strtotime("+1 month"));
 
@@ -187,6 +190,10 @@ class OrderController extends Controller
         $model->checkBeforeSave();
 
         if ($model->save()) {
+            if(empty($model->code)){
+                $model->code = $model->generateUniqueCode();
+                $model->save();
+            }
             $debtModel = new Debt();
             $debtModel->syncWhenUpdateOrder($model);
 
@@ -237,6 +244,11 @@ class OrderController extends Controller
         $model->checkBeforeSave();
 
         if ($model->save()) {
+            if(empty($model->code)){
+                $model->code = $model->generateUniqueCode();
+                $model->save();
+            }
+
             $debtModel = new Debt();
             $debtModel->syncWhenUpdateOrder($model);
         }
@@ -258,6 +270,15 @@ class OrderController extends Controller
         $this->authorize('admin');
         # find model and delete
         $model = $this->finById($id);
+
+        # check in debt
+        $paymentScheduleModel = new PaymentSchedule();
+        if ($paymentScheduleModel->checkOrderExist($model->id)) {
+            return response()->json([
+                'success' => false,
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH . ' CÔNG NỢ.',
+            ]);
+        }
 
         if ($model->delete()) {
             $output = [
@@ -282,6 +303,12 @@ class OrderController extends Controller
         return Order::findOrFail($id);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Throwable
+     */
     public function detail(Request $request)
     {
         $this->authorize('admin');
@@ -298,6 +325,11 @@ class OrderController extends Controller
         return response()->json($output);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function getByCustomer(Request $request)
     {
         $model = new Order();

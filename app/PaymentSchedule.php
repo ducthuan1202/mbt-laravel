@@ -26,12 +26,10 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentSchedule extends Model
 {
     const LIMIT = 10;
-
     const
         PAID_STATUS = 1,
         PENDING_STATUS = 2,
         DELAY_STATUS = 3;
-
 
     protected $table = 'payment_schedules';
     /**
@@ -83,6 +81,7 @@ class PaymentSchedule extends Model
             ->whereBetween('payment_date', [$startDate, $endDate])
             ->orderBy('payment_date', 'desc');
     }
+
     public function getPaymentPaid($date)
     {
         return $this->getPayment($date)
@@ -97,6 +96,10 @@ class PaymentSchedule extends Model
             ->get();
     }
 
+    public function checkOrderExist($id = 0)
+    {
+        return $this->where('order_id', $id)->count();
+    }
     // TODO:  LIST DATA =====
     public function listStatus($addAll = false)
     {
@@ -129,6 +132,4 @@ class PaymentSchedule extends Model
     {
         return Common::formatDate($this->payment_date);
     }
-
-
 }
