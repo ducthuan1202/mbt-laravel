@@ -54,7 +54,6 @@
                             <th>Ngày tạo</th>
                             <th>Số nợ</th>
                             <th>Nhân viên KD</th>
-                            <th>Kiểu công nợ</th>
                             <th>Trạng Thái</th>
                             <th></th>
                         </tr>
@@ -70,7 +69,6 @@
                                     <td>{{$item->formatDateCreate()}}</td>
                                     <td>{{$item->formatMoney()}}</td>
                                     <td>{{$item->formatCustomerUser()}}</td>
-                                    <td>{!! $item->formatStatus() !!}</td>
                                     <td>{!! $item->formatType() !!}</td>
                                     <td class="text-right">
                                         @can('admin')

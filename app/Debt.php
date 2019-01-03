@@ -66,7 +66,7 @@ class Debt extends Model
 
     public function checkBeforeSave()
     {
-        if(!$this->exists){
+        if (!$this->exists) {
             $this->status = self::OLD_STATUS;
             $this->type = self::NOT_PAY_TYPE;
         }
@@ -76,6 +76,36 @@ class Debt extends Model
         if (!empty($this->date_pay)) {
             $this->date_pay = Common::dmY2Ymd($this->date_pay);
         }
+    }
+
+    public function syncWhenUpdateOrder($order)
+    {
+        /**
+         * @var $order Order
+         */
+
+        if (!$order->exists) {
+            $debt = new Debt();
+        } else {
+            $debt = Debt::where('order_id', $order->id)
+                ->where('customer_id', $order->customer_id)
+                ->first();
+            if (!$debt) {
+                $debt = new Debt();
+            }
+        }
+
+        if (!$debt->exists) {
+            $debt->order_id = $order->id;
+            $debt->customer_id = $order->customer_id;
+            $debt->status = Debt::NEW_STATUS;
+            $debt->type = Debt::NOT_PAY_TYPE;
+            $debt->date_create = date('Y-m-d');
+        }
+
+        $debt->total_money = $order->getTotalMoneyWithoutPayment();
+
+        $debt->save();
     }
 
     // TODO: RELATIONSHIP =========
@@ -151,7 +181,8 @@ class Debt extends Model
         return 0;
     }
 
-    private function getDebt($date){
+    private function getDebt($date)
+    {
         $date = Common::extractDate($date);
         $startDate = Common::dmY2Ymd($date[0]);
         $endDate = Common::dmY2Ymd($date[1]);
@@ -159,8 +190,9 @@ class Debt extends Model
         return self::with(['customer'])
             ->where('status', Debt::OLD_STATUS)
             ->whereBetween('date_pay', [$startDate, $endDate])
-            ->orderBy('date_pay','asc');
+            ->orderBy('date_pay', 'asc');
     }
+
     public function getDebtThisTime($date)
     {
         return $this->getDebt($date)
@@ -173,6 +205,31 @@ class Debt extends Model
         return $this->getDebt($date)
             ->where('type', Debt::NOT_PAY_TYPE)
             ->get();
+    }
+
+    public function countByDate($date = null)
+    {
+        if (empty($date)) return 0;
+
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        $data = self::whereBetween('date_create', [$startDate, $endDate])->count();
+        return $data;
+    }
+
+    public function sumOldDebt($date = null)
+    {
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        return DB::table($this->getTable())
+            ->select(DB::raw("SUM(total_money) AS total"))
+            ->where('status', Debt::NEW_STATUS)
+            ->whereBetween('date_create', [$startDate, $endDate])
+            ->first();
     }
 
     // TODO: LIST DROPDOWN =========
@@ -241,15 +298,18 @@ class Debt extends Model
         return sprintf('<span class="btn btn-xs btn-round %s" style="width: 120px">%s</span>', $cls, $output);
     }
 
-    public function formatMoney(){
+    public function formatMoney()
+    {
         return Common::formatMoney($this->total_money);
     }
 
-    public function formatDateCreate(){
+    public function formatDateCreate()
+    {
         return Common::formatDate($this->date_create);
     }
 
-    public function formatDatePay(){
+    public function formatDatePay()
+    {
         return Common::formatDate($this->date_pay);
     }
 

@@ -144,8 +144,10 @@ class OrderController extends Controller
 
         $userModel = new User();
         $model = new Order();
-        if($priceQuotation){
+        if ($priceQuotation) {
             $model->fill($priceQuotation->getAttributes());
+            $model->vat = 0;
+            $model->prepay = 0;
             $model->standard_real = $model->standard_output;
             $model->status = Order::NOT_SHIPPED_STATUS;
             $message = sprintf('Thông tin đơn hàng hiện tại được lấy từ báo giá #%s ', $priceQuotation->code);
@@ -177,27 +179,17 @@ class OrderController extends Controller
          */
         $this->authorize('admin');
         $model = new Order();
-        if($request->get('code')){
+        if ($request->get('code')) {
             $this->validate($request, ['code' => 'unique:orders,code'], ['code.unique' => 'Đơn hàng cho báo giá này đã tồn tại.']);
         }
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
         $model->checkBeforeSave();
 
-        if($model->save()){
-            $debt = new Debt();
-            $debt->order_id = $model->id;
-            $debt->customer_id = $model->customer_id;
-            $debt->total_money = 0;
-            $debt->status = Debt::NEW_STATUS;
-            $debt->type = Debt::NOT_PAY_TYPE;
-            $debt->date_create = date('Y-m-d');
+        if ($model->save()) {
+            $debtModel = new Debt();
+            $debtModel->syncWhenUpdateOrder($model);
 
-            if($model->status == Order::SHIPPED_STATUS){
-                $debt->total_money = $model->getTotalMoneyWithoutPayment();
-            }
-
-            $debt->save();
             return redirect()
                 ->route('orders.index')
                 ->with('success', Messages::UPDATE_SUCCESS);
@@ -244,27 +236,9 @@ class OrderController extends Controller
         $model->fill($request->all());
         $model->checkBeforeSave();
 
-        if($model->save()){
-            $debt = Debt::where('order_id', $model->id)
-                ->where('customer_id', $model->customer_id)
-                ->first();
-
-            if($model->status == Order::SHIPPED_STATUS){
-                if(!$debt) {
-                    $debt = new Debt();
-                    $debt->order_id = $model->id;
-                    $debt->customer_id = $model->customer_id;
-                    $debt->status = Debt::NEW_STATUS;
-                    $debt->type = Debt::NOT_PAY_TYPE;
-                    $debt->date_create = date('Y-m-d');
-                    $debt->save();
-                } else{
-                    $debt->total_money = 0;
-                }
-
-                $debt->total_money = $model->total_money - $model->prepay + $model->vat;
-                $debt->save();
-            }
+        if ($model->save()) {
+            $debtModel = new Debt();
+            $debtModel->syncWhenUpdateOrder($model);
         }
 
         return redirect()

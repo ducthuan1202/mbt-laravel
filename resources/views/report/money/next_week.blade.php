@@ -10,7 +10,7 @@
 @section('content')
     <div class="right_col" role="main">
 
-        <h1>Tháng sau</h1>
+        <h1>Tuần sau</h1>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="x_panel tile">
@@ -90,11 +90,15 @@
                                             <td style="width: 50px">{{$index + 1}}</td>
                                             <td>{{$item->formatDate() }}</td>
                                             <td>{!! $item->formatMoney() !!}</td>
-                                            <td>{!! $item->order->formatCustomer() !!}</td>
-                                            <td>{!! $item->order->formatCustomerCity() !!}</td>
-                                            <td>{{$item->order->code}}</td>
+                                            <td>{{isset($item->order) ? $item->order->formatCustomer() : ''}}</td>
+                                            <td>{{isset($item->order) ? $item->order->formatCustomerCity() : ''}}</td>
+                                            <td>
+                                                @if(isset($item->order))
+                                                    <a href="{{route('payment-schedules.index', $item->order->id)}}" style="text-decoration: underline">{{$item->order->code}}</a>
+                                                @endif
+                                            </td>
                                             <td>{{$item->note}}</td>
-                                            <td>{{$item->order->user->name}}</td>
+                                            <td>{{isset($item->order) ?  $item->order->formatUser() : ''}}</td>
                                         </tr>
                                     @endforeach
                                     <tr>

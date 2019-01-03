@@ -90,7 +90,7 @@ use \App\Helpers\Common;
                                     <td>{{$item->formatPrePay() }}</td>
                                     <td>{{$item->formatCustomer() }}</td>
                                     <td>{!! $item->formatUser() !!}</td>
-                                    <td><b style="color:#ff5722">{{$item->code}}</b></td>
+                                    <td><a href="{{route('payment-schedules.index', $item->id)}}" style="text-decoration: underline">{{$item->code}}</a></td>
                                     <td>{{$item->formatUser()}}</td>
                                 </tr>
                             @endforeach
@@ -135,10 +135,14 @@ use \App\Helpers\Common;
                                     <td style="width: 50px">{{$index + 1}}</td>
                                     <td>{{$item->formatDate() }}</td>
                                     <td>{{$item->formatMoney()}}</td>
-                                    <td>{{$item->order->formatCustomer() }}</td>
-                                    <td>{{$item->order->formatCustomerCity()}}</td>
-                                    <td>{{$item->order->code}}</td>
-                                    <td>{{$item->order->formatUser()}}</td>
+                                    <td>{{isset($item->order) ? $item->order->formatCustomer() : ''}}</td>
+                                    <td>{{isset($item->order) ? $item->order->formatCustomerCity() : ''}}</td>
+                                    <td>
+                                        @if(isset($item->order))
+                                            <a href="{{route('payment-schedules.index', $item->order->id)}}" style="text-decoration: underline">{{$item->order->code}}</a>
+                                        @endif
+                                    </td>
+                                    <td>{{isset($item->order) ?  $item->order->formatUser() : ''}}</td>
                                 </tr>
                             @endforeach
                             <tr>

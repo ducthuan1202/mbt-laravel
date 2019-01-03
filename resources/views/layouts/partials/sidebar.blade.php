@@ -63,19 +63,27 @@
                         </li>
                     @endcan
                 </ul>
-
             </div>
 
             <div class="menu_section">
+
                 <ul class="nav side-menu">
                     @can('admin')
                         <li>
-                            <a><i class="fa fa-bar-chart-o"></i> BÁO CÁO DOANH THU<span class="fa fa-chevron-down"></span></a>
+                            <a><i class="fa fa-bar-chart-o"></i> Báo cáo <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                                <li><a href="{{route('report.this_week')}}">Tuần này</a></li>
-                                <li><a href="{{route('report.next_week')}}">Tuần sau</a></li>
-                                <li><a href="{{route('report.this_month')}}">Tháng này</a></li>
-                                <li><a href="{{route('report.next_month')}}">Tháng sau</a></li>
+                                <li><a href="{{route('report.overview', ['date'=>\App\Helpers\Common::getDateRangeOfThisWeek()])}}">Tuần này</a></li>
+                                <li><a href="{{route('report.overview', ['date'=>\App\Helpers\Common::getDateRangeOfThisMonth()])}}">Tháng này</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a><i class="fa fa-bar-chart-o"></i> Doanh thu <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li><a href="{{route('report.tw.money')}}">Tuần này</a></li>
+                                <li><a href="{{route('report.nw.money')}}">Tuần sau</a></li>
+                                <li><a href="{{route('report.tm.money')}}">Tháng này</a></li>
+                                <li><a href="{{route('report.nm.money')}}">Tháng sau</a></li>
                             </ul>
                         </li>
                     @endcan

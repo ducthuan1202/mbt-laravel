@@ -79,6 +79,7 @@ class Customer extends Model
     private function getUserLogin(){
         return Auth::user();
     }
+
     // TODO:  RELATIONSHIP =====
     public function city()
     {
@@ -87,7 +88,7 @@ class Customer extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function checkCityExist($id = 0)
@@ -206,6 +207,17 @@ class Customer extends Model
             array_unshift($data, $firstItem);
         }
 
+        return $data;
+    }
+
+    public function countByDate($date = null){
+        if(empty($date)) return 0;
+
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        $data = self::whereBetween('created_at', [$startDate, $endDate])->count();
         return $data;
     }
 

@@ -79,9 +79,8 @@
                                 <th style="vertical-align: middle">Số lượng</th>
                                 <th style="vertical-align: middle">Tạm ứng</th>
                                 <th style="vertical-align: middle">Đã thanh toán</th>
-                                <th style="vertical-align: middle">Công nợ</th>
+                                <th style="vertical-align: middle">Số tiền còn lại</th>
                                 <th style="vertical-align: middle" class="text-center">Ngày giao hàng</th>
-                                <th style="vertical-align: middle">Trạng thái</th>
                                 <th style="vertical-align: middle">Nhân viên KD</th>
                                 <th style="vertical-align: middle"></th>
                                 <th style="vertical-align: middle"></th>
@@ -104,7 +103,6 @@
                                         <td>{{$item->formatPayment() }}</td>
                                         <td>{{$item->formatDebt() }}</td>
                                         <td class="text-center">{{$item->formatShippedDate()}}</td>
-                                        <td>{!! $item->formatStatus() !!}</td>
                                         <td><b class="text-success">{{$item->formatUser()}}</b></td>
                                         <td class="text-right">
 
