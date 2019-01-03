@@ -190,15 +190,17 @@ class OrderController extends Controller
         $model->checkBeforeSave();
 
         if ($model->save()) {
-            if(empty($model->code)){
+            if (empty($model->code)) {
                 $model->code = $model->generateUniqueCode();
                 $model->save();
             }
             $debtModel = new Debt();
             $debtModel->syncWhenUpdateOrder($model);
 
+            $routeName = $model->getRouteName();
+
             return redirect()
-                ->route('orders.index')
+                ->route($routeName)
                 ->with('success', Messages::UPDATE_SUCCESS);
         } else {
             return redirect()
@@ -242,9 +244,8 @@ class OrderController extends Controller
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
         $model->checkBeforeSave();
-
         if ($model->save()) {
-            if(empty($model->code)){
+            if (empty($model->code)) {
                 $model->code = $model->generateUniqueCode();
                 $model->save();
             }
@@ -253,8 +254,9 @@ class OrderController extends Controller
             $debtModel->syncWhenUpdateOrder($model);
         }
 
+        $routeName = $model->getRouteName();
         return redirect()
-            ->route('orders.index')
+            ->route($routeName)
             ->with('success', Messages::UPDATE_SUCCESS);
     }
 
@@ -276,7 +278,7 @@ class OrderController extends Controller
         if ($paymentScheduleModel->checkOrderExist($model->id)) {
             return response()->json([
                 'success' => false,
-                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH . ' CÔNG NỢ.',
+                'message' => Messages::DELETE_FAIL_BECAUSE_HAS_RELATIONSHIP_WITH . ' LỊCH TRÌNH THANH TOÁN.',
             ]);
         }
 

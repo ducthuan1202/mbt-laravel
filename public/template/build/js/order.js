@@ -33,6 +33,18 @@ var MBT_Order = function () {
         $("#total_money").val(formatMoney(equal));
     };
 
+    var paymentRequiredOnChange = function () {
+        var prepay_required = $("#prepay_required");
+
+        console.log(prepay_required.val());
+
+        if(prepay_required.val() == 1){
+            $("#prepay").removeClass('hidden');
+        } else {
+            $("#prepay").addClass('hidden');
+        }
+    };
+
     return {
         delete: function (id) {
             alertConfirm({
@@ -43,7 +55,8 @@ var MBT_Order = function () {
         },
         priceOrAmountOnchange: function () {
             priceOrAmountOnchange();
-        }
+        },
+        paymentRequiredOnChange: paymentRequiredOnChange
     };
 
 }();

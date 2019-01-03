@@ -46,7 +46,6 @@
                                     <td>Khách hàng</td>
                                     <td>{!! $order->formatCustomer() !!}</td>
                                 </tr>
-
                                 <tr>
                                     <td>Khu vực</td>
                                     <td>{{$order->formatCustomerCity()}}</td>
@@ -89,7 +88,9 @@
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Tạm ứng</td>
-                                    <td><span class="blue">{{$order->formatPrePay()}}</span></td>
+                                    <td>
+                                        <span class="blue">{{$order->formatPrePay()}}</span>
+                                    </td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Còn lại</td>

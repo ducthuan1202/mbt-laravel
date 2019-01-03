@@ -82,7 +82,7 @@
                                 <th style="vertical-align: middle">Số tiền còn lại</th>
                                 <th style="vertical-align: middle" class="text-center">Ngày giao hàng</th>
                                 <th style="vertical-align: middle">Nhân viên KD</th>
-                                <th style="vertical-align: middle"></th>
+                                <th style="vertical-align: middle">Giao hàng</th>
                                 <th style="vertical-align: middle"></th>
                             </tr>
                         </thead>
@@ -104,8 +104,8 @@
                                         <td>{{$item->formatDebt() }}</td>
                                         <td class="text-center">{{$item->formatShippedDate()}}</td>
                                         <td><b class="text-success">{{$item->formatUser()}}</b></td>
-                                        <td class="text-right">
-
+                                        <td>
+                                            {!! $item->formatPrePayRequired() !!}
                                         </td>
                                         <td class="text-right" style="min-width: 100px">
                                             <a href="{{route('payment-schedules.index', $item->id)}}" class="btn btn-primary btn-xs">

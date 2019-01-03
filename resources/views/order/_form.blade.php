@@ -101,11 +101,6 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
                     @if ($errors->has('product_number')) <span class="help-block">{{ $errors->first('product_number') }}</span> @endif
                 </div>
 
-                <div class="form-group">
-                    <label>VAT (<code>ngàn đồng</code>)</label>
-                    <input type="number" class="form-control" name="vat" value="{{old('vat') ? old('vat') : $model->vat}}"/>
-                </div>
-
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-6">
@@ -148,17 +143,8 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
         </div>
 
         <div class="row">
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
-                    <label>Bảo hành</label>
-                    <div class="input-group">
-                        <input type="number" min="1" class="form-control" name="guarantee" value="{{old('guarantee') ? old('guarantee') : $model->guarantee}}"/>
-                        <code class="input-group-addon">tháng</code>
-                    </div>
-                    @if ($errors->has('guarantee')) <span class="help-block">{{ $errors->first('guarantee') }}</span> @endif
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
+
+            <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group {{$errors->has('amount') ? 'has-error' : ''}}">
                     <label>Số lượng</label>
                     <input type="number" class="form-control" name="amount" onchange="MBT_Order.priceOrAmountOnchange()"
@@ -168,7 +154,7 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
                     @endif
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
+            <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group {{$errors->has('price') ? 'has-error' : ''}}">
                     <label>Đơn giá (<code>ngàn đồng</code>)</label>
                     <input type="number" class="form-control" name="price" onchange="MBT_Order.priceOrAmountOnchange()"
@@ -177,38 +163,82 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+
+<div class="row">
+
+    <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="form-group {{$errors->has('product_number') ? 'has-error' : ''}}">
+            <label>Tạm ứng trước khi giao hàng</label>
+            <select name="prepay_required" class="form-control chosen-select" id="prepay_required" onchange="MBT_Order.paymentRequiredOnChange()">
+                @foreach($model->listPrePayRequired() as $key => $val)
+                    <option value="{{ $key }}" {{ ($key == $model->prepay_required || $key == old('prepay_required')) ? 'selected' : '' }}>{!! $val !!}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group" id="prepay">
+            <label>Số tiền tạm ứng (<code>ngàn đồng</code>)</label>
+            <input type="number" class="form-control" name="prepay" value="{{old('prepay') ? old('prepay') : $model->prepay}}"/>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="form-group">
+            <label>Thanh toán</label>
+            <select name="payment_pre_shipped" class="form-control chosen-select">
+                @foreach($model->listPaymentPreShip() as $key => $val)
+                    <option value="{{ $key }}" {{ ($key == $model->payment_pre_shipped || $key == old('payment_pre_shipped')) ? 'selected' : '' }}>{!! $val !!}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group {{$errors->has('product_number') ? 'has-error' : ''}}">
+            <label>Trạng thái đơn hàng</label>
+            <select name="status" class="form-control chosen-select">
+                @foreach($model->listStatus() as $key => $val)
+                    <option value="{{ $key }}" {{ ($key == $model->status || $key == old('status')) ? 'selected' : '' }}>{!! $val !!}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-6">
 
         <div class="row">
-            <div class="col-xs-12 col-sm-4 col-md-4">
+            <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group">
-                    <label>Tạm ứng (<code>ngàn đồng</code>)</label>
-                    <input type="number" class="form-control" name="prepay" value="{{old('prepay') ? old('prepay') : $model->prepay}}"/>
+                    <label>VAT (<code>ngàn đồng</code>)</label>
+                    <input type="number" class="form-control" name="vat" value="{{old('vat') ? old('vat') : $model->vat}}"/>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="form-group">
-                    <label>Thanh toán</label>
-                    <select name="payment_pre_shipped" class="form-control chosen-select">
-                        @foreach($model->listPaymentPreShip() as $key => $val)
-                            <option value="{{ $key }}" {{ ($key == $model->payment_pre_shipped || $key == old('payment_pre_shipped')) ? 'selected' : '' }}>{!! $val !!}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="form-group {{$errors->has('product_number') ? 'has-error' : ''}}">
-                    <label>Trạng thái đơn hàng</label>
-                    <select name="status" class="form-control chosen-select">
-                        @foreach($model->listStatus() as $key => $val)
-                            <option value="{{ $key }}" {{ ($key == $model->status || $key == old('status')) ? 'selected' : '' }}>{!! $val !!}</option>
-                        @endforeach
-                    </select>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
+                    <label>Bảo hành</label>
+                    <div class="input-group">
+                        <input type="number" min="1" class="form-control" name="guarantee" value="{{old('guarantee') ? old('guarantee') : $model->guarantee}}"/>
+                        <code class="input-group-addon">tháng</code>
+                    </div>
+                    @if ($errors->has('guarantee')) <span class="help-block">{{ $errors->first('guarantee') }}</span> @endif
                 </div>
             </div>
         </div>
 
+
+        <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
+            <label>Số ngày cho phép chậm thanh toán</label>
+            <div class="input-group">
+                <input type="number" min="0" class="form-control" name="date_delay_payment" value="{{old('date_delay_payment') ? old('date_delay_payment') : $model->date_delay_payment}}"/>
+                <code class="input-group-addon">ngày</code>
+            </div>
+            @if ($errors->has('date_delay_payment')) <span class="help-block">{{ $errors->first('date_delay_payment') }}</span> @endif
+        </div>
+
     </div>
+
 </div>
+
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-4">
@@ -254,5 +284,5 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
     @else
         <button type="submit" class="btn btn-success">Tạo Mới</button>
     @endif
-    <a href="{{route('orders.index')}}" class="btn btn-default">Trở Về</a>
+    <a href="{{route($model->getRouteName())}}" class="btn btn-default">Trở Về</a>
 </div>

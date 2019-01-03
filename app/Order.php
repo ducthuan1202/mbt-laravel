@@ -36,6 +36,8 @@ use Illuminate\Support\Facades\DB;
  * @property string note
  * @property integer status
  * @property integer vat
+ * @property integer prepay_required
+ * @property integer date_delay_payment
  * @property integer prepay
  * @property string payment_pre_shipped
  *
@@ -71,7 +73,8 @@ class Order extends Model
     protected $fillable = [
         'user_id', 'customer_id', 'code', 'amount', 'price', 'total_money', 'power', 'voltage_input', 'voltage_output',
         'standard_output', 'standard_real', 'guarantee', 'product_number', 'product_skin', 'product_type',
-        'setup_at', 'delivery_at', 'start_date', 'shipped_date', 'note', 'status', 'vat', 'prepay', 'payment_pre_shipped'
+        'setup_at', 'delivery_at', 'start_date', 'shipped_date', 'shipped_date_real',
+        'note', 'status', 'vat', 'prepay', 'payment_pre_shipped', 'prepay_required','date_delay_payment'
     ];
 
     public $validateMessage = [
@@ -121,22 +124,19 @@ class Order extends Model
         'status' => 'required',
     ];
 
-    private function getUserLogin()
-    {
-        return Auth::user();
-    }
-
     public function checkBeforeSave()
     {
         if (!empty($this->start_date)) {
             $this->start_date = Common::dmY2Ymd($this->start_date);
         }
+
         if (!empty($this->shipped_date)) {
             $this->shipped_date = Common::dmY2Ymd($this->shipped_date);
         }
 
         if (!empty($this->shipped_date_real)) {
             $this->shipped_date_real = Common::dmY2Ymd($this->shipped_date_real);
+            $this->status = self::SHIPPED_STATUS;
         }
 
         $this->total_money = (int)$this->price * (int)$this->amount;
@@ -376,6 +376,7 @@ class Order extends Model
         $data = self::whereBetween('start_date', [$startDate, $endDate])->count();
         return $data;
     }
+
     // TODO:  LIST DATA =====
     public function listStandard($addAll = false)
     {
@@ -438,6 +439,17 @@ class Order extends Model
         $data[self::SHIPPED_STATUS] = 'Đã giao';
         $data[self::NOT_SHIPPED_STATUS] = 'Chưa giao';
         $data[self::CANCEL_STATUS] = 'Đã hủy';
+        return $data;
+    }
+
+    public function listPrePayRequired($addAll = false)
+    {
+        $data = [];
+        if ($addAll) {
+            $data = [null => 'Tất cả'];
+        }
+        $data[self::YES] = 'Có tạm ứng';
+        $data[self::NO] = 'Không cần tạm ứng';
         return $data;
     }
 
@@ -586,9 +598,41 @@ class Order extends Model
         return Common::formatMoney($this->prepay);
     }
 
+    public function formatPrePayRequired()
+    {
+        if($this->checkConditionShip()){
+            return sprintf('<span class="label label-success"><i class="fa fa-check"></i> Đủ điều kiện</span>');
+        }
+
+        return sprintf('<span class="label label-danger"><i class="fa fa-times"></i> Không đủ điều kiện</span>');
+    }
+
     public function generateUniqueCode()
     {
         return Common::generateUniqueCode('MBT-DH00000', $this->id);
+    }
+
+    public function getRouteName(){
+        switch ($this->status) {
+            case Order::SHIPPED_STATUS:
+                $routeName = 'orders.shipped';
+                break;
+            case Order::NOT_SHIPPED_STATUS:
+                $routeName = 'orders.no_shipped';
+                break;
+            case Order::CANCEL_STATUS:
+            default:
+                $routeName = 'orders.cancel';
+                break;
+        }
+        return $routeName;
+    }
+
+    public function checkConditionShip(){
+        if($this->prepay_required == self::YES && $this->prepay > 0){
+            return true;
+        }
+        return false;
     }
 
 }

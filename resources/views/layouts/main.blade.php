@@ -25,6 +25,7 @@
     <link href="{{ asset('/template/vendors/nprogress/nprogress.css') }}" rel="stylesheet"/>
     <!-- bootstrap-daterangepicker -->
     <link href="{{ asset('/template/vendors/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('/template/vendors/switchery/dist/switchery.min.css') }}" rel="stylesheet"/>
 
     <!-- select2 -->
     <link href="{{ asset('/template/vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet"/>
@@ -64,6 +65,7 @@
 <script src="{{ asset('/template/vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 <!-- Sweetalert -->
 <script src="{{ asset('/template/vendors/sweetalert/sweetalert.min.js') }}"></script>
+<script src="{{ asset('/template/vendors/switchery/dist/switchery.min.js') }}"></script>
 
 <script>$.ajaxSetup({headers: {'X-CSRF-TOKEN': '{{csrf_token()}}'}});</script>
 <script src="{{ asset('/template/vendors/select2/dist/js/select2.min.js') }}"></script>
