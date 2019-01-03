@@ -1,3 +1,11 @@
+@php
+use \App\Helpers\Common;
+
+$dateRangeThisWeek = Common::getDateRangeOfThisWeek();
+$dateRangeThisMonth = Common::getDateRangeOfThisMonth();
+$dateRangeNextWeek = Common::getDateRangeOfNextWeek();
+$dateRangeNextMonth = Common::getDateRangeOfNextMonth();
+@endphp
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
@@ -72,20 +80,31 @@
                         <li>
                             <a><i class="fa fa-bar-chart-o"></i> Báo cáo <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                                <li><a href="{{route('report.overview', ['date'=>\App\Helpers\Common::getDateRangeOfThisWeek()])}}">Tuần này</a></li>
-                                <li><a href="{{route('report.overview', ['date'=>\App\Helpers\Common::getDateRangeOfThisMonth()])}}">Tháng này</a></li>
+                                <li><a href="{{route('report.overview', ['date'=>$dateRangeThisWeek])}}">Tuần này</a></li>
+                                <li><a href="{{route('report.overview', ['date'=>$dateRangeThisMonth])}}">Tháng này</a></li>
                             </ul>
                         </li>
 
                         <li>
-                            <a><i class="fa fa-bar-chart-o"></i> Doanh thu <span class="fa fa-chevron-down"></span></a>
+                            <a><i class="fa fa-bar-chart-o"></i> Doanh thu<span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                                <li><a href="{{route('report.tw.money')}}">Tuần này</a></li>
-                                <li><a href="{{route('report.nw.money')}}">Tuần sau</a></li>
-                                <li><a href="{{route('report.tm.money')}}">Tháng này</a></li>
-                                <li><a href="{{route('report.nm.money')}}">Tháng sau</a></li>
+                                <li><a href="{{route('report.money_present', ['date'=>$dateRangeThisWeek])}}">Tuần này</a></li>
+                                <li><a href="{{route('report.money_present', ['date'=>$dateRangeThisMonth])}}">Tháng này</a></li>
+
+                                <li><a href="{{route('report.money_future', ['date'=>$dateRangeNextWeek])}}">Tuần tới</a></li>
+                                <li><a href="{{route('report.money_future', ['date'=>$dateRangeNextMonth])}}">Tháng tới</a></li>
                             </ul>
                         </li>
+
+                        {{--<li>--}}
+                            {{--<a><i class="fa fa-bar-chart-o"></i> Doanh thu <span class="fa fa-chevron-down"></span></a>--}}
+                            {{--<ul class="nav child_menu">--}}
+                                {{--<li><a href="{{route('report.tw.money')}}">Tuần này</a></li>--}}
+                                {{--<li><a href="{{route('report.nw.money')}}">Tuần sau</a></li>--}}
+                                {{--<li><a href="{{route('report.tm.money')}}">Tháng này</a></li>--}}
+                                {{--<li><a href="{{route('report.nm.money')}}">Tháng sau</a></li>--}}
+                            {{--</ul>--}}
+                        {{--</li>--}}
                     @endcan
                 </ul>
             </div>

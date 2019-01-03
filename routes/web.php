@@ -60,6 +60,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report/orders', 'ReportController@orders')->name('report.orders');
     Route::get('/report/{userId}/orders', 'ReportController@ordersDetail')->name('report.orders_detail');
 
+    Route::get('/report/money/present', 'ReportController@moneyPresent')->name('report.money_present');
+    Route::get('/report/money/future', 'ReportController@moneyFuture')->name('report.money_future');
+
     Route::get('/report/tw/money', 'ReportController@thisWeekMoney')->name('report.tw.money');
     Route::get('/report/nw/money', 'ReportController@nextWeekMoney')->name('report.nw.money');
     Route::get('/report/tm/money', 'ReportController@thisMonthMoney')->name('report.tm.money');

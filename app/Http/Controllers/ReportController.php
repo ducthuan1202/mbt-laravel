@@ -35,6 +35,7 @@ class ReportController extends Controller
         $debtPaid = $debt->getDebtThisTime($date);
 
         return [
+            'date'=>$date,
             'revenue' => $revenue,
             'payment' => $payment,
             'debtPaid' => $debtPaid
@@ -57,13 +58,12 @@ class ReportController extends Controller
         $payment = $paymentSchedule->getPaymentNextTime($date);
 
         return [
+            'date'=>$date,
             'revenue' => $revenue,
             'payment' => $payment,
         ];
 
     }
-
-    // TODO: report money
 
     /**
      * @param string $timeRange
@@ -136,6 +136,20 @@ class ReportController extends Controller
         $data = $this->calculatorNext($date);
 
         return view('report.money.next_month', $data);
+    }
+
+    public function moneyPresent(Request $request){
+        $date = $request->get('date');
+        $data = $this->calculatorThis($date);
+
+        return view('report.money.present', $data);
+    }
+
+    public function moneyFuture(Request $request){
+        $date = $request->get('date');
+        $data = $this->calculatorNext($date);
+
+        return view('report.money.future', $data);
     }
 
     // report general
