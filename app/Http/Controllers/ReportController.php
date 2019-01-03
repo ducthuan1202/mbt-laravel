@@ -6,6 +6,7 @@ use App\Debt;
 use App\Helpers\Common;
 use App\Order;
 use App\PaymentSchedule;
+use App\User;
 
 class ReportController extends Controller
 {
@@ -89,6 +90,7 @@ class ReportController extends Controller
 
     }
 
+    // TODO: report money
     public function thisWeek()
     {
         $date = Common::getDateRangeOfThisWeek();
@@ -124,4 +126,12 @@ class ReportController extends Controller
         return view('report/next_month', $data);
     }
 
+    // TODO: report customer
+    public  function customers(){
+        $date = Common::getDateRangeOfThisWeek();
+        $userModel = new User();
+        $users = $userModel->getCustomerByUserCreate($date);
+//        dd($users);
+        return 'aaaaaa';
+    }
 }

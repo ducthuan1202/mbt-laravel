@@ -45,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('payment-schedules/ajax/{orderId}', 'PaymentScheduleController@saveForm')->name('payment-schedules.save_form');
 
     //report
-    Route::get('/report', 'ReportController@index')->name('report.index');
+    Route::get('/report/customers', 'ReportController@customers')->name('report.customers');
     Route::get('/report/this-week', 'ReportController@thisWeek')->name('report.this_week');
     Route::get('/report/next-week', 'ReportController@nextWeek')->name('report.next_week');
     Route::get('/report/this-month', 'ReportController@thisMonth')->name('report.this_month');

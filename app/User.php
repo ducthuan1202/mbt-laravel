@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Helpers\Common;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -76,7 +77,7 @@ class User extends Authenticatable
     // TODO:  RELATIONSHIP =====
     public function customer()
     {
-        return $this->belongsTo(Customer::class, 'user_id', 'id');
+        return $this->belongsTo(Customer::class, 'id', 'user_id');
     }
 
     // TODO:  QUERY TO DATABASE =====
@@ -100,7 +101,7 @@ class User extends Authenticatable
         $userTbl = $this->getTable();
 
         return DB::table($userTbl)
-            ->select( "$userTbl.name AS name", DB::raw("COUNT($customerTbl.id) AS value"))
+            ->select("$userTbl.name AS name", DB::raw("COUNT($customerTbl.id) AS value"))
             ->leftJoin($customerTbl, "$customerTbl.user_id", '=', "$userTbl.id")
             ->where("$userTbl.role", self::EMPLOYEE_ROLE)
             ->groupBy("$userTbl.id")
@@ -136,6 +137,20 @@ class User extends Authenticatable
             array_unshift($data, $firstItem);
         }
         return $data;
+    }
+
+    public function getCustomerByUserCreate($date)
+    {
+        $date = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($date[0]);
+        $endDate = Common::dmY2Ymd($date[1]);
+
+        return User::with(['customer' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }, 'customer.city'])
+            ->where('role', User::EMPLOYEE_ROLE)
+            ->where('status', User::ACTIVATE_STATUS)
+            ->get();
     }
 
     // TODO:  LIST DATA =====
@@ -205,10 +220,10 @@ class User extends Authenticatable
 
     public function eChartGenerateData($data)
     {
-        if(!$data || isset($data['name'])|| isset($data['value'])){
+        if (!$data || isset($data['name']) || isset($data['value'])) {
             return \GuzzleHttp\json_encode([
-                'label'=> ['không có dữ liệu'],
-                'data'=> [
+                'label' => ['không có dữ liệu'],
+                'data' => [
                     ['không có dữ liệu' => 0]
                 ]
             ]);
