@@ -43,7 +43,6 @@
             <div class="col-xs-12 col-sm-4 col-md-3 col-lg-4">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
-                    <a href="{{route('debts.index')}}" class="btn btn-default">Bỏ Lọc</a>
                 </div>
             </div>
 

@@ -21,7 +21,6 @@
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
-                    <a href="{{route('users.index')}}" class="btn btn-default">Bỏ Lọc</a>
                 </div>
             </div>
         </div>

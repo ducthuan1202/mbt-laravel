@@ -296,7 +296,7 @@ class PriceQuotation extends Model
         $data['1'] = 'Kiểu hở sứ thường';
         $data['2'] = 'Kiểu hở sứ elbow';
         $data['3'] = 'Kiểu kín sứ thường';
-        $data['4'] = 'Kiểu kín sứ thường';
+        $data['4'] = 'Kiểu kín sứ elbow';
         return $data;
     }
 
