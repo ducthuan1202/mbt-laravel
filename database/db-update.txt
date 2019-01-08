@@ -1,0 +1,5 @@
+#===== 2019-01-08 =====
+ALTER TABLE `price_quotations` ADD `standard_real` VARCHAR(31) NULL DEFAULT NULL AFTER `standard_output`;
+ALTER TABLE `price_quotations` ADD `group_work` BOOLEAN NOT NULL AFTER `delivery_at`;
+ALTER TABLE `price_quotations` ADD `expired` INT(11) NULL DEFAULT NULL COMMENT 'hiệu lực báo giá' AFTER `group_work`;
+ALTER TABLE `price_quotations` ADD `terms_of_payment` BOOLEAN NULL DEFAULT NULL AFTER `expired`;

@@ -30,6 +30,10 @@ use Illuminate\Support\Facades\DB;
  * @property string product_type
  * @property string setup_at
  * @property integer delivery_at
+ * @property integer standard_real
+ * @property integer group_work
+ * @property integer expired
+ * @property integer terms_of_payment
  * @property string order_status
  * @property string note
  * @property string reason
@@ -46,7 +50,6 @@ use Illuminate\Support\Facades\DB;
 class PriceQuotation extends Model
 {
     const LIMIT = 50;
-
     const
         SIGNED_ORDER_STATUS = 1,
         UNSIGNED_ORDER_STATUS = 2;
@@ -54,7 +57,6 @@ class PriceQuotation extends Model
         SUCCESS_STATUS = 1,
         PENDING_STATUS = 2,
         FAIL_STATUS = 3;
-
     const
         MACHINE_SKIN = 1,
         CABIN_SKIN = 2;
@@ -67,8 +69,9 @@ class PriceQuotation extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'user_id', 'customer_id', 'amount', 'price', 'quotations_date', 'power', 'voltage_input', 'voltage_output', 'standard_output',
-        'guarantee', 'product_skin', 'product_type', 'setup_at', 'delivery_at', 'order_status', 'note', 'reason', 'status',
+        'code', 'user_id', 'customer_id', 'amount', 'price', 'quotations_date', 'power', 'voltage_input',
+        'voltage_output', 'standard_output', 'guarantee', 'product_skin', 'product_type', 'setup_at', 'delivery_at',
+        'order_status', 'note','reason', 'status','standard_real','group_work','expired','terms_of_payment',
     ];
 
     public $validateMessage = [
@@ -270,6 +273,32 @@ class PriceQuotation extends Model
     }
 
     // TODO:  LIST DATA =====
+    public function listGroupWork(){
+        $data = [];
+        $data['0'] = 'Chọn tổ đấu';
+        $data['1'] = 'Y/Yo-12';
+        $data['2'] = 'D/Yo-11';
+        $data['3'] = 'Y-D/Yo-12-11';
+        $data['4'] = 'D-D/Yo-11';
+        return $data;
+    }
+
+    public function listExpired(){
+        $data = [];
+        $data['0'] = 'Hiệu lực báo giá';
+        $data['1'] = '15 ngày';
+        $data['2'] = '30 ngày';
+        $data['3'] = '60 ngày';
+        return $data;
+    }
+
+    public function listTearmsOfPayment(){
+        $data = [];
+        $data['1'] = 'Thanh toán giá trị còn lại trước khi nhận hàng';
+        $data['2'] = 'Tạm ứng 30% giá trị khi chính thức đặt hàng';
+        return $data;
+    }
+
     public function listStandard($addAll = false)
     {
         $data = [];
