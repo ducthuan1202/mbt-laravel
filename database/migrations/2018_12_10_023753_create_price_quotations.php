@@ -27,7 +27,8 @@ class CreatePriceQuotations extends Migration
             $table->string('power',15)->comment('công suất');
             $table->string('voltage_input',15)->comment('điện áp vào');
             $table->string('voltage_output',15)->comment('điện áp ra');
-            $table->string('standard_output',31)->comment('tiêu chuẩn xuất máy');
+            $table->string('standard_output',31)->comment('tiêu chuẩn sản xuất');
+            $table->string('standard_real',31)->comment('tiêu chuẩn xuất máy');
             $table->integer('guarantee')->comment('thời gian bảo hành (tháng)');
 
             $table->boolean('product_skin')->comment('ngoại hình máy');
