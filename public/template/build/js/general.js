@@ -1,14 +1,14 @@
-var __FORMAT_DATE__ = 'DD/MM/YYYY';
+var __FORMAT_DATE__ = "DD/MM/YYYY";
 
-var formatMoney = function(number){
-    number = number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+var formatMoney = function (number) {
+    number = number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
     return number.substr(0, number.length - 3);
 };
 
 function alertSuccess(setting) {
 
-    var title = 'Thành công.',
-        text = 'Chúc mừng.';
+    var title = "Thành công.",
+        text = "Chúc mừng.";
     if (setting) {
         title = setting.title ? setting.title : title;
         text = setting.text ? setting.text : text;
@@ -23,8 +23,8 @@ function alertSuccess(setting) {
 
 function alertError(setting) {
 
-    var title = 'Lỗi.',
-        text = 'Đã xảy ra lỗi trong quá trình thưc thi.';
+    var title = "Lỗi.",
+        text = "Đã xảy ra lỗi trong quá trình thưc thi.";
     if (setting) {
         title = setting.title ? setting.title : title;
         text = setting.text ? setting.text : text;
@@ -38,8 +38,8 @@ function alertError(setting) {
 }
 
 function alertConfirm(setting) {
-    var title = 'Cảnh báo !',
-        text = 'Bạn có chắc muốn thực hiện hành động này?',
+    var title = "Cảnh báo !",
+        text = "Bạn có chắc muốn thực hiện hành động này?",
         cbSuccess = null,
         cbCancel = null;
 
@@ -57,11 +57,15 @@ function alertConfirm(setting) {
         dangerMode: true,
         buttons: ["Hủy bỏ", "Đồng ý"]
     })
-        .then((willDelete) => {
+        .then(function (willDelete) {
             if (willDelete) {
-                if (cbSuccess) cbSuccess();
+                if (cbSuccess) {
+                    cbSuccess();
+                }
             } else {
-                if (cbCancel) cbCancel();
+                if (cbCancel) {
+                    cbCancel();
+                }
             }
         });
 }
@@ -70,8 +74,8 @@ function sendAjax(options) {
     var setting = {
         url: null,
         timeout: 10e3,
-        method: 'DELETE',
-        dataType: 'JSON',
+        method: "DELETE",
+        dataType: "JSON",
         data: {},
         fnSuccess: null,
         fnError: null
@@ -88,21 +92,21 @@ function sendAjax(options) {
         data: setting.data,
         timeout: setting.timeout,
         beforeSend: function () {
-            if (typeof setting.beforeSend === 'function') {
+            if (typeof setting.beforeSend === "function") {
                 setting.beforeSend();
             }
         },
         success: function (response) {
-            if (typeof setting.fnSuccess === 'function') {
+            if (typeof setting.fnSuccess === "function") {
                 setting.fnSuccess(response);
             }
         },
         error: function (response) {
             console.log(response);
-            if (typeof setting.fnError === 'function') {
+            if (typeof setting.fnError === "function") {
                 setting.fnError(response);
             } else {
-                alertError({title: 'Quá trình truyền tải dữ liệu thất bại.'});
+                alertError({title: "Quá trình truyền tải dữ liệu thất bại."});
             }
         }
     });
@@ -235,7 +239,7 @@ function initSelect2() {
     });
 }
 
-function getCitiesByUser(callback){
+function getCitiesByUser(callback) {
     var cityId = $("#city_id").val();
     var userId = $("#user_id").val();
 
@@ -249,7 +253,7 @@ function getCitiesByUser(callback){
             userId: userId,
             cityId: cityId,
         },
-        beforeSend: function(){
+        beforeSend: function () {
             $('#city_id').html('<option>đang tải dữ liệu...</option>');
         },
         fnSuccess: function (response) {
@@ -258,12 +262,12 @@ function getCitiesByUser(callback){
             } else {
                 alertError({title: response.message});
             }
-            if(typeof callback === 'function') callback();
+            if (typeof callback === 'function') callback();
         }
     });
 }
 
-function getCustomerByCityAndUser(callback){
+function getCustomerByCityAndUser(callback) {
     var cityId = $("#city_id").val();
     var userId = $("#user_id").val();
     var customerId = $("#customer_id").val();
@@ -280,7 +284,7 @@ function getCustomerByCityAndUser(callback){
             cityId: cityId,
             customerId: customerId
         },
-        beforeSend: function(){
+        beforeSend: function () {
             $('#customer_id').html('<option>đang tải dữ liệu...</option>');
         },
         fnSuccess: function (response) {
@@ -289,12 +293,12 @@ function getCustomerByCityAndUser(callback){
             } else {
                 alertError({title: response.message});
             }
-            if(typeof callback === 'function') callback();
+            if (typeof callback === 'function') callback();
         }
     });
 }
 
-function getCitiesAndCustomersByUser(){
+function getCitiesAndCustomersByUser() {
     getCitiesByUser(function () {
         getCustomerByCityAndUser();
     });

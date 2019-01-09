@@ -92,7 +92,11 @@
 
                                     <tr>
                                         <td style="width: 50px">{{$index + 1}}</td>
-                                        <td><b style="color:#ff5722">{!! $item->formatCustomer('<br/>') !!}</b></td>
+                                        <td>
+                                            <a href="{{route('payment-schedules.index', $item->id)}}" style="text-decoration: underline">
+                                            {!! $item->formatCustomer('<br/>') !!}
+                                            </a>
+                                        </td>
                                         <td>{!! $item->formatCustomerCity() !!}</td>
                                         <td>
                                             {{$item->power }} kvA <br/>

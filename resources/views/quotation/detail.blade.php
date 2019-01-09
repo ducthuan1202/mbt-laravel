@@ -13,21 +13,28 @@
                 <h2>
                     Báo giá: #{{$model->code}}
                 </h2>
-                <a class="btn btn-dark pull-right" href="{{route('quotations.index')}}">
-                    <i class="fa fa-reply"></i> Trở về
-                </a>
+
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
+
+                <div class="clearfix">
+                    <a href="{{route('quotations.index')}}" class="btn btn-dark btn-xs pull-right">
+                        <i class="fa fa-reply"></i> Trở về
+                    </a>
+                    <a href="{{route('quotations.edit', $model->id)}}" class="btn btn-info btn-xs">
+                        <i class="fa fa-pencil"></i> Sửa
+                    </a>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <tbody>
                         <tr class="bg-warning">
-                            <td>Nhân viên kinh doanh chăm sóc</td>
+                            <td>NVDK</td>
                             <td>{{$model->formatUser()}}</td>
                         </tr>
                         <tr class="bg-warning">
-                            <td>Trạng thái báo giá</td>
+                            <td>Trạng thái</td>
                             <td>
                                 {!! $model->formatStatus() !!}
                                 @if(!empty($model->reason))

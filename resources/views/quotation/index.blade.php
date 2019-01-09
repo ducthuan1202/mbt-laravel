@@ -50,7 +50,7 @@
                     <table class="table table-striped jambo_table bulk_action">
                         <thead>
                         <tr class="headings">
-                            <th>No.</th>
+                            <th style="width: 50px">No.</th>
                             <th>Ngày báo giá</th>
                             <th>Khách hàng</th>
                             <th>Khu vực</th>
@@ -63,23 +63,21 @@
                         @if(count($data))
                             @foreach($data as $index => $item)
                                 <tr>
-                                    <td style="width: 50px">{{$index + 1}}</td>
+                                    <td>{{ $index + $data->firstItem() }}</td>
                                     <td>
                                         {{$item->formatQuotationDate()}}<br/>
                                         @if($item->status === \App\PriceQuotation::SUCCESS_STATUS)
                                             @if($item->order)
-                                                <a href="#" class="btn btn-dark btn-xs disabled">
-                                                    <i class="fa fa-shopping-cart"></i> Đã tạo đơn hàng
-                                                </a>
+                                                <span class="label label-default">Đã tạo ĐH</span>
                                             @else
-                                                <a href="{{route('orders.create', ['orderId' => $item->id])}}" class="btn btn-warning btn-xs">
-                                                    <i class="fa fa-shopping-cart"></i> Tạo đơn hàng
-                                                </a>
+                                                <a href="{{route('orders.create', ['orderId' => $item->id])}}" class="label label-warning">Tạo ĐH</a>
                                             @endif
                                         @endif
                                     </td>
                                     <td>
-                                        <strong class="text-success">{!! $item->formatCustomer() !!}</strong>
+                                        <a href="{{route('quotations.show', $item->id)}}" style="text-decoration: underline">
+                                            {!! $item->formatCustomer('<br/>') !!}
+                                        </a>
                                     </td>
                                     <td>
                                         {!! $item->formatCustomerCity() !!}
@@ -90,16 +88,9 @@
                                     <td>
                                         <strong class="text-danger">{!! $item->formatUser() !!}</strong>
                                     </td>
-                                    <td class="text-right" style="min-width: 150px">
-                                        <a href="{{route('quotations.show', $item->id)}}" class="btn btn-primary btn-xs">
-                                            <i class="fa fa-folder"></i> Xem
-                                        </a>
-                                        <a href="{{route('quotations.edit', $item->id)}}" class="btn btn-info btn-xs">
-                                            <i class="fa fa-pencil"></i> Sửa
-                                        </a>
+                                    <td>
                                         @can('admin')
-                                            <a onclick="MBT_PriceQuotation.delete({{$item->id}})"
-                                               class="btn btn-danger btn-xs">
+                                            <a onclick="MBT_PriceQuotation.delete({{$item->id}})" class="btn btn-danger btn-xs">
                                                 <i class="fa fa-trash-o"></i> Xóa
                                             </a>
                                         @endcan

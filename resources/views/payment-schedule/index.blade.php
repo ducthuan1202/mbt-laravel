@@ -13,9 +13,20 @@
 
     <div class="right_col" role="main">
 
+
         @if($message = Session::get('success'))
             <div class="alert alert-success">{{$message}}</div>
         @endif
+
+        <div class="clearfix">
+            <a href="{{route('orders.index')}}" class="btn btn-dark btn-xs pull-right">
+                <i class="fa fa-reply"></i> Trở về
+            </a>
+            <a href="{{route('orders.edit', $order->id)}}" class="btn btn-info btn-xs">
+                <i class="fa fa-pencil"></i> Sửa
+            </a>
+        </div>
+
 
         <div class="row">
             <div class="col-xs-12 col-md-5">
@@ -27,6 +38,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content" style="padding:0">
+
                         <div class="modal-body" style="padding:0">
                             <table class="table table-bordered">
                                 <tbody>
@@ -130,7 +142,7 @@
 
                                 <tr>
                                     <td>Ghi chú đơn hàng</td>
-                                    <td>{!! $order->note !!}</td>
+                                    <td style="width: 60%">{!! $order->note !!}</td>
                                 </tr>
                                 </tbody>
                             </table>
