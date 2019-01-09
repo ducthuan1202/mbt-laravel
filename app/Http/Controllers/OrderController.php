@@ -328,6 +328,24 @@ class OrderController extends Controller
     }
 
     /**
+     * @param $code
+     * @return \Illuminate\Http\RedirectResponse|void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function detailByCode($code)
+    {
+        /** @var $model Order */
+        $this->authorize('admin');
+
+        $model = Order::where('code', $code)->first();
+        if($model){
+            return redirect()->route('payment-schedules.index', ['id'=>$model->id]);
+        } else {
+            return abort(404);
+        }
+    }
+
+    /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Throwable

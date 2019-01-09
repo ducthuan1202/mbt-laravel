@@ -201,6 +201,7 @@ class Care extends Model
         $data[11] = 'Xin đối chiếu công nợ';
         $data[12] = 'Giới thiệu sản phẩm (khách mới)';
         $data[13] = 'Chúc mừng sinh nhật khách hàng';
+        $data[14] = 'Việc khác';
         return $data;
     }
 

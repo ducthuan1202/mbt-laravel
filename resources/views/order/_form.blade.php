@@ -67,7 +67,7 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
 
         <div class="form-group {{$errors->has('note') ? 'has-error' : ''}}">
             <label>Ghi chú đơn hàng</label>
-            <textarea class="form-control" name="note">{{old('note') ? old('note') : $model->note}}</textarea>
+            <textarea class="form-control" name="note" rows="5">{{old('note') ? old('note') : $model->note}}</textarea>
             @if ($errors->has('note')) <span class="help-block">{{ $errors->first('note') }}</span> @endif
         </div>
 
@@ -153,13 +153,29 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
                         <span class="help-block">{{ $errors->first('amount') }}</span>
                     @endif
                 </div>
-            </div>
-            <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group {{$errors->has('price') ? 'has-error' : ''}}">
                     <label>Đơn giá (<code>ngàn đồng</code>)</label>
                     <input type="number" class="form-control" name="price" onchange="MBT_Order.priceOrAmountOnchange()"
                            value="{{old('price') ? old('price') : $model->price}}"/>
                     @if ($errors->has('price')) <span class="help-block">{{ $errors->first('price') }}</span> @endif
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <label>Tổ đấu</label>
+                    <select name="group_work" class="form-control chosen-select">
+                        @foreach($model->listGroupWork() as $key => $val)
+                            <option value="{{ $key }}" {{ ($key == $model->group_work || $key == old('group_work')) ? 'selected' : '' }}>{!! $val !!}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Lý do xuất hàng</label>
+                    <select name="condition_pass" class="form-control chosen-select">
+                        @foreach($model->listConditionPass() as $key => $val)
+                            <option value="{{ $key }}" {{ ($key == $model->condition_pass || $key == old('condition_pass')) ? 'selected' : '' }}>{!! $val !!}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         </div>
@@ -212,6 +228,10 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
                     <label>VAT (<code>ngàn đồng</code>)</label>
                     <input type="number" class="form-control" name="vat" value="{{old('vat') ? old('vat') : $model->vat}}"/>
                 </div>
+                <div class="form-group">
+                    <label>Chênh lệch VAT (<code>ngàn đồng</code>)</label>
+                    <input type="number" class="form-control" name="difference_vat" value="{{old('difference_vat') ? old('difference_vat') : $model->difference_vat}}"/>
+                </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
@@ -222,19 +242,16 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
                     </div>
                     @if ($errors->has('guarantee')) <span class="help-block">{{ $errors->first('guarantee') }}</span> @endif
                 </div>
+                <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
+                    <label>Số ngày chậm thanh toán</label>
+                    <div class="input-group">
+                        <input type="number" min="0" class="form-control" name="date_delay_payment" value="{{old('date_delay_payment') ? old('date_delay_payment') : $model->date_delay_payment}}"/>
+                        <code class="input-group-addon">ngày</code>
+                    </div>
+                    @if ($errors->has('date_delay_payment')) <span class="help-block">{{ $errors->first('date_delay_payment') }}</span> @endif
+                </div>
             </div>
         </div>
-
-
-        <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
-            <label>Số ngày cho phép chậm thanh toán</label>
-            <div class="input-group">
-                <input type="number" min="0" class="form-control" name="date_delay_payment" value="{{old('date_delay_payment') ? old('date_delay_payment') : $model->date_delay_payment}}"/>
-                <code class="input-group-addon">ngày</code>
-            </div>
-            @if ($errors->has('date_delay_payment')) <span class="help-block">{{ $errors->first('date_delay_payment') }}</span> @endif
-        </div>
-
     </div>
 
 </div>
@@ -243,7 +260,7 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Ngày vào sản xuất</label>
+            <label>Ngày nhận</label>
             <div class="input-group date">
                 <span class="input-group-addon">
                    <i class="glyphicon glyphicon-calendar"></i>
@@ -254,7 +271,7 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
     </div>
     <div class="col-xs-12 col-sm-12 col-md-4">
         <div class="form-group">
-            <label>Ngày giao hàng</label>
+            <label>Ngày ĐK giao hàng</label>
             <div class="input-group date">
                 <span class="input-group-addon">
                    <i class="glyphicon glyphicon-calendar"></i>

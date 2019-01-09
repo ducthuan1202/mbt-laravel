@@ -14,6 +14,7 @@
 // Route::get('/import/customer', 'HomeController@importCustomer');
 // Route::get('/convert-data', 'HomeController@convertData');
 // Route::get('/update-code', 'HomeController@updateCode');
+ Route::get('/export/quotation-form', 'HomeController@exportExcel');
 
 Route::namespace('Auth')->group(function () {
     Route::get('login', 'LoginController@showLoginForm')->name('login');
@@ -35,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders/shipped', 'OrderController@shipped')->name('orders.shipped');
     Route::get('/orders/no-shipped', 'OrderController@noShipped')->name('orders.no_shipped');
     Route::get('/orders/cancel', 'OrderController@cancel')->name('orders.cancel');
+    Route::get('/orders/detail-by-code/{code}', 'OrderController@detailByCode')->name('orders.detail_by_code');
 
     // api
     Route::get('/customers/by-city', 'CustomerController@getByCity');

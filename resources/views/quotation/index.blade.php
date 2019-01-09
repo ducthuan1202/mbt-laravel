@@ -50,13 +50,22 @@
                     <table class="table table-striped jambo_table bulk_action">
                         <thead>
                         <tr class="headings">
-                            <th style="width: 50px">No.</th>
-                            <th>Ngày báo giá</th>
-                            <th>Khách hàng</th>
-                            <th>Khu vực</th>
-                            <th>Trạng thái</th>
-                            <th>Nhân viên KD</th>
-                            <th></th>
+                            <th style="vertical-align: middle">No.</th>
+                            <th style="vertical-align: middle">Ngày</th>
+                            <th style="vertical-align: middle">Khách hàng</th>
+                            <th style="vertical-align: middle">CS</th>
+                            <th style="vertical-align: middle;width: 120px">Điện áp <br/>đầu vào</th>
+                            <th style="vertical-align: middle;width: 120px">Điện áp <br/> đầu ra</th>
+                            <th style="vertical-align: middle;width: 120px">Tiêu chuẩn<br/>sản xuất</th>
+                            <th style="vertical-align: middle;width: 120px">Tiêu chuẩn<br/>xuất máy</th>
+                            <th style="vertical-align: middle">Tổ đấu</th>
+                            <th style="vertical-align: middle">Nơi lắp</th>
+                            <th style="vertical-align: middle">Đơn giá</th>
+                            <th style="vertical-align: middle">Thành tiền</th>
+                            <th style="vertical-align: middle;width: 120px">Hiệu lực<br/> báo giá</th>
+                            <th style="vertical-align: middle;width: 120px">Điều khoản<br/>thanh toán</th>
+                            <th style="vertical-align: middle;">Trạng thái</th>
+                            <th style="vertical-align: middle;width: 120px">Nhân viên KD</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -66,35 +75,56 @@
                                     <td>{{ $index + $data->firstItem() }}</td>
                                     <td>
                                         {{$item->formatQuotationDate()}}<br/>
-                                        @if($item->status === \App\PriceQuotation::SUCCESS_STATUS)
-                                            @if($item->order)
-                                                <span class="label label-default">Đã tạo ĐH</span>
-                                            @else
-                                                <a href="{{route('orders.create', ['orderId' => $item->id])}}" class="label label-warning">Tạo ĐH</a>
-                                            @endif
-                                        @endif
+                                        <div class="btn-group">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle btn-xs"
+                                                    type="button" aria-expanded="false">Hành động <span class="caret"></span>
+                                            </button>
+                                            <ul role="menu" class="dropdown-menu">
+
+                                                @if($item->status === \App\PriceQuotation::SUCCESS_STATUS)
+                                                    <li>
+                                                        @if($item->order)
+                                                            <a href="{{route('orders.detail_by_code', ['code' =>$item->code])}}" class="text-info"><i class="fa fa-shopping-cart"></i> Xem đơn hàng</a>
+                                                        @else
+                                                            <a href="{{route('orders.create', ['orderId' => $item->id])}}" class="text-success"><i class="fa fa-shopping-cart"></i> Tạo đơn hàng</a>
+                                                        @endif
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                @endif
+                                                <li>
+                                                    <a href="{{route('quotations.show', $item->id)}}"><i class="fa fa-folder"></i> Xem báo giá</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{route('quotations.edit', $item->id)}}"><i class="fa fa-pencil"></i> Sửa báo giá</a>
+                                                </li>
+                                                @can('admin')
+                                                    <li class="divider"></li>
+                                                    <li>
+                                                        <a onclick="MBT_PriceQuotation.delete({{$item->id}})"><i class="fa fa-trash-o"></i>  Xóa báo giá</a>
+                                                    </li>
+                                                @endcan
+                                            </ul>
+                                        </div>
                                     </td>
                                     <td>
                                         <a href="{{route('quotations.show', $item->id)}}" style="text-decoration: underline">
                                             {!! $item->formatCustomer('<br/>') !!}
                                         </a>
                                     </td>
-                                    <td>
-                                        {!! $item->formatCustomerCity() !!}
-                                    </td>
-                                    <td>
-                                        {!! $item->formatStatus() !!}
-                                    </td>
-                                    <td>
-                                        <strong class="text-danger">{!! $item->formatUser() !!}</strong>
-                                    </td>
-                                    <td>
-                                        @can('admin')
-                                            <a onclick="MBT_PriceQuotation.delete({{$item->id}})" class="btn btn-danger btn-xs">
-                                                <i class="fa fa-trash-o"></i> Xóa
-                                            </a>
-                                        @endcan
-                                    </td>
+                                    <td>{{$item->power}}</td>
+                                    <td>{{$item->voltage_input}}</td>
+                                    <td>{{$item->voltage_output}}</td>
+                                    <td>{{$item->formatStandard()}}</td>
+                                    <td>{{$item->formatStandardReal()}}</td>
+                                    <td>{{$item->formatGroupWork()}}</td>
+                                    <td>{{$item->delivery_at}}</td>
+                                    <td>{{$item->formatPrice()}}</td>
+                                    <td>{{$item->formatTotalMoney()}}</td>
+                                    <td>{{empty($item->expired) ? '' : $item->expired.' ngày'}}</td>
+                                    <td>{{$item->formatTermsOfPayment()}}</td>
+                                    <td>{!! $item->formatStatus() !!}</td>
+                                    <td><strong class="text-danger">{!! $item->formatUser() !!}</strong></td>
+
                                 </tr>
                             @endforeach
                         @else

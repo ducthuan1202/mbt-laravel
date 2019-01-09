@@ -40,6 +40,9 @@ use Illuminate\Support\Facades\DB;
  * @property integer date_delay_payment
  * @property integer prepay
  * @property string payment_pre_shipped
+ * @property string difference_vat
+ * @property string group_work
+ * @property string condition_pass
  *
  * @property string created_at
  * @property string updated_at
@@ -52,7 +55,7 @@ use Illuminate\Support\Facades\DB;
  */
 class Order extends Model
 {
-    const LIMIT = 50;
+    const LIMIT = 3;
     const
         SHIPPED_STATUS = 1,
         NOT_SHIPPED_STATUS = 2,
@@ -73,8 +76,8 @@ class Order extends Model
     protected $fillable = [
         'user_id', 'customer_id', 'code', 'amount', 'price', 'total_money', 'power', 'voltage_input', 'voltage_output',
         'standard_output', 'standard_real', 'guarantee', 'product_number', 'product_skin', 'product_type',
-        'setup_at', 'delivery_at', 'start_date', 'shipped_date', 'shipped_date_real',
-        'note', 'status', 'vat', 'prepay', 'payment_pre_shipped', 'prepay_required','date_delay_payment'
+        'setup_at', 'delivery_at', 'start_date', 'shipped_date', 'shipped_date_real', 'note', 'status', 'vat', 'prepay',
+        'payment_pre_shipped', 'prepay_required','date_delay_payment','difference_vat','group_work', 'condition_pass'
     ];
 
     public $validateMessage = [
@@ -378,6 +381,32 @@ class Order extends Model
     }
 
     // TODO:  LIST DATA =====
+    public function listGroupWork($addAll = false)
+    {
+        $data = [];
+        if ($addAll) {
+            $data['0'] = 'Chọn tổ đấu';
+        }
+        $data['1'] = 'Y/Yo-12';
+        $data['2'] = 'D/Yo-11';
+        $data['3'] = 'Y-D/Yo-12-11';
+        $data['4'] = 'D-D/Yo-11';
+        return $data;
+    }
+
+    public function listConditionPass($addAll = false)
+    {
+        $data = [];
+        if ($addAll) {
+            $data['0'] = 'Chọn lý do xuất hàng';
+        }
+        $data['1'] = 'Xuất bán';
+        $data['2'] = 'Xuất bảo hành';
+        $data['3'] = 'Xuất mượn';
+        $data['4'] = 'Xuất đổi';
+        return $data;
+    }
+
     public function listStandard($addAll = false)
     {
         $data = [];
@@ -481,6 +510,24 @@ class Order extends Model
         return Common::UNKNOWN_TEXT;
     }
 
+    public function formatStandardReal()
+    {
+        $list = $this->listStandard();
+        if (isset($list[$this->standard_real])) {
+            return $list[$this->standard_real];
+        }
+        return Common::UNKNOWN_TEXT;
+    }
+
+    public function formatGroupWork()
+    {
+        $list = $this->listGroupWork();
+        if (isset($list[$this->group_work])) {
+            return $list[$this->group_work];
+        }
+        return 'n/a';
+    }
+
     public function formatStatus()
     {
         $arr = $this->listStatus();
@@ -508,6 +555,31 @@ class Order extends Model
     public function formatVat()
     {
         return Common::formatMoney($this->vat);
+    }
+
+    public function formatDifferenceVat()
+    {
+        return Common::formatMoney($this->difference_vat);
+    }
+
+    public function formatConditionPass(){
+        $list = $this->listConditionPass();
+        if (isset($list[$this->condition_pass])) {
+            return $list[$this->condition_pass];
+        }
+        return '';
+    }
+
+    public function formatProductType(){
+        if($this->product_type === self::CABIN_SKIN){
+            return 'tủ - trạm';
+        }
+
+        if($this->product_type === self::MACHINE_SKIN){
+            return 'máy';
+        }
+
+        return '';
     }
 
     public function formatPaymentPreShip()

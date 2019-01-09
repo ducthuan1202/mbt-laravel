@@ -71,7 +71,7 @@ class PriceQuotation extends Model
     protected $fillable = [
         'code', 'user_id', 'customer_id', 'amount', 'price', 'quotations_date', 'power', 'voltage_input',
         'voltage_output', 'standard_output', 'guarantee', 'product_skin', 'product_type', 'setup_at', 'delivery_at',
-        'order_status', 'note','reason', 'status','standard_real','group_work','expired','terms_of_payment',
+        'order_status', 'note', 'reason', 'status', 'standard_real', 'group_work', 'expired', 'terms_of_payment',
     ];
 
     public $validateMessage = [
@@ -114,7 +114,8 @@ class PriceQuotation extends Model
         'status' => 'required',
     ];
 
-    private function getUserLogin(){
+    private function getUserLogin()
+    {
         return Auth::user();
     }
 
@@ -199,7 +200,7 @@ class PriceQuotation extends Model
         $model = $this->with(['customer', 'user', 'customer.city', 'order']);
 
         $userLogin = $this->getUserLogin();
-        if($userLogin && $userLogin->role !== User::ADMIN_ROLE){
+        if ($userLogin && $userLogin->role !== User::ADMIN_ROLE) {
             $model = $model->where('user_id', $userLogin->id);
         }
 
@@ -261,8 +262,9 @@ class PriceQuotation extends Model
         return $this->where('customer_id', $id)->count();
     }
 
-    public function countByDate($date = null){
-        if(empty($date)) return 0;
+    public function countByDate($date = null)
+    {
+        if (empty($date)) return 0;
 
         $date = Common::extractDate($date);
         $startDate = Common::dmY2Ymd($date[0]);
@@ -273,9 +275,12 @@ class PriceQuotation extends Model
     }
 
     // TODO:  LIST DATA =====
-    public function listGroupWork(){
+    public function listGroupWork($addAll = false)
+    {
         $data = [];
-        $data['0'] = 'Chọn tổ đấu';
+        if ($addAll) {
+            $data['0'] = 'Chọn tổ đấu';
+        }
         $data['1'] = 'Y/Yo-12';
         $data['2'] = 'D/Yo-11';
         $data['3'] = 'Y-D/Yo-12-11';
@@ -283,16 +288,20 @@ class PriceQuotation extends Model
         return $data;
     }
 
-    public function listExpired(){
+    public function listExpired($addAll = false)
+    {
         $data = [];
-        $data['0'] = 'Hiệu lực báo giá';
+        if ($addAll) {
+            $data['0'] = 'Hiệu lực báo giá';
+        }
         $data['1'] = '15 ngày';
         $data['2'] = '30 ngày';
         $data['3'] = '60 ngày';
         return $data;
     }
 
-    public function listTearmsOfPayment(){
+    public function listTermsOfPayment()
+    {
         $data = [];
         $data['1'] = 'Thanh toán giá trị còn lại trước khi nhận hàng';
         $data['2'] = 'Tạm ứng 30% giá trị khi chính thức đặt hàng';
@@ -467,7 +476,34 @@ class PriceQuotation extends Model
         if (isset($list[$this->standard_output])) {
             return $list[$this->standard_output];
         }
-        return Common::UNKNOWN_TEXT;
+        return 'n/a';
+    }
+
+    public function formatStandardReal()
+    {
+        $list = $this->listStandard();
+        if (isset($list[$this->standard_real])) {
+            return $list[$this->standard_real];
+        }
+        return 'n/a';
+    }
+
+    public function formatGroupWork()
+    {
+        $list = $this->listGroupWork();
+        if (isset($list[$this->group_work])) {
+            return $list[$this->group_work];
+        }
+        return 'n/a';
+    }
+
+    public function formatTermsOfPayment()
+    {
+        $list = $this->listTermsOfPayment();
+        if (isset($list[$this->terms_of_payment])) {
+            return $list[$this->terms_of_payment];
+        }
+        return 'n/a';
     }
 
     public function formatQuotationDate()
