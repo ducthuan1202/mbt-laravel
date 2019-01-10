@@ -69,7 +69,7 @@
                                     <td>
                                         <strong class="text-danger">{!! $item->formatUser() !!}</strong>
                                     </td>
-                                    <td>{!! $item->customer_note !!}</td>
+                                    <td style="max-width: 30%">{!! $item->customer_note !!}</td>
                                     <td class="text-right" style="min-width: 150px">
                                         <a href="{{route('cares.edit', $item->id)}}" class="btn btn-info btn-xs">
                                             <i class="fa fa-pencil"></i> Sửa
