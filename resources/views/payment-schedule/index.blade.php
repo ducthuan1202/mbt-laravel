@@ -20,12 +20,13 @@
         @endif
 
         <div class="clearfix">
-            <a href="{{route('orders.index')}}" class="btn btn-dark btn-xs pull-right">
-                <i class="fa fa-reply"></i> Trở về
-            </a>
-            <a href="{{route('orders.edit', $order->id)}}" class="btn btn-info btn-xs">
+
+            <a href="{{route('orders.edit', $order->id)}}" class="btn btn-info">
                 <i class="fa fa-pencil"></i> Sửa
             </a>
+
+            <button onclick="window.history.back()" class="btn btn-default pull-right">
+                <i class="fa fa-reply"></i>  Quay lại</button>
         </div>
 
 
@@ -36,6 +37,8 @@
                         <h2>
                             {{$title}} #{{$order->code}}
                         </h2>
+
+
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content" style="padding:0">
@@ -68,7 +71,7 @@
                                     <td>{{$order->formatStartDate()}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Ngày giao hàng dự tính</td>
+                                    <td>Ngày đăng ký giao hàng</td>
                                     <td>{{$order->formatShippedDate()}}</td>
                                 </tr>
                                 <tr>
@@ -100,7 +103,15 @@
                                     <td><span class="red">{{$order->formatVat()}}</span></td>
                                 </tr>
                                 <tr class="bg-warning">
-                                    <td>Tạm ứng</td>
+                                    <td>Chênh lệc VAT</td>
+                                    <td><span class="red">{{$order->formatDifferenceVat()}}</span></td>
+                                </tr>
+                                <tr class="bg-warning">
+                                    <td>Tạm ứng trước khi giao</td>
+                                    <td>{{$order->formatPrePayRequiredText()}}</td>
+                                </tr>
+                                <tr class="bg-warning">
+                                    <td>Đã tạm ứng</td>
                                     <td>
                                         <span class="blue">{{$order->formatPrePay()}}</span>
                                     </td>
@@ -108,6 +119,10 @@
                                 <tr class="bg-warning">
                                     <td>Còn lại</td>
                                     <td>{{$order->formatPaymentPreShip()}}</td>
+                                </tr>
+                                <tr class="bg-success">
+                                    <td>Số máy</td>
+                                    <td><kbd>{{ $order->product_number }}</kbd></td>
                                 </tr>
                                 <tr>
                                     <td>Công suất</td>
@@ -140,10 +155,13 @@
                                     <td>Tiêu chuẩn</td>
                                     <td>{{$order->formatStandard()}}</td>
                                 </tr>
-
+                                <tr>
+                                    <td>Lý do xuất</td>
+                                    <td>{{$order->formatConditionPass()}}</td>
+                                </tr>
                                 <tr>
                                     <td>Ghi chú đơn hàng</td>
-                                    <td style="width: 60%">{!! $order->note !!}</td>
+                                    <td style="width: 60%">{{$order->note}}</td>
                                 </tr>
                                 </tbody>
                             </table>

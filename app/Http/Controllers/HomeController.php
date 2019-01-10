@@ -54,106 +54,50 @@ class HomeController extends Controller
     {
         /** @var $customers Customer[] */
 
-        $customers = Customer::get();
-        $companies = Company::select('id', 'name')->get();
+        // step 1
+        $this->createCompanyFromCustomer();
 
-        foreach ($customers as $customer) {
-
-            $company = array_first($companies, function ($item) use($customer){
-                return $item->name == $customer->company;
-            });
-
-            if($company){
-                $customer->company_id = $company->id;
-            } else{
-                $customer->company_id = 0;
-            }
-            $customer->save();
-
-        }
-
+        // step 2
+        $this->setCompanyIdToCustomer();
         return 'done';
     }
 
-    /**
-     * convertQuotations
-     */
-    public function convertQuotations()
+    private function setCompanyIdToCustomer()
     {
-        return '';
-        $data = DB::connection('mysql01')->select("select * from bao_gia where 1");
+        $customers = Customer::get();
+        $companies = Company::get();
 
-        foreach ($data as $item) {
-            $model = new PriceQuotation();
-            $model->user_id = 1;
-            $model->customer_id = 1;
-            $model->amount = $item->so_luong;
-            $model->price = $item->don_gia;
-            $model->total_money = $item->tong_don_hang;
-            $model->quotations_date = $item->ngay_bao_gia;
-            $model->power = $item->cong_suat;
-            $model->voltage_output = $item->dien_ap_ra;
-            $model->voltage_input = $item->dien_ap_vao;
-            $model->standard_output = $item->tieu_chuan;
-            $model->guarantee = $item->bao_hanh;
-            $model->product_skin = 0;
-            $model->product_type = 0;
-            $model->setup_at = $item->lap_tai;
-            $model->delivery_at = $item->giao_hang_tai;
-            $model->order_status = $item->status == PriceQuotation::UNSIGNED_ORDER_STATUS ? PriceQuotation::UNSIGNED_ORDER_STATUS : PriceQuotation::SIGNED_ORDER_STATUS;
-            $model->note = $item->note;
-            $model->reason = '';
-            $model->status = 0;
-            $model->save();
-        }
+        foreach ($customers as $customer):
+            $company = array_first($companies, function ($item) use ($customer) {
+                return $item->slug == str_slug(trim($customer->company));
+            });
+
+            if ($company) {
+                $customer->company_id = $company->id;
+            } else {
+                $customer->company_id = 0;
+            }
+
+            $customer->save();
+        endforeach;
     }
 
-    /**
-     * @return string
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
-     */
-    public function importCustomer()
+    private function createCompanyFromCustomer()
     {
-        return '';
-        $cities = City::select('id', 'name')->get()->toArray();
-        $users = User::select('id', 'name')->get()->toArray();
-
-        $file = public_path('customers.xlsx');
-
-        if (file_exists($file)) {
-            $reader = IOFactory::createReader('Xlsx');
-            $reader->setReadDataOnly(true);
-            $spreadSheet = $reader->load($file);
-            $sheetData = $spreadSheet->getActiveSheet()->toArray();
-
-            $data = [];
-            foreach ($sheetData as $index => $sheet) {
-
-                if (!empty($sheet[2]) && !empty($sheet[4])) {
-                    $city = collect($cities)->firstWhere('name', $sheet[7]);
-                    $user = collect($users)->firstWhere('name', $sheet[1]);
-
-                    $data[] = [
-                        'code' => 'MBT-KH00000',
-                        'user_id' => $user['id'],
-                        'city_id' => $city['id'],
-                        'name' => $sheet[2],
-                        'position' => empty($sheet[3]) ? 'Nhân Viên' : $sheet[3],
-                        'mobile' => $sheet[4],
-                        'company' => $sheet[5],
-                        'address' => $sheet[6],
-                        'status' => ((int)$sheet[8] == 1 || (string)$sheet[8] == '1') ? 1 : 2,
-                        'created_at' => date('Y-m-d'),
-                        'updated_at' => date('Y-m-d'),
-                    ];
-                }
+        $customers = DB::table('customers')
+            ->selectRaw(DB::raw("DISTINCT(company)"))
+            ->get();
+        $list = [];
+        foreach ($customers as $customer):
+            if (!empty($customer->company)) {
+                $list[] = [
+                    'name' => trim($customer->company),
+                    'slug'=>str_slug(trim($customer->company)),
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
             }
-            DB::table('customers')->insert($data);
-            return sprintf('done');
-        } else {
-            return sprintf('file không tồn tại.');
-        }
+        endforeach;
+        Company::insert($list);
     }
 
     /**

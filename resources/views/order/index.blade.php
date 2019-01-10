@@ -29,6 +29,22 @@
                 @include('order._search')
 
                 <div class="row tile_count text-center" style="margin-top: 0;">
+
+                    @if(empty($searchParams['status']))
+                        <div class="col-md-4 tile_stats_count" style="margin-bottom: 0">
+                            <span class="count_top">ĐÃ GIAO</span>
+                            <div class="count green">{{$count[\App\Order::SHIPPED_STATUS]['count']}}</div>
+                        </div>
+                        <div class="col-md-4 tile_stats_count" style="margin-bottom: 0">
+                            <span class="count_top">CHƯA GIAO</span>
+                            <div class="count blue">{{$count[\App\Order::NOT_SHIPPED_STATUS]['count']}}</div>
+                        </div>
+                        <div class="col-md-4 tile_stats_count" style="margin-bottom: 0">
+                            <span class="count_top">ĐÃ HỦY</span>
+                            <div class="count red">{{$count[\App\Order::CANCEL_STATUS]['count']}}</div>
+                        </div>
+                    @endif
+
                     @if($searchParams['status'] == \App\Order::SHIPPED_STATUS)
                     <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                         <span class="count_top">ĐÃ GIAO</span>
@@ -143,7 +159,7 @@
                                         </td>
                                         <td>{{$item->formatStartDate()}}</td>
                                         <td>{{$item->formatShippedDate()}}</td>
-                                        <td>---</td>
+                                        <td>{{$item->formatDateBuild()}}</td>
                                         <td>{{$item->formatShippedDateReal()}}</td>
                                         <td>{{$item->product_number}}</td>
                                         <td>{{$item->power}}</td>
@@ -163,12 +179,12 @@
                                         <td>{{$item->formatTotalMoney()}}</td>
                                         <td>{{$item->formatVat()}}</td>
                                         <td>{{$item->formatDifferenceVat()}}</td>
-                                        <td>{{$item->prepay_required}}</td>
+                                        <td>{{$item->formatPrePayRequiredText()}}</td>
                                         <td>hạn tt</td>
                                         <td>{{$item->formatPrePay()}}</td>
                                         <td>{{$item->formatDebt() }}</td>
-                                        <td>10</td>
-                                        <td>10</td>
+                                        <td>{{$item->formatDateBuild()}} ngày</td>
+                                        <td>{{$item->formatOutDate()}} ngày</td>
                                         <td>{{$item->formatProductType()}}</td>
                                         <td>{{$item->formatConditionPass()}}</td>
                                     </tr>

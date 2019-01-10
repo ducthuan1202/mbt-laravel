@@ -46,7 +46,7 @@
                                             <td>{{$index + 1}}</td>
                                             <td>{{$item->formatStartDate()}}</td>
                                             <td>{{$item->formatCustomer()}}</td>
-                                            <td>{{$item->customer->company}}</td>
+                                            <td>{{$item->customer->formatCompany()}}</td>
                                             <td>{{$item->customer->formatCity()}}</td>
                                             <td>{!! $item->formatStatus() !!}</td>
                                             <td class="text-right">

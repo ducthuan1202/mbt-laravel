@@ -40,7 +40,7 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                         <a href="{{route('cities.index')}}"><i class="fa fa-map-marker"></i> Khu Vực</a>
                     </li>
                     <li>
-                        <a href="{{route('companies.index')}}"><i class="fa fa-map-marker"></i> Công Ty</a>
+                        <a href="{{route('companies.index')}}"><i class="fa fa-credit-card"></i> Công Ty</a>
                     </li>
                     @can('admin')
                         <li>
@@ -59,9 +59,7 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                     <li>
                         <a><i class="fa fa-shopping-cart"></i> Đơn Hàng <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            {{--<li><a href="{{route('orders.shipped')}}">Đã giao</a></li>--}}
-                            {{--<li><a href="{{route('orders.no_shipped')}}">Chưa giao</a></li>--}}
-                            {{--<li><a href="{{route('orders.cancel')}}">Đã hủy</a></li>--}}
+                            <li><a href="{{route('orders.index')}}">Tất cả</a></li>
                             <li><a href="{{route('orders.index', ['status'=>\App\Order::SHIPPED_STATUS])}}">Đã giao</a></li>
                             <li><a href="{{route('orders.index', ['status'=>\App\Order::NOT_SHIPPED_STATUS])}}">Chưa giao</a></li>
                             <li><a href="{{route('orders.index', ['status'=>\App\Order::CANCEL_STATUS])}}">Đã hủy</a></li>
@@ -101,16 +99,6 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                                 <li><a href="{{route('report.money_future', ['date'=>$dateRangeNextMonth])}}">Tháng tới</a></li>
                             </ul>
                         </li>
-
-                        {{--<li>--}}
-                            {{--<a><i class="fa fa-bar-chart-o"></i> Doanh thu <span class="fa fa-chevron-down"></span></a>--}}
-                            {{--<ul class="nav child_menu">--}}
-                                {{--<li><a href="{{route('report.tw.money')}}">Tuần này</a></li>--}}
-                                {{--<li><a href="{{route('report.nw.money')}}">Tuần sau</a></li>--}}
-                                {{--<li><a href="{{route('report.tm.money')}}">Tháng này</a></li>--}}
-                                {{--<li><a href="{{route('report.nm.money')}}">Tháng sau</a></li>--}}
-                            {{--</ul>--}}
-                        {{--</li>--}}
                     @endcan
                 </ul>
             </div>

@@ -33,9 +33,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('payment-schedules/{orderId}', 'PaymentScheduleController@store')->name('payment-schedules.store');
     Route::get('debts/old', 'DebtController@oldDebt')->name('debts.list_old');
     Route::get('debts/new', 'DebtController@newDebt')->name('debts.list_new');
-    Route::get('/orders/shipped', 'OrderController@shipped')->name('orders.shipped');
-    Route::get('/orders/no-shipped', 'OrderController@noShipped')->name('orders.no_shipped');
-    Route::get('/orders/cancel', 'OrderController@cancel')->name('orders.cancel');
+//    Route::get('/orders/shipped', 'OrderController@shipped')->name('orders.shipped');
+//    Route::get('/orders/no-shipped', 'OrderController@noShipped')->name('orders.no_shipped');
+//    Route::get('/orders/cancel', 'OrderController@cancel')->name('orders.cancel');
     Route::get('/orders/detail-by-code/{code}', 'OrderController@detailByCode')->name('orders.detail_by_code');
 
     // api
@@ -65,10 +65,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report/money/present', 'ReportController@moneyPresent')->name('report.money_present');
     Route::get('/report/money/future', 'ReportController@moneyFuture')->name('report.money_future');
 
-    Route::get('/report/tw/money', 'ReportController@thisWeekMoney')->name('report.tw.money');
-    Route::get('/report/nw/money', 'ReportController@nextWeekMoney')->name('report.nw.money');
-    Route::get('/report/tm/money', 'ReportController@thisMonthMoney')->name('report.tm.money');
-    Route::get('/report/nm/money', 'ReportController@nextMonthMoney')->name('report.nm.money');
+//    Route::get('/report/tw/money', 'ReportController@thisWeekMoney')->name('report.tw.money');
+//    Route::get('/report/nw/money', 'ReportController@nextWeekMoney')->name('report.nw.money');
+//    Route::get('/report/tm/money', 'ReportController@thisMonthMoney')->name('report.tm.money');
+//    Route::get('/report/nm/money', 'ReportController@nextMonthMoney')->name('report.nm.money');
 
     // resource
     Route::resource('cities', 'CityController')->except(['show']);

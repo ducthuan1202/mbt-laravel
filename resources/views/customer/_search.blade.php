@@ -2,7 +2,7 @@
     <form class="form" action="{{route('customers.index')}}" method="GET">
         <div class="row">
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                 <div class="form-group">
                     <label>Nhân viên</label>
                     @can('admin')
@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                 <div class="form-group">
                     <label class="block">Khu vực</label>
                     <select class="form-control chosen-select" name="city" id="city_id">
@@ -29,7 +29,18 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+                <div class="form-group">
+                    <label class="block">Công ty</label>
+                    <select class="form-control chosen-select" name="company">
+                        @foreach($companies as $company)
+                            <option value="{{ $company['id'] }}" {{ $company['id'] == $searchParams['company'] ? 'selected' : '' }}>{{$company['name']}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                 <div class="form-group">
                     <label>Tình trạng</label>
                     <select class="form-control chosen-select" name="status">
@@ -40,14 +51,14 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                 <div class="form-group">
-                    <label>Tên, SĐT, công ty</label>
+                    <label>Tên hoặc SĐT</label>
                     <input type="text" class="form-control" name="keyword" value="{{$searchParams['keyword'] ? $searchParams['keyword'] : ''}}"/>
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                 <div class="form-group">
                     <label>Ngày tạo</label>
                     <div class="input-group date">
@@ -57,7 +68,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
                 </div>

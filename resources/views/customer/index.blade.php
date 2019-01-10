@@ -5,7 +5,7 @@
      */
 @endphp
 
-@php $title = 'Công Nợ'; @endphp
+@php $title = 'Khách hàng'; @endphp
 @extends('layouts.main')
 @section('title') {{$title}} @endsection
 
@@ -49,13 +49,14 @@
                         <thead>
                         <tr class="headings">
                             <th>No.</th>
-                            <th style="width: 150px">Họ tên</th>
-                            <th style="width: 150px">Số điện thoại</th>
-                            <th>Chức vụ - Công ty</th>
-                            <th style="width: 100px">Khu vực</th>
-                            <th style="width: 150px">Nhân viên KD</th>
-                            <th class="text-right" style="width: 80px">Ngày tạo</th>
-                            <th></th>
+                            <th>Họ tên</th>
+                            <th>Số điện thoại</th>
+                            <th>Công ty</th>
+                            <th>Khu vực</th>
+                            <th>Nhân viên KD</th>
+                            <th class="text-right" style="width: 80px">Trạng thái</th>
+                            <th class="text-right">Ngày tạo</th>
+                            <th style="max-width: 150px"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -65,22 +66,23 @@
                                     <td style="width: 50px">{{$index + 1}}</td>
                                     <td>
                                         <strong class="text-success">{{$item->name}}</strong>
-                                        <p style="font-size: 11px">{{$item->code}}</p>
+                                        <p style="font-size: 11px">{{$item->position}}</p>
                                     </td>
                                     <td>
                                         <a class="text-primary" href="tel:{{$item->mobile}}"><b>{{$item->mobile}}</b></a><br/>
-                                        {!! $item->formatStatus() !!}
                                     </td>
                                     <td>
-                                        <span class="text-primary">{{$item->position}}</span><br/>
-                                        <span>{{$item->company}}</span>
+                                        <span>{{$item->formatCompany()}}</span>
                                     </td>
                                     <td>{{$item->formatCity()}}</td>
                                     <td>
                                         <strong class="text-danger">{!! $item->formatUser() !!}</strong>
                                     </td>
+                                    <td>
+                                        {!! $item->formatStatus() !!}
+                                    </td>
                                     <td class="text-right">{{$item->formatCreatedAt()}}</td>
-                                    <td class="text-right" style="max-width: 220px">
+                                    <td class="text-right" style="max-width: 150px">
                                         <a href="{{route('customers.show', $item->id)}}" class="btn btn-primary btn-xs">
                                             <i class="fa fa-folder"></i> Xem
                                         </a>

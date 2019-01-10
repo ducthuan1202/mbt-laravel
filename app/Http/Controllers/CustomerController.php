@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Care;
 use App\City;
+use App\Company;
 use App\Customer;
 use App\Debt;
 use App\Helpers\Messages;
@@ -27,12 +28,14 @@ class CustomerController extends Controller
             'keyword' => null,
             'status' => null,
             'user' => null,
+            'company' => null,
             'date' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
         // get dropdown list
         $userModel = new User();
+        $companyModel = new Company();
         $model = new Customer();
 
         $shared = [
@@ -40,6 +43,7 @@ class CustomerController extends Controller
             'hasBuy' => $model->countHasBuy($searchParams),
             'searchParams' => $searchParams,
             'users' => $userModel->getDropDownList(true),
+            'companies' => $companyModel->getDropDownList(true),
             'status' => $model->getStatus(true)
         ];
 
@@ -53,8 +57,11 @@ class CustomerController extends Controller
      */
     public function create()
     {
+
+
         $userModel = new User();
         $cityModel = new City();
+        $companyModel = new Company();
 
         $model = new Customer();
         $model->average_sale = 0;
@@ -69,6 +76,7 @@ class CustomerController extends Controller
             "model" => $model,
             'users' => $userModel->getDropDownList(),
             'cities' => $cityModel->getDropDownList(),
+            'companies' => $companyModel->getDropDownList(),
             'status' => $model->getStatus()
         ];
         return view('customer.create', $shared);
@@ -106,12 +114,14 @@ class CustomerController extends Controller
     {
         $userModel = new User();
         $cityModel = new City();
+        $companyModel = new Company();
 
         $model = $this->finById($id);
         $shared = [
             "model" => $model,
             'users' => $userModel->getDropDownList(),
             'cities' => $cityModel->getDropDownList(),
+            'companies' => $companyModel->getDropDownList(),
             'status' => $model->getStatus()
         ];
         return view('customer.edit', $shared);
@@ -248,22 +258,19 @@ class CustomerController extends Controller
     // TODO: api
     public function getByCity(Request $request)
     {
-
         $cityId = (int)$request->get('cityId');
         $userId = (int)$request->get('userId');
         $customerId = (int)$request->get('customerId');
 
-        $customerQuery = Customer::select('id', 'name', 'mobile', 'company');
-
+        $customerQuery = Customer::with(['companyName'])->select('id', 'name', 'mobile', 'company_id');
         if (!empty($userId)) {
             $customerQuery = $customerQuery->where('user_id', $userId);
         }
-
         if (!empty($cityId)) {
             $customerQuery = $customerQuery->where('city_id', $cityId);
         }
 
-        $customers = $customerQuery->get()->toArray();
+        $customers = $customerQuery->get();
 
         $shared = [
             'customers' => $customers,

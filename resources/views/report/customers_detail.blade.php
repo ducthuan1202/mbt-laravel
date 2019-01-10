@@ -46,7 +46,7 @@
                                             <td>{{$index + 1}}</td>
                                             <td>{{$item->name}}</td>
                                             <td>{{$item->mobile}}</td>
-                                            <td>{{$item->company}}</td>
+                                            <td>{{$item->formatCompany()}}</td>
                                             <td>{{$item->formatCity()}}</td>
                                         </tr>
                                     @endforeach
@@ -91,7 +91,7 @@
                                             <td>{{$index + 1}}</td>
                                             <td>{{$item->name}}</td>
                                             <td>{{$item->mobile}}</td>
-                                            <td>{{$item->company}}</td>
+                                            <td>{{$item->formatCompany()}}</td>
                                             <td>{{$item->formatCity()}}</td>
                                         </tr>
                                     @endforeach

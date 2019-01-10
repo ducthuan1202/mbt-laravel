@@ -258,7 +258,7 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
 
 
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-4">
+    <div class="col-xs-6 col-sm-6 col-md-3">
         <div class="form-group">
             <label>Ngày nhận</label>
             <div class="input-group date">
@@ -269,7 +269,7 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
             </div>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-4">
+    <div class="col-xs-6 col-sm-6 col-md-3">
         <div class="form-group">
             <label>Ngày ĐK giao hàng</label>
             <div class="input-group date">
@@ -280,14 +280,26 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
             </div>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-4">
+    <div class="col-xs-6 col-sm-6 col-md-3">
         <div class="form-group">
-            <label>Ngày giao hàng thực tế</label>
+            <label>Ngày giao hàng</label>
             <div class="input-group date">
                 <span class="input-group-addon">
                    <i class="glyphicon glyphicon-calendar"></i>
                 </span>
                 <input type="text" class="form-control drp-single" name="shipped_date_real" value="{{old('shipped_date_real') ? old('shipped_date_real') : $model->formatShippedDateReal()}}" readonly/>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-6 col-sm-6 col-md-3">
+        <div class="form-group">
+            <label>Ngày thay đổi</label>
+            <div class="input-group date">
+                <span class="input-group-addon">
+                   <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+                <input type="text" class="form-control drp-single" name="date_change" value="{{old('date_change') ? old('date_change') : $model->formatDateChange()}}" readonly/>
             </div>
         </div>
     </div>
@@ -301,5 +313,5 @@ $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
     @else
         <button type="submit" class="btn btn-success">Tạo Mới</button>
     @endif
-    <a href="{{route($model->getRouteName())}}" class="btn btn-default">Trở Về</a>
+    <a href="{{route('orders.index', ['status'=>$model->status])}}" class="btn btn-default">Trở Về</a>
 </div>

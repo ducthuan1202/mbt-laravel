@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\DB;
  *
  * @property City city
  * @property User user
+ * @property Company $companyName
  *
  */
 class Customer extends Model
@@ -59,6 +60,7 @@ class Customer extends Model
         'user_id.required' => 'Chọn NVKD chăm sóc.',
         'name.required' => 'Tên không thể bỏ trống.',
         'mobile.required' => 'Số điện thoại không thể bỏ trống.',
+        'mobile.unique' => 'Số điện thoại đã tồn tại.',
         'status.required' => 'Chọn trạng thái khách.',
     ];
 
@@ -66,7 +68,7 @@ class Customer extends Model
         'city_id' => 'required',
         'user_id' => 'required',
         'name' => 'required|max:255',
-        'mobile' => 'required',
+        'mobile' => 'required|unique:customers,mobile',
         'status' => 'required',
     ];
 
@@ -90,6 +92,11 @@ class Customer extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function companyName()
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
     public function checkCityExist($id = 0)
@@ -136,7 +143,7 @@ class Customer extends Model
         /**
          * @var $userLogin User
          */
-        $model = $this->with(['city', 'user']);
+        $model = $this->with(['city', 'user', 'companyName']);
 
         $userLogin = Auth::user();
         if($userLogin->role !== User::ADMIN_ROLE){
@@ -147,13 +154,16 @@ class Customer extends Model
         if (isset($searchParams['keyword']) && !empty($searchParams['keyword'])) {
             $model = $model->where(function ($query) use ($searchParams) {
                 $query->where('name', 'like', "%{$searchParams['keyword']}%")
-                    ->orWhere('company', 'like', "%{$searchParams['keyword']}%")
                     ->orWhere('mobile', 'like', "%{$searchParams['keyword']}%");
             });
         }
 
         if (isset($searchParams['user']) && !empty($searchParams['user'])) {
             $model = $model->where('user_id', $searchParams['user']);
+        }
+
+        if (isset($searchParams['company']) && !empty($searchParams['company'])) {
+            $model = $model->where('company_id', $searchParams['company']);
         }
 
         if (isset($searchParams['city']) && !empty($searchParams['city'])) {
@@ -251,6 +261,13 @@ class Customer extends Model
             }
         }
         return $location;
+    }
+
+    public function formatCompany(){
+        if($this->companyName){
+            return $this->companyName->name;
+        }
+        return '';
     }
 
     public function formatUser()

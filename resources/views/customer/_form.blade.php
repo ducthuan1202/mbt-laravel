@@ -1,6 +1,7 @@
 @php
     /**
      * @var $model \App\Customer
+     * @var $companies \App\Company[]
      */
 @endphp
 
@@ -38,7 +39,11 @@
                 </div>
                 <div class="form-group">
                     <label>Công ty KH</label>
-                    <input type="text" class="form-control" name="company" value="{{old('company') ? old('company') : $model->company}}"/>
+                    <select class="form-control chosen-select" name="company_id">
+                        @foreach($companies as $company)
+                            <option value="{{ $company['id'] }}" {{ $company['id'] == $model->company_id || $company['id'] == old('company_id') ? 'selected' : '' }}>{{$company['name']}}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Ngày sinh</label>

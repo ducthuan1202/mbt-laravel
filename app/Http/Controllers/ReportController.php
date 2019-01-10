@@ -90,54 +90,6 @@ class ReportController extends Controller
     }
 
     // report money
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function thisWeekMoney()
-    {
-        $date = Common::getDateRangeOfThisWeek();
-
-        $data = $this->calculatorThis($date);
-
-        return view('report.money.this_week', $data);
-    }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function nextWeekMoney()
-    {
-        $date = Common::getDateRangeOfNextWeek();
-
-        $data = $this->calculatorNext($date);
-
-        return view('report.money.next_week', $data);
-    }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function thisMonthMoney()
-    {
-
-        $date = Common::getDateRangeOfThisMonth();
-        $data = $this->calculatorThis($date);
-
-        return view('report.money.this_month', $data);
-    }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function nextMonthMoney()
-    {
-        $date = Common::getDateRangeOfNextMonth();
-        $data = $this->calculatorNext($date);
-
-        return view('report.money.next_month', $data);
-    }
-
     public function moneyPresent(Request $request){
         $date = $request->get('date');
         $data = $this->calculatorThis($date);

@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\DB;
  * @property string start_date
  * @property string shipped_date
  * @property string shipped_date_real
+ * @property string date_change
  * @property string note
  * @property integer status
  * @property integer vat
@@ -40,7 +41,7 @@ use Illuminate\Support\Facades\DB;
  * @property integer date_delay_payment
  * @property integer prepay
  * @property string payment_pre_shipped
- * @property string difference_vat
+ * @property integer difference_vat
  * @property string group_work
  * @property string condition_pass
  *
@@ -76,8 +77,8 @@ class Order extends Model
     protected $fillable = [
         'user_id', 'customer_id', 'code', 'amount', 'price', 'total_money', 'power', 'voltage_input', 'voltage_output',
         'standard_output', 'standard_real', 'guarantee', 'product_number', 'product_skin', 'product_type',
-        'setup_at', 'delivery_at', 'start_date', 'shipped_date', 'shipped_date_real', 'note', 'status', 'vat', 'prepay',
-        'payment_pre_shipped', 'prepay_required','date_delay_payment','difference_vat','group_work', 'condition_pass'
+        'setup_at', 'delivery_at', 'start_date', 'shipped_date', 'shipped_date_real','date_change', 'note', 'status', 'vat', 'prepay',
+        'payment_pre_shipped', 'prepay_required', 'date_delay_payment', 'difference_vat', 'group_work', 'condition_pass'
     ];
 
     public $validateMessage = [
@@ -135,6 +136,10 @@ class Order extends Model
 
         if (!empty($this->shipped_date)) {
             $this->shipped_date = Common::dmY2Ymd($this->shipped_date);
+        }
+
+        if (!empty($this->date_change)) {
+            $this->date_change = Common::dmY2Ymd($this->date_change);
         }
 
         if (!empty($this->shipped_date_real)) {
@@ -280,15 +285,15 @@ class Order extends Model
         $count = [
             self::SHIPPED_STATUS => [
                 'count' => 0,
-                'total'=>0
+                'total' => 0
             ],
             self::NOT_SHIPPED_STATUS => [
                 'count' => 0,
-                'total'=>0
+                'total' => 0
             ],
             self::CANCEL_STATUS => [
                 'count' => 0,
-                'total'=>0
+                'total' => 0
             ],
         ];
 
@@ -296,8 +301,8 @@ class Order extends Model
         } else {
             foreach ($data as $item) {
                 $count[$item->status] = [
-                    'count'=>$item->value,
-                    'total'=>$item->total,
+                    'count' => $item->value,
+                    'total' => $item->total,
                 ];
             }
         }
@@ -369,8 +374,9 @@ class Order extends Model
             ->get();
     }
 
-    public function countByDate($date = null){
-        if(empty($date)) return 0;
+    public function countByDate($date = null)
+    {
+        if (empty($date)) return 0;
 
         $date = Common::extractDate($date);
         $startDate = Common::dmY2Ymd($date[0]);
@@ -562,7 +568,8 @@ class Order extends Model
         return Common::formatMoney($this->difference_vat);
     }
 
-    public function formatConditionPass(){
+    public function formatConditionPass()
+    {
         $list = $this->listConditionPass();
         if (isset($list[$this->condition_pass])) {
             return $list[$this->condition_pass];
@@ -570,12 +577,13 @@ class Order extends Model
         return '';
     }
 
-    public function formatProductType(){
-        if($this->product_type === self::CABIN_SKIN){
+    public function formatProductType()
+    {
+        if ($this->product_type === self::CABIN_SKIN) {
             return 'tủ - trạm';
         }
 
-        if($this->product_type === self::MACHINE_SKIN){
+        if ($this->product_type === self::MACHINE_SKIN) {
             return 'máy';
         }
 
@@ -617,7 +625,7 @@ class Order extends Model
 
     public function getTotalMoneyWithoutPayment()
     {
-        return $this->total_money + $this->vat - $this->prepay;
+        return ((int)$this->total_money + (int)$this->vat + (int)$this->difference_vat) - (int)$this->prepay;
     }
 
     public function formatDebt()
@@ -654,6 +662,28 @@ class Order extends Model
     {
         return Common::formatDate($this->shipped_date_real);
     }
+    public function formatDateChange()
+    {
+        return Common::formatDate($this->date_change);
+    }
+
+    public function formatDateBuild(){
+        if(empty($this->shipped_date) || empty($this->start_date)){
+            return '0';
+        }
+        $time = strtotime($this->shipped_date) - strtotime($this->start_date);
+        $oneDay = 60*60*24;
+        return round($time / $oneDay);
+    }
+
+    public function formatOutDate(){
+        if(empty($this->shipped_date_real) || empty($this->shipped_date)){
+            return '0';
+        }
+        $time = strtotime($this->shipped_date_real) - strtotime($this->shipped_date);
+        $oneDay = 60*60*24;
+        return round($time / $oneDay);
+    }
 
     public function formatPrice()
     {
@@ -672,11 +702,21 @@ class Order extends Model
 
     public function formatPrePayRequired()
     {
-        if($this->checkConditionShip()){
+        if ($this->checkConditionShip()) {
             return sprintf('<span class="label label-success"><i class="fa fa-check"></i> Đủ điều kiện</span>');
         }
 
         return sprintf('<span class="label label-danger"><i class="fa fa-times"></i> Không đủ điều kiện</span>');
+    }
+
+    public function formatPrePayRequiredText()
+    {
+        $list = $this->listPrePayRequired();
+
+        if (isset($list[$this->prepay_required])) {
+            return $list[$this->prepay_required];
+        }
+        return '';
     }
 
     public function generateUniqueCode()
@@ -684,7 +724,8 @@ class Order extends Model
         return Common::generateUniqueCode('MBT-DH00000', $this->id);
     }
 
-    public function getRouteName(){
+    public function getRouteName()
+    {
         switch ($this->status) {
             case Order::SHIPPED_STATUS:
                 $routeName = 'orders.shipped';
@@ -700,8 +741,9 @@ class Order extends Model
         return $routeName;
     }
 
-    public function checkConditionShip(){
-        if($this->prepay_required == self::YES && $this->prepay > 0){
+    public function checkConditionShip()
+    {
+        if ($this->prepay_required == self::YES && $this->prepay > 0) {
             return true;
         }
         return false;

@@ -150,7 +150,6 @@ class OrderController extends Controller
             $model->standard_real = $model->standard_output;
             $message = sprintf('Thông tin đơn hàng hiện tại được lấy từ báo giá #%s ', $priceQuotation->code);
         } else {
-
             $model->amount = 1;
             $message = sprintf('Không có báo giá phù hợp, đơn hàng phải nhập số liệu từ đầu');
         }
@@ -183,7 +182,13 @@ class OrderController extends Controller
         $this->authorize('admin');
         $model = new Order();
         if ($request->get('code')) {
-            $this->validate($request, ['code' => 'unique:orders,code'], ['code.unique' => 'Đơn hàng cho báo giá này đã tồn tại.']);
+            $this->validate($request, [
+                'code' => 'unique:orders,code',
+                'product_number' => 'unique:orders,product_number',
+            ], [
+                'code.unique' => 'Đơn hàng cho báo giá này đã tồn tại.',
+                'product_number.unique' => 'Số máy này đã tồn tại.',
+            ]);
         }
         $this->validate($request, $model->validateRules, $model->validateMessage);
         $model->fill($request->all());
@@ -205,7 +210,7 @@ class OrderController extends Controller
         } else {
             return redirect()
                 ->route('orders.index', $model->id)
-                ->withErrors(['lỗi khi tạo công nợ']);
+                ->withErrors(['lỗi khi tạo đơn hàng']);
         }
     }
 

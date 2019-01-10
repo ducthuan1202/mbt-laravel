@@ -180,7 +180,7 @@ class User extends Authenticatable
 
         $query = User::with(['customers' => function ($query) use ($startDate, $endDate) {
             $query->whereBetween('created_at', [$startDate, $endDate]);
-        }, 'customers.city'])
+        }, 'customers.city', 'customers.companyName'])
             ->where('role', User::EMPLOYEE_ROLE);
 
         if (!empty($userId)) {
@@ -200,7 +200,7 @@ class User extends Authenticatable
 
         $query = User::with(['cares' => function ($query) use ($startDate, $endDate) {
             $query->whereBetween('start_date', [$startDate, $endDate]);
-        }, 'cares.customer', 'cares.customer.city'])
+        }, 'cares.customer', 'cares.customer.city', 'cares.customer.companyName'])
             ->where('role', User::EMPLOYEE_ROLE);
 
         if (!empty($userId)) {
@@ -220,7 +220,7 @@ class User extends Authenticatable
 
         $query = User::with(['quotations' => function ($query) use ($startDate, $endDate) {
             $query->whereBetween('quotations_date', [$startDate, $endDate]);
-        }, 'quotations.customer', 'quotations.customer.city'])
+        }, 'quotations.customer', 'quotations.customer.city', 'quotations.customer.companyName'])
             ->where('role', User::EMPLOYEE_ROLE);
 
         if (!empty($userId)) {
@@ -240,7 +240,7 @@ class User extends Authenticatable
 
         $query = User::with(['orders' => function ($query) use ($startDate, $endDate) {
             $query->whereBetween('start_date', [$startDate, $endDate]);
-        }, 'orders.customer', 'orders.customer.city'])
+        }, 'orders.customer', 'orders.customer.city', 'orders.customer.companyName'])
             ->where('role', User::EMPLOYEE_ROLE);
 
         if (!empty($userId)) {

@@ -47,7 +47,7 @@
                                             <td>{{$item->formatStartDate()}}</td>
                                             <td>{{$item->customer->name}}</td>
                                             <td>{{$item->customer->mobile}}</td>
-                                            <td>{{$item->customer->company}}</td>
+                                            <td>{{$item->customer->formatCompany()}}</td>
                                             <td>{{$item->customer->formatCity()}}</td>
                                             <td>{!! $item->formatStatus() !!}</td>
                                         </tr>

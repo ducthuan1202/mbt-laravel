@@ -11,3 +11,4 @@ ALTER TABLE `orders` ADD `condition_pass` BOOLEAN NOT NULL AFTER `note`;
 
 #===== 2019-01-10 =====
 ALTER TABLE `customers` ADD `company_id` INT NOT NULL AFTER `city_id`;
+ALTER TABLE `orders` ADD `date_change` DATE NULL DEFAULT NULL AFTER `shipped_date_real`;

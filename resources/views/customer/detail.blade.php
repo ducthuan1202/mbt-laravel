@@ -20,6 +20,8 @@
                     {{$title}}: #{{$model->name}}
                 </h2>
 
+                <button onclick="window.history.back()" class="btn btn-default pull-right">Quay lại</button>
+
                 <div class="clearfix"></div>
             </div>
 

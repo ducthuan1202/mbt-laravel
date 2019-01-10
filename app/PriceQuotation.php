@@ -82,7 +82,7 @@ class PriceQuotation extends Model
         'amount.required' => 'Số lượng không thể bỏ trống.',
         'amount.min' => 'Số lượng phải là số và lớn hơn 0.',
         'price.required' => 'Giá báo không thể bỏ trống.',
-        'price.min' => 'Giá báo phải là số và lớn hơn 0.',
+        'price.integer' => 'Giá báo phải là dạng số.',
         'quotations_date.required' => 'Ngày báo giá không thể bỏ trống.',
         'power.required' => 'Công suất không thể bỏ trống.',
         'voltage_input.required' => 'Điện áp đầu vào không thể bỏ trống.',
@@ -100,7 +100,7 @@ class PriceQuotation extends Model
         'user_id' => 'required|integer|min:1',
         'customer_id' => 'required|integer|min:1',
         'amount' => 'required|integer|min:1',
-        'price' => 'required|integer|min:1',
+        'price' => 'required|integer',
         'quotations_date' => 'required',
         'power' => 'required',
         'voltage_input' => 'required',
@@ -428,7 +428,7 @@ class PriceQuotation extends Model
                 $cls = 'btn-default';
                 break;
             default:
-                $output = 'n/a';
+                $output = '';
                 $cls = 'btn-default';
                 break;
         }
@@ -452,7 +452,7 @@ class PriceQuotation extends Model
                 $cls = 'btn-dark';
                 break;
             default:
-                $output = 'n/a';
+                $output = '';
                 $cls = 'btn-default';
                 break;
         }
@@ -476,7 +476,7 @@ class PriceQuotation extends Model
         if (isset($list[$this->standard_output])) {
             return $list[$this->standard_output];
         }
-        return 'n/a';
+        return '';
     }
 
     public function formatStandardReal()
@@ -485,7 +485,7 @@ class PriceQuotation extends Model
         if (isset($list[$this->standard_real])) {
             return $list[$this->standard_real];
         }
-        return 'n/a';
+        return '';
     }
 
     public function formatGroupWork()
@@ -494,7 +494,7 @@ class PriceQuotation extends Model
         if (isset($list[$this->group_work])) {
             return $list[$this->group_work];
         }
-        return 'n/a';
+        return '';
     }
 
     public function formatTermsOfPayment()
@@ -503,7 +503,7 @@ class PriceQuotation extends Model
         if (isset($list[$this->terms_of_payment])) {
             return $list[$this->terms_of_payment];
         }
-        return 'n/a';
+        return '';
     }
 
     public function formatQuotationDate()

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string created_at
  * @property string updated_at
  *
- *
+ * @property Customer $customers
  */
 class Company extends Model
 {
@@ -37,6 +37,11 @@ class Company extends Model
     public $validateRules = [
         'name' => 'required|max:255',
     ];
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class, 'company_id', 'id');
+    }
 
     // TODO:  QUERY TO DATABASE =====
     public function search($searchParams = [])
