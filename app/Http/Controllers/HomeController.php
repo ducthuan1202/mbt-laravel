@@ -61,7 +61,7 @@ class HomeController extends Controller
 //        $this->setCompanyIdToCustomer();
 
         // step 3
-        $this->step3();
+//        $this->step3();
         return 'done';
     }
 
