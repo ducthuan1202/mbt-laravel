@@ -5,15 +5,15 @@
      $user = \Illuminate\Support\Facades\Auth::user();
 @endphp
 
+@php $title = 'Nhân Sự'; @endphp
 @extends('layouts.main')
+@section('title') {{$title}} @endsection
 
 @section('content')
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <h2>
-                    Nhân Sự
-                </h2>
+                <h2>{{$title}}</h2>
 
                 @can('admin')
                     <a class="btn btn-success pull-right" href="{{route('users.create')}}">

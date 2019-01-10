@@ -1,4 +1,3 @@
-
 @php
     /**
      * @var $model \App\Customer
@@ -9,14 +8,16 @@
      */
 @endphp
 
+@php $title = 'Khách hàng'; @endphp
 @extends('layouts.main')
+@section('title') {{$title}} @endsection
 
 @section('content')
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
                 <h2>
-                    Khách hàng: #{{$model->name}}
+                    {{$title}}: #{{$model->name}}
                 </h2>
 
                 <div class="clearfix"></div>

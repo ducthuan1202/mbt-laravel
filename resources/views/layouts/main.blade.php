@@ -1,6 +1,5 @@
 @php
     $user = Auth::user();
-    // $user = \Illuminate\Support\Facades\Auth::user();
 @endphp
 <!DOCTYPE html>
 <html lang="vi">
@@ -15,7 +14,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'MBT') }}</title>
+    <title>@yield('title')</title>
 
     <!-- Bootstrap -->
     <link href="{{ asset('/template/vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet"/>

@@ -5,13 +5,15 @@
     use App\Helpers\Common;
 @endphp
 
+@php $title = 'Báo Giá'; @endphp
 @extends('layouts.main')
+@section('title') {{$title}} @endsection
 
 @section('content')
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <h2>Báo Giá</h2>
+                <h2>{{$title}}</h2>
 
                 <a class="btn btn-success pull-right" href="{{route('quotations.create')}}">
                     <i class="fa fa-plus"></i> Thêm mới

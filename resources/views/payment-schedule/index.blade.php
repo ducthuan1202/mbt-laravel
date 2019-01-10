@@ -6,8 +6,9 @@
     */
     $sum = 0;
 @endphp
-
+@php $title = 'Đơn hàng'; @endphp
 @extends('layouts.main')
+@section('title') {{$title}} @endsection
 
 @section('content')
 
@@ -33,7 +34,7 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
-                            Đơn hàng #{{$order->code}}
+                            {{$title}} #{{$order->code}}
                         </h2>
                         <div class="clearfix"></div>
                     </div>

@@ -1,17 +1,19 @@
 @php
+    use App\Helpers\Common;
     /**
      * @var $data \App\Customer[]
      */
-    use App\Helpers\Common;
 @endphp
 
+@php $title = 'Công Nợ'; @endphp
 @extends('layouts.main')
+@section('title') {{$title}} @endsection
 
 @section('content')
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <h2>Khách Hàng</h2>
+                <h2>{{$title}}</h2>
                 <a class="btn btn-success pull-right" href="{{route('customers.create')}}">
                     <i class="fa fa-plus"></i> Thêm mới
                 </a>

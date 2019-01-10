@@ -29,7 +29,7 @@ class OrderController extends Controller
             'city' => null,
             'keyword' => null,
             'date' => null,
-            'status' => null,
+            'status' => $request->get('status'),
         ];
         $searchParams = array_merge($searchParams, $request->all());
 

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
  * @property string code
  * @property integer city_id
  * @property integer user_id
+ * @property string company_id
  * @property string company
  * @property string address
  * @property string name
@@ -49,7 +50,7 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
-        'code', 'city_id', 'user_id', 'company', 'address',
+        'code', 'city_id', 'user_id','company_id', 'company', 'address',
         'name', 'position', 'mobile', 'average_sale', 'status', 'birthday', 'note'
     ];
 

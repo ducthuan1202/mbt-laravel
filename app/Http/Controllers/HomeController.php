@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Care;
 use App\City;
+use App\Company;
 use App\Customer;
 use App\Order;
 use App\PriceQuotation;
@@ -51,11 +52,27 @@ class HomeController extends Controller
      */
     public function updateCode()
     {
-        $customers = Customer::select('id', 'code')->get();
+        /** @var $customers Customer[] */
+
+        $customers = Customer::get();
+        $companies = Company::select('id', 'name')->get();
+
         foreach ($customers as $customer) {
-            $customer->code = $customer->generateUniqueCode();
+
+            $company = array_first($companies, function ($item) use($customer){
+                return $item->name == $customer->company;
+            });
+
+            if($company){
+                $customer->company_id = $company->id;
+            } else{
+                $customer->company_id = 0;
+            }
             $customer->save();
+
         }
+
+        return 'done';
     }
 
     /**

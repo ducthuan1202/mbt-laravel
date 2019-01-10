@@ -5,13 +5,15 @@
     use App\Helpers\Common;
 @endphp
 
+@php $title = 'Công Nợ'; @endphp
 @extends('layouts.main')
+@section('title') {{$title}} @endsection
 
 @section('content')
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <h2>Công Nợ</h2>
+                <h2>{{$title}}</h2>
                 @can('admin')
                     <a class="btn btn-success pull-right" href="{{route('debts.create')}}">
                         <i class="fa fa-plus"></i> Thêm mới

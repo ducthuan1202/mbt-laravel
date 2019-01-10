@@ -4,14 +4,16 @@
      */
 @endphp
 
+@php $title = 'Báo Giá'; @endphp
 @extends('layouts.main')
+@section('title') {{$title}} @endsection
 
 @section('content')
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
                 <h2>
-                    Báo giá: #{{$model->code}}
+                    {{$title}}: #{{$model->code}}
                 </h2>
 
                 <div class="clearfix"></div>

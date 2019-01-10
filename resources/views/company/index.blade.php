@@ -1,18 +1,17 @@
 @php
     /**
-     * @var $data \App\City[]
+     * @var $data \App\Company[]
      */
 @endphp
-@php $title = 'Khu vực'; @endphp
+@php $title = 'Công ty'; @endphp
 @extends('layouts.main')
 @section('title') {{$title}} @endsection
-
 @section('content')
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
                 <h2>{{$title}}</h2>
-                <a class="btn btn-success pull-right" href="{{route('cities.create')}}">
+                <a class="btn btn-success pull-right" href="{{route('companies.create')}}">
                     <i class="fa fa-plus"></i> Thêm mới
                 </a>
 
@@ -21,7 +20,7 @@
 
             <div class="x_content">
 
-                @include('city._search')
+                @include('company._search')
 
                 @if($message = Session::get('success'))
                     <div class="alert alert-success">{{$message}}</div>
@@ -34,7 +33,7 @@
                         <thead>
                         <tr class="headings">
                             <th>No.</th>
-                            <th>Tên khu vực (tỉnh)</th>
+                            <th>Tên công ty</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -45,14 +44,9 @@
                                     <td style="width: 50px">{{$index + 1}}</td>
                                     <td>{{$item->name}}</td>
                                     <td class="text-right" style="min-width: 150px">
-                                        <a href="{{route('cities.edit', $item->id)}}" class="btn btn-info btn-xs">
+                                        <a href="{{route('companies.edit', $item->id)}}" class="btn btn-info btn-xs">
                                             <i class="fa fa-pencil"></i> Sửa
                                         </a>
-                                        @can('admin')
-                                            {{--<a onclick="MBT_City.delete({{$item->id}})" class="btn btn-danger btn-xs">--}}
-                                                {{--<i class="fa fa-trash-o"></i> Xóa--}}
-                                            {{--</a>--}}
-                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
@@ -75,5 +69,5 @@
 
 @section('script')
     <!-- FastClick -->
-    <script src="{{ asset('/template/build/js/city.js') }}"></script>
+    <script src="{{ asset('/template/build/js/company.js') }}"></script>
 @endsection

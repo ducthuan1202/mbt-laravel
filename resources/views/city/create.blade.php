@@ -1,4 +1,6 @@
+@php $title = 'Khu vực'; @endphp
 @extends('layouts.main')
+@section('title') {{$title}} @endsection
 
 @section('content')
 
@@ -8,7 +10,7 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
-                            Khu Vực
+                            {{$title}}
                             <small>Tạo Mới</small>
                         </h2>
                         <div class="clearfix"></div>

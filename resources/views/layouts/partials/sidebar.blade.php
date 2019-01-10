@@ -39,6 +39,9 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                     <li>
                         <a href="{{route('cities.index')}}"><i class="fa fa-map-marker"></i> Khu Vực</a>
                     </li>
+                    <li>
+                        <a href="{{route('companies.index')}}"><i class="fa fa-map-marker"></i> Công Ty</a>
+                    </li>
                     @can('admin')
                         <li>
                             <a href="{{route('users.index')}}"><i class="fa fa-user"></i> Nhân Sự</a>
@@ -56,9 +59,12 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                     <li>
                         <a><i class="fa fa-shopping-cart"></i> Đơn Hàng <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="{{route('orders.shipped')}}">Đã giao</a></li>
-                            <li><a href="{{route('orders.no_shipped')}}">Chưa giao</a></li>
-                            <li><a href="{{route('orders.cancel')}}">Đã hủy</a></li>
+                            {{--<li><a href="{{route('orders.shipped')}}">Đã giao</a></li>--}}
+                            {{--<li><a href="{{route('orders.no_shipped')}}">Chưa giao</a></li>--}}
+                            {{--<li><a href="{{route('orders.cancel')}}">Đã hủy</a></li>--}}
+                            <li><a href="{{route('orders.index', ['status'=>\App\Order::SHIPPED_STATUS])}}">Đã giao</a></li>
+                            <li><a href="{{route('orders.index', ['status'=>\App\Order::NOT_SHIPPED_STATUS])}}">Chưa giao</a></li>
+                            <li><a href="{{route('orders.index', ['status'=>\App\Order::CANCEL_STATUS])}}">Đã hủy</a></li>
                         </ul>
                     </li>
                     @can('admin')

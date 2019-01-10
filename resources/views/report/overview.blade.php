@@ -4,7 +4,9 @@
     * @var $date string
     */
 @endphp
+@php $title = 'Báo Cáo'; @endphp
 @extends('layouts.main')
+@section('title') {{$title}} @endsection
 
 @section('content')
     <div class="right_col" role="main">

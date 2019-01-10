@@ -55,7 +55,7 @@ use Illuminate\Support\Facades\DB;
  */
 class Order extends Model
 {
-    const LIMIT = 3;
+    const LIMIT = 50;
     const
         SHIPPED_STATUS = 1,
         NOT_SHIPPED_STATUS = 2,
