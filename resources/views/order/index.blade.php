@@ -31,15 +31,19 @@
                 <div class="row tile_count text-center" style="margin-top: 0;">
 
                     @if(empty($searchParams['status']))
-                        <div class="col-md-4 tile_stats_count" style="margin-bottom: 0">
+                        <div class="col-md-3 tile_stats_count" style="margin-bottom: 0">
+                            <span class="count_top">TỔNG</span>
+                            <div class="count dark">{{$data->total()}}</div>
+                        </div>
+                        <div class="col-md-3 tile_stats_count" style="margin-bottom: 0">
                             <span class="count_top">ĐÃ GIAO</span>
                             <div class="count green">{{$count[\App\Order::SHIPPED_STATUS]['count']}}</div>
                         </div>
-                        <div class="col-md-4 tile_stats_count" style="margin-bottom: 0">
+                        <div class="col-md-3 tile_stats_count" style="margin-bottom: 0">
                             <span class="count_top">CHƯA GIAO</span>
                             <div class="count blue">{{$count[\App\Order::NOT_SHIPPED_STATUS]['count']}}</div>
                         </div>
-                        <div class="col-md-4 tile_stats_count" style="margin-bottom: 0">
+                        <div class="col-md-3 tile_stats_count" style="margin-bottom: 0">
                             <span class="count_top">ĐÃ HỦY</span>
                             <div class="count red">{{$count[\App\Order::CANCEL_STATUS]['count']}}</div>
                         </div>
