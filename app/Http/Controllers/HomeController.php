@@ -70,14 +70,12 @@ class HomeController extends Controller
         $customers = Customer::whereNotNull('company')
             ->where('company_id', '0')
             ->get();
-        dd($customers);
         $companies = Company::get();
 
         foreach ($customers as $customer):
             $company = array_first($companies, function ($item) use ($customer) {
                 return $item->slug == str_slug(trim($customer->company));
             });
-
             if ($company) {
                 $customer->company_id = $company->id;
             } else {
