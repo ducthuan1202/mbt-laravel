@@ -5,7 +5,7 @@ ALTER TABLE `price_quotations` ADD `expired` INT(11) NULL DEFAULT NULL COMMENT '
 ALTER TABLE `price_quotations` ADD `terms_of_payment` BOOLEAN NULL DEFAULT NULL AFTER `expired`;
 
 #===== 2019-01-09 =====
-ALTER TABLE `orders` ADD `difference_vat` BOOLEAN NOT NULL AFTER `vat`
+ALTER TABLE `orders` ADD `difference_vat` BOOLEAN NOT NULL AFTER `vat`;
 ALTER TABLE `orders` ADD `group_work` BOOLEAN NOT NULL AFTER `difference_vat`;
 ALTER TABLE `orders` ADD `condition_pass` BOOLEAN NOT NULL AFTER `note`;
 

@@ -263,6 +263,7 @@ class CustomerController extends Controller
         $customerId = (int)$request->get('customerId');
 
         $customerQuery = Customer::with(['companyName'])->select('id', 'name', 'mobile', 'company_id');
+
         if (!empty($userId)) {
             $customerQuery = $customerQuery->where('user_id', $userId);
         }

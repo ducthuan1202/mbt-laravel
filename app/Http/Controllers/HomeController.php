@@ -55,11 +55,37 @@ class HomeController extends Controller
         /** @var $customers Customer[] */
 
         // step 1
-        $this->createCompanyFromCustomer();
+//        $this->createCompanyFromCustomer();
 
         // step 2
-        $this->setCompanyIdToCustomer();
+//        $this->setCompanyIdToCustomer();
+
+        // step 3
+        $this->step3();
         return 'done';
+    }
+
+    private function step3()
+    {
+        $customers = Customer::whereNotNull('company')
+            ->where('company_id', '0')
+            ->get();
+        dd($customers);
+        $companies = Company::get();
+
+        foreach ($customers as $customer):
+            $company = array_first($companies, function ($item) use ($customer) {
+                return $item->slug == str_slug(trim($customer->company));
+            });
+
+            if ($company) {
+                $customer->company_id = $company->id;
+            } else {
+                $customer->company_id = 0;
+            }
+
+            $customer->save();
+        endforeach;
     }
 
     private function setCompanyIdToCustomer()
