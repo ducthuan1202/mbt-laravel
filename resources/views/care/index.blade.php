@@ -48,7 +48,7 @@
                             <th>Khu vực</th>
                             <th>Ngày gọi</th>
                             <th>Ngày hẹn</th>
-                            <th>Nội dung chăm sóc</th>
+                            <th style="max-width: 30%">Nội dung chăm sóc</th>
                             <th>Nhân viên KD</th>
                             <th>Ghi chú</th>
                             <th></th>
