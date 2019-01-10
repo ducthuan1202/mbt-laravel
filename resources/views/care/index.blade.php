@@ -50,7 +50,7 @@
                             <th>Ngày hẹn</th>
                             <th>Nội dung chăm sóc</th>
                             <th>Nhân viên KD</th>
-                            <th style="max-width: 30%">Ghi chú</th>
+                            <th>Ghi chú</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -69,7 +69,7 @@
                                     <td>
                                         <strong class="text-danger">{!! $item->formatUser() !!}</strong>
                                     </td>
-                                    <td style="max-width: 30%">{!! $item->customer_note !!}</td>
+                                    <td style="width: 200px">{!! $item->customer_note !!}</td>
                                     <td class="text-right" style="min-width: 150px">
                                         <a href="{{route('cares.edit', $item->id)}}" class="btn btn-info btn-xs">
                                             <i class="fa fa-pencil"></i> Sửa
