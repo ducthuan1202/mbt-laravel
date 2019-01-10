@@ -64,8 +64,7 @@
                         @if(count($data))
                             @foreach($data as $index => $item)
                                 <tr>
-                                    <td style="width: 50px">{{$index + 1}}</td>
-
+                                    <td>{{ $index + $data->firstItem() }}</td>
                                     <td>{!! $item->formatCustomer() !!}</td>
                                     <td>{{$item->formatCustomerCity()}}</td>
                                     <td>{{$item->formatDateCreate()}}</td>

@@ -128,7 +128,7 @@
                                 @foreach($data as $index => $item)
 
                                     <tr>
-                                        <td style="width: 50px">{{$index + 1}}</td>
+                                        <td>{{ $index + $data->firstItem() }}</td>
                                         <td><b class="text-success">{{$item->formatUser()}}</b></td>
                                         <td>
                                             <a href="{{route('payment-schedules.index', $item->id)}}" style="text-decoration: underline">

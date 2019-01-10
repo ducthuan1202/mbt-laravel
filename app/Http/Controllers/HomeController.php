@@ -38,6 +38,10 @@ class HomeController extends Controller
             'cityCount' => City::countNumber(),
             'orderCount' => Order::countNumber(),
             'careCount' => Care::countNumber(),
+            'quotationCount' => PriceQuotation::countNumber(),
+            'companyCount' => Company::countNumber(),
+            'userCount' => User::countNumber(),
+
 //            'totalMoney' => $orderModel->sumTotalMoney(),
 //            'totalMoneyDebt' => $debtModel->sumTotalMoney(),
 //            'eChartData' => $userModel->eChartGenerateData($eChartData),

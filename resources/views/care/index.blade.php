@@ -58,7 +58,7 @@
                         @if(count($data))
                             @foreach($data as $index => $item)
                                 <tr>
-                                    <td style="width: 50px">{{$index + 1}}</td>
+                                    <td>{{ $index + $data->firstItem() }}</td>
                                     <td>
                                         <strong class="text-success">{!! $item->formatCustomer() !!}</strong>
                                     </td>

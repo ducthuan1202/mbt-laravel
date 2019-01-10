@@ -108,7 +108,7 @@ class User extends Authenticatable
 
     public static function countNumber()
     {
-        return self::count();
+        return self::where('role', self::EMPLOYEE_ROLE)->count();
     }
 
     public function countCustomerByUser()

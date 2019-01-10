@@ -39,6 +39,16 @@
                 <div class="tile-stats">
                     <div class="icon"><i class="fa fa-briefcase"></i>
                     </div>
+                    <div class="count">{{$quotationCount}}</div>
+
+                    <h3>Báo giá</h3>
+                    <p><a href="{{route('quotations.index')}}">Xem Danh Sách</a></p>
+                </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-briefcase"></i>
+                    </div>
                     <div class="count">{{$orderCount}}</div>
 
                     <h3>Đơn hàng</h3>
@@ -61,7 +71,7 @@
                     </div>
                     <div class="count">{{$careCount}}</div>
 
-                    <h3>Báo giá</h3>
+                    <h3>Lượt CSKH</h3>
                     <p><a href="{{route('cares.index')}}">Xem Danh Sách</a></p>
                 </div>
             </div>
@@ -74,6 +84,26 @@
 
                     <h3>Tỉnh Thành</h3>
                     <p><a href="{{route('cities.index')}}">Xem Danh Sách</a></p>
+                </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-map-marker"></i>
+                    </div>
+                    <div class="count">{{$companyCount}}</div>
+
+                    <h3>Công ty</h3>
+                    <p><a href="{{route('companies.index')}}">Xem Danh Sách</a></p>
+                </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-map-marker"></i>
+                    </div>
+                    <div class="count">{{$userCount}}</div>
+
+                    <h3>NVKD</h3>
+                    <p><a href="{{route('users.index', ['role'=>\App\User::EMPLOYEE_ROLE])}}">Xem Danh Sách</a></p>
                 </div>
             </div>
 
