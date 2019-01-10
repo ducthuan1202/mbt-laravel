@@ -54,7 +54,14 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                         <a href="{{route('cares.index')}}"><i class="fa fa-phone-square"></i> CSKH</a>
                     </li>
                     <li>
-                        <a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Báo Giá</a>
+                        {{--<a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Báo Giá</a>--}}
+                        <a><i class="fa fa-bullhorn"></i> Báo Giá <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{{route('quotations.index')}}">Tất cả</a></li>
+                            <li><a href="{{route('quotations.index', ['status'=>\App\PriceQuotation::SUCCESS_STATUS])}}">Thành công</a></li>
+                            <li><a href="{{route('quotations.index', ['status'=>\App\PriceQuotation::PENDING_STATUS])}}">Đang theo</a></li>
+                            <li><a href="{{route('quotations.index', ['status'=>\App\PriceQuotation::FAIL_STATUS])}}">Thất bại</a></li>
+                        </ul>
                     </li>
                     <li>
                         <a><i class="fa fa-shopping-cart"></i> Đơn Hàng <span class="fa fa-chevron-down"></span></a>
