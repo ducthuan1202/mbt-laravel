@@ -19,7 +19,7 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-6">
         <div class="form-group">
-            <label>Tên khu vực (tỉnh)</label>
+            <label>Tên công ty</label>
             <input type="text" class="form-control" name="name" value="{{old('name') ? old('name') : $model->name}}" autofocus required/>
         </div>
     </div>
