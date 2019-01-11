@@ -54,8 +54,9 @@
                             <th>Khách hàng</th>
                             <th>Công ty</th>
                             <th>Khu vực</th>
-                            <th>Ngày tạo</th>
                             <th>Số nợ</th>
+                            <th>Đã thanh toán</th>
+                            <th>Còn lại</th>
                             <th>Nhân viên KD</th>
                             <th></th>
                         </tr>
@@ -72,8 +73,9 @@
                                     </td>
                                     <td>{{$item->customer->formatCompany()}}</td>
                                     <td>{{$item->formatCustomerCity()}}</td>
-                                    <td>{{$item->formatDateCreate()}}</td>
                                     <td>{{$item->formatMoney()}}</td>
+                                    <td>{{$item->formatHasPaid()}}</td>
+                                    <td>{{$item->formatNotPaid()}}</td>
                                     <td>{{$item->formatCustomerUser()}}</td>
                                     <td class="text-right">
                                         @can('admin')

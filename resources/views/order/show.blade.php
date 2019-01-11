@@ -39,12 +39,8 @@
                             <table class="table table-bordered">
                                 <tbody>
                                 <tr class="bg-warning">
-                                    <td>Nhân viên</td>
+                                    <td>Nhân viên kinh doanh</td>
                                     <td>{!! $model->formatUser()!!}</td>
-                                </tr>
-                                <tr class="bg-warning">
-                                    <td>Mã đơn hàng</td>
-                                    <td><kbd>{{$model->code}}</kbd></td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Trạng thái đơn hàng</td>
@@ -54,100 +50,99 @@
                                     <td>Khách hàng</td>
                                     <td>{!! $model->formatCustomer() !!}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-warning">
                                     <td>Khu vực</td>
                                     <td>{{$model->formatCustomerCity()}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-info">
                                     <td>Ngày vào sản xuất</td>
                                     <td>{{$model->formatStartDate()}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-info">
                                     <td>Ngày đăng ký giao hàng</td>
                                     <td>{{$model->formatShippedDate()}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-info">
                                     <td>Ngày giao hàng thực tế</td>
                                     <td>{{$model->formatShippedDateReal()}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-info">
+                                    <td>Ngày thay đổi</td>
+                                    <td>{{$model->formatDateChange()}}</td>
+                                </tr>
+                                <tr class="bg-info">
                                     <td>Địa chỉ lắp đặt</td>
                                     <td>{{$model->setup_at}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-info">
                                     <td>Địa chỉ giao hàng</td>
                                     <td>{{$model->delivery_at}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-success">
                                     <td>Số lượng</td>
                                     <td>{{$model->amount}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-success">
                                     <td>Giá bán</td>
                                     <td>{{$model->formatPrice()}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-success">
                                     <td>Thành tiền</td>
                                     <td>{{$model->formatTotalMoney()}}</td>
                                 </tr>
-                                <tr class="bg-warning">
+                                <tr class="bg-success">
                                     <td>VAT</td>
                                     <td><span class="red">{{$model->formatVat()}}</span></td>
                                 </tr>
-                                <tr class="bg-warning">
+                                <tr class="bg-success">
                                     <td>Chênh lệc VAT</td>
                                     <td><span class="red">{{$model->formatDifferenceVat()}}</span></td>
                                 </tr>
-                                <tr class="bg-warning">
+                                <tr class="bg-success">
                                     <td>Tạm ứng trước khi giao</td>
                                     <td>{{$model->formatPrePayRequiredText()}}</td>
                                 </tr>
-                                <tr class="bg-warning">
+                                <tr class="bg-success">
                                     <td>Đã tạm ứng</td>
-                                    <td>
-                                        <span class="blue">{{$model->formatPrePay()}}</span>
-                                    </td>
+                                    <td><span class="blue">{{$model->formatPrePay()}}</span></td>
                                 </tr>
-                                <tr class="bg-warning">
+                                <tr class="bg-success">
                                     <td>Còn lại</td>
                                     <td>{{$model->formatPaymentPreShip()}}</td>
                                 </tr>
-                                <tr class="bg-success">
+                                <tr class="bg-danger">
                                     <td>Số máy</td>
                                     <td><kbd>{{ $model->product_number }}</kbd></td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-danger">
                                     <td>Công suất</td>
                                     <td>{{ $model->power }} kvA</td>
                                 </tr>
-
-                                <tr>
+                                <tr class="bg-danger">
                                     <td>Điện áp vào</td>
                                     <td>{{ $model->voltage_input }} kv</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-danger">
                                     <td>Điện áp ra</td>
                                     <td>{{ $model->voltage_output}} kv</td>
                                 </tr>
-
-                                <tr>
+                                <tr class="bg-danger">
                                     <td>Kiểu máy</td>
                                     <td>{{$model->formatType()}}</td>
                                 </tr>
-
-                                <tr>
+                                <tr class="bg-danger">
                                     <td>Ngoại hình máy</td>
                                     <td>{{$model->formatSkin()}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-danger">
                                     <td>Bảo hành</td>
                                     <td>{{$model->guarantee}} tháng</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-danger">
                                     <td>Tiêu chuẩn</td>
                                     <td>{{$model->formatStandard()}}</td>
                                 </tr>
-                                <tr>
+                                <tr class="bg-danger">
                                     <td>Lý do xuất</td>
                                     <td>{{$model->formatConditionPass()}}</td>
                                 </tr>
@@ -185,8 +180,11 @@
                                 @if(count($payments))
 
                                     @foreach($payments as $item)
-                                        @php if($item->status == \App\PaymentSchedule::PAID_STATUS) $sum += $item->money; @endphp
-                                        <tr>
+                                        @php
+                                            $hasPaid = ($item->status == \App\PaymentSchedule::PAID_STATUS);
+                                            if($hasPaid) $sum += $item->money;
+                                        @endphp
+                                        <tr class="{{$hasPaid ? 'bg-success' : ''}}">
                                             <td {{(!empty($item->note)) ? 'rowspan=2' : ''}} style="vertical-align: middle; width: 150px">{{$item->formatDate()}}</td>
                                             <td>{{$item->formatMoney()}}</td>
                                             <td>{!! $item->formatStatus() !!}</td>

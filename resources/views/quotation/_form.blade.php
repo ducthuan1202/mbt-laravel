@@ -76,7 +76,7 @@ $customerId = old('customer_id') ? old('customer_id') : ($model->customer_id ? $
             @if ($errors->has('quotations_date')) <span class="help-block">{{ $errors->first('quotations_date') }}</span> @endif
         </div>
 
-        <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
+        <div class="form-group {{$errors->has('expired') ? 'has-error' : ''}}">
             <label>Hiệu lực báo giá</label>
             <div class="input-group">
                 <input type="number" min="1" class="form-control" name="expired" value="{{old('expired') ? old('expired') : $model->expired}}"/>
@@ -135,7 +135,7 @@ $customerId = old('customer_id') ? old('customer_id') : ($model->customer_id ? $
                     @if ($errors->has('guarantee')) <span class="help-block">{{ $errors->first('guarantee') }}</span> @endif
                 </div>
 
-                <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
+                <div class="form-group {{$errors->has('terms_of_payment') ? 'has-error' : ''}}">
                     <label>Điều khoản thanh toán</label>
                     <input type="text" class="form-control" name="terms_of_payment" value="{{old('terms_of_payment') ? old('terms_of_payment') : $model->terms_of_payment}}"/>
                     @if ($errors->has('terms_of_payment')) <span class="help-block">{{ $errors->first('terms_of_payment') }}</span> @endif

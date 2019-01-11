@@ -55,17 +55,11 @@
                             <th style="vertical-align: middle">No.</th>
                             <th style="vertical-align: middle">Ngày</th>
                             <th style="vertical-align: middle">Khách hàng</th>
-                            <th style="vertical-align: middle">CS</th>
-                            <th style="vertical-align: middle;width: 120px">Điện áp <br/>đầu vào</th>
-                            <th style="vertical-align: middle;width: 120px">Điện áp <br/> đầu ra</th>
-                            <th style="vertical-align: middle;width: 120px">Tiêu chuẩn<br/>sản xuất</th>
-                            <th style="vertical-align: middle;width: 120px">Tiêu chuẩn<br/>xuất máy</th>
-                            <th style="vertical-align: middle">Tổ đấu</th>
+                            <th style="vertical-align: middle">Công suất</th>
                             <th style="vertical-align: middle">Nơi lắp</th>
-                            <th style="vertical-align: middle">Đơn giá</th>
+                            <th style="vertical-align: middle">Số lượng</th>
                             <th style="vertical-align: middle">Thành tiền</th>
                             <th style="vertical-align: middle;width: 120px">Hiệu lực<br/> báo giá</th>
-                            <th style="vertical-align: middle;width: 120px">Điều khoản<br/>thanh toán</th>
                             <th style="vertical-align: middle;">Trạng thái</th>
                             <th style="vertical-align: middle;width: 120px">Nhân viên KD</th>
                         </tr>
@@ -113,17 +107,15 @@
                                             {!! $item->formatCustomer('<br/>') !!}
                                         </a>
                                     </td>
-                                    <td>{{$item->power}}</td>
-                                    <td>{{$item->voltage_input}}</td>
-                                    <td>{{$item->voltage_output}}</td>
-                                    <td>{{$item->formatStandard()}}</td>
-                                    <td>{{$item->formatStandardReal()}}</td>
-                                    <td>{{$item->formatGroupWork()}}</td>
+                                    <td>
+                                        {{$item->power}}<br/>
+                                        {{$item->voltage_input}}<br/>
+                                        {{$item->voltage_output}}
+                                    </td>
                                     <td>{{$item->delivery_at}}</td>
-                                    <td>{{$item->formatPrice()}}</td>
+                                    <td>{{$item->amount}}</td>
                                     <td>{{$item->formatTotalMoney()}}</td>
                                     <td>{{empty($item->expired) ? '' : $item->expired.' ngày'}}</td>
-                                    <td>{{$item->terms_of_payment}}</td>
                                     <td>{!! $item->formatStatus() !!}</td>
                                     <td><strong class="text-danger">{!! $item->formatUser() !!}</strong></td>
 

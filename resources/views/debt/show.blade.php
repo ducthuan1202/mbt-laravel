@@ -98,8 +98,11 @@
                                 @if(count($payments))
 
                                     @foreach($payments as $item)
-                                        @php if($item->status == \App\PaymentSchedule::PAID_STATUS) $sum += $item->money; @endphp
-                                        <tr>
+                                        @php
+                                            $hasPaid = ($item->status == \App\PaymentSchedule::PAID_STATUS);
+                                            if($hasPaid) $sum += $item->money;
+                                        @endphp
+                                        <tr class="{{$hasPaid ? 'bg-success' : ''}}">
                                             <td {{(!empty($item->note)) ? 'rowspan=2' : ''}} style="vertical-align: middle; width: 150px">{{$item->formatDate()}}</td>
                                             <td>{{$item->formatMoney()}}</td>
                                             <td>{!! $item->formatStatus() !!}</td>

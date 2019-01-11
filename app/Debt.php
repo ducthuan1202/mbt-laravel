@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\DB;
  *
  * @property Order order
  * @property Customer customer
+ * @property PaymentSchedule payments
  *
  */
 class Debt extends Model
@@ -114,6 +115,11 @@ class Debt extends Model
         return $this->hasOne(Order::class, 'id', 'order_id');
     }
 
+    public function payments()
+    {
+        return $this->hasMany(PaymentSchedule::class, 'order_id', 'id');
+    }
+
     public function customer()
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');
@@ -122,7 +128,11 @@ class Debt extends Model
     // TODO: QUERY DATA =========
     public function search($searchParams = [])
     {
-        $model = $this->with(['order', 'customer', 'order.customer']);
+        $model = $this->with(['order', 'customer', 'order.customer','payments' => function ($query) {
+            $query->where('status', PaymentSchedule::PAID_STATUS)
+                ->where('type', PaymentSchedule::DEBT_TYPE);
+        }]);
+
         $model = $model->orderBy('id', 'desc');
 
         if (isset($searchParams['user']) && !empty($searchParams['user'])) {
@@ -345,4 +355,21 @@ class Debt extends Model
         return Common::UNKNOWN_TEXT;
     }
 
+    public function formatHasPaid(){
+        $hasPaid = 0;
+        foreach ($this->payments as $paid):
+            $hasPaid += (int) $paid->money;
+        endforeach;
+
+        return Common::formatMoney($hasPaid);
+    }
+
+    public function formatNotPaid(){
+        $hasPaid = 0;
+        foreach ($this->payments as $paid):
+            $hasPaid += (int) $paid->money;
+        endforeach;
+        $total = $this->total_money - $hasPaid;
+        return Common::formatMoney($total);
+    }
 }

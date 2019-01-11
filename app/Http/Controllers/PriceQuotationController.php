@@ -63,6 +63,8 @@ class PriceQuotationController extends Controller
         $model->quotations_date = date('Y-m-d');
         $model->amount = 1;
         $model->total_money = 0;
+        $model->terms_of_payment = 'Thanh toán giá trị còn lại trước khi nhận hàng';
+        $model->expired = 20;
         $shared = [
             "model" => $model,
             'users'=>$userModel->getDropDownList(),

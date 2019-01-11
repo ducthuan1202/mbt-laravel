@@ -94,6 +94,8 @@ class PriceQuotation extends Model
         'setup_at.required' => 'Địa chỉ lắp đặt không thể bỏ trống.',
         'delivery_at.required' => 'Địa chỉ giao hàng không thể bỏ trống.',
         'status.required' => 'Chọn trạng thái.',
+        'expired.required' => 'Hiệu lực báo giá không thể bỏ trống.',
+        'terms_of_payment.required' => 'Điều khoản thanh toán không thể bỏ trống.',
     ];
 
     public $validateRules = [
@@ -112,6 +114,8 @@ class PriceQuotation extends Model
         'setup_at' => 'required',
         'delivery_at' => 'required',
         'status' => 'required',
+        'expired' => 'required',
+        'terms_of_payment' => 'required',
     ];
 
     private function getUserLogin()
