@@ -114,7 +114,7 @@
                                         <td>{{ $index + $data->firstItem() }}</td>
                                         <td><b class="text-success">{{$item->formatUser()}}</b></td>
                                         <td>
-                                            <a href="{{route('payment-schedules.index', $item->id)}}" style="text-decoration: underline">
+                                            <a href="{{route('orders.show', $item->id)}}" style="text-decoration: underline">
                                                 {!! $item->formatCustomer('<br/>') !!}
                                             </a>
                                             <br/>
@@ -126,7 +126,6 @@
                                                 <ul role="menu" class="dropdown-menu">
 
                                                     <li>
-                                                        {{--<a href="{{route('payment-schedules.index', $item->id)}}"><i class="fa fa-folder"></i> Xem đơn hàng</a>--}}
                                                         <a href="{{route('orders.show', $item->id)}}"><i class="fa fa-folder"></i> Xem đơn hàng</a>
                                                     </li>
                                                     <li>
