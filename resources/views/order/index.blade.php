@@ -97,33 +97,13 @@
                                 <th style="vertical-align: middle">Khách hàng</th>
                                 <th style="vertical-align: middle">Ngày vào sản xuất</th>
                                 <th style="vertical-align: middle">Ngày ĐK giao</th>
-                                <th style="vertical-align: middle">Ngày thay đổi</th>
                                 <th style="vertical-align: middle">Ngày giao thực tế</th>
                                 <th style="vertical-align: middle">Số máy</th>
                                 <th style="vertical-align: middle">Công suất</th>
-                                <th style="vertical-align: middle">Điện áp vào</th>
-                                <th style="vertical-align: middle">Điện áp ra</th>
                                 <th style="vertical-align: middle">Số lượng</th>
-                                <th style="vertical-align: middle">Tiêu chuẩn sản xuất</th>
-                                <th style="vertical-align: middle">Tiêu chuẩn xuất máy</th>
-                                <th style="vertical-align: middle">Tổ đấu</th>
-                                <th style="vertical-align: middle">Nơi lắp</th>
-                                <th style="vertical-align: middle">Nơi giao</th>
-                                <th style="vertical-align: middle">Bảo hành</th>
-                                <th style="vertical-align: middle">Ngoại hình</th>
-                                <th style="vertical-align: middle">Ghi chú 1</th>
-                                <th style="vertical-align: middle">Đơn giá</th>
-                                <th style="vertical-align: middle">Thanh toán</th>
                                 <th style="vertical-align: middle">Thành tiền</th>
-                                <th style="vertical-align: middle">VAT</th>
-                                <th style="vertical-align: middle">Chênh lệch VAT</th>
-                                <th style="vertical-align: middle">Tạm ứng</th>
-                                <th style="vertical-align: middle">Hạn thanh toán</th>
                                 <th style="vertical-align: middle">Đã tạm ứng</th>
                                 <th style="vertical-align: middle">Số tiền còn lại</th>
-                                <th style="vertical-align: middle">Số ngày vào KHSX</th>
-                                <th style="vertical-align: middle">Quá hạn giao máy</th>
-                                <th style="vertical-align: middle">Loại hàng</th>
                                 <th style="vertical-align: middle">Lý do xuất</th>
                             </tr>
                         </thead>
@@ -161,7 +141,6 @@
                                             </div>
 
                                         </td>
-                                        <td>{{$item->formatStartDate()}}</td>
                                         <td>{{$item->formatShippedDate()}}</td>
                                         <td>{{$item->formatDateBuild()}}</td>
                                         <td>{{$item->formatShippedDateReal()}}</td>
