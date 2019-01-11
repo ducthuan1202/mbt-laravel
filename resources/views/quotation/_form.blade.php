@@ -135,13 +135,10 @@ $customerId = old('customer_id') ? old('customer_id') : ($model->customer_id ? $
                     @if ($errors->has('guarantee')) <span class="help-block">{{ $errors->first('guarantee') }}</span> @endif
                 </div>
 
-                <div class="form-group">
+                <div class="form-group {{$errors->has('guarantee') ? 'has-error' : ''}}">
                     <label>Điều khoản thanh toán</label>
-                    <select name="terms_of_payment" class="form-control chosen-select">
-                        @foreach($model->listTermsOfPayment() as $key => $val)
-                            <option value="{{ $key }}" {{ ($key == $model->terms_of_payment || $key == old('terms_of_payment')) ? 'selected' : '' }}>{!! $val !!}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" class="form-control" name="terms_of_payment" value="{{old('terms_of_payment') ? old('terms_of_payment') : $model->terms_of_payment}}"/>
+                    @if ($errors->has('terms_of_payment')) <span class="help-block">{{ $errors->first('terms_of_payment') }}</span> @endif
                 </div>
 
             </div>

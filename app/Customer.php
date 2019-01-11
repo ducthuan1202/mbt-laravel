@@ -68,7 +68,7 @@ class Customer extends Model
         'city_id' => 'required',
         'user_id' => 'required',
         'name' => 'required|max:255',
-        'mobile' => 'required|unique:customers,mobile',
+        'mobile' => 'required',
         'status' => 'required',
     ];
 

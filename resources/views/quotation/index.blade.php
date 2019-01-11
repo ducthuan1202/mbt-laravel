@@ -123,7 +123,7 @@
                                     <td>{{$item->formatPrice()}}</td>
                                     <td>{{$item->formatTotalMoney()}}</td>
                                     <td>{{empty($item->expired) ? '' : $item->expired.' ngày'}}</td>
-                                    <td>{{$item->formatTermsOfPayment()}}</td>
+                                    <td>{{$item->terms_of_payment}}</td>
                                     <td>{!! $item->formatStatus() !!}</td>
                                     <td><strong class="text-danger">{!! $item->formatUser() !!}</strong></td>
 

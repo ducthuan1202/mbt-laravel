@@ -90,7 +90,9 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $model = new Customer();
-        $this->validate($request, $model->validateRules, $model->validateMessage);
+        $rules = array_merge($model->validateRules, ['mobile' => 'required|unique:customers,mobile']);
+        $this->validate($request, $rules, $model->validateMessage);
+
         $model->fill($request->all());
 
         $model->checkBeforeSave();

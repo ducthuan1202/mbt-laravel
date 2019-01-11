@@ -300,14 +300,6 @@ class PriceQuotation extends Model
         return $data;
     }
 
-    public function listTermsOfPayment()
-    {
-        $data = [];
-        $data['1'] = 'Thanh toán giá trị còn lại trước khi nhận hàng';
-        $data['2'] = 'Tạm ứng 30% giá trị khi chính thức đặt hàng';
-        return $data;
-    }
-
     public function listStandard($addAll = false)
     {
         $data = [];

@@ -89,7 +89,7 @@
                 @endif
 
                 <div class="table-responsive">
-                    <table class="table table-striped jambo_table bulk_action" style="width: 3000px">
+                    <table class="table table-striped jambo_table bulk_action">
                         <thead>
                             <tr class="headings">
                                 <th style="vertical-align: middle">No.</th>
@@ -97,14 +97,14 @@
                                 <th style="vertical-align: middle">Khách hàng</th>
                                 <th style="vertical-align: middle">Ngày vào sản xuất</th>
                                 <th style="vertical-align: middle">Ngày ĐK giao</th>
-                                <th style="vertical-align: middle">Ngày giao thực tế</th>
                                 <th style="vertical-align: middle">Số máy</th>
                                 <th style="vertical-align: middle">Công suất</th>
                                 <th style="vertical-align: middle">Số lượng</th>
                                 <th style="vertical-align: middle">Thành tiền</th>
-                                <th style="vertical-align: middle">Đã tạm ứng</th>
+                                <th style="vertical-align: middle">Đã thanh toán</th>
                                 <th style="vertical-align: middle">Số tiền còn lại</th>
-                                <th style="vertical-align: middle">Lý do xuất</th>
+                                <th style="vertical-align: middle">Đk giao hàng</th>
+                                <th style="vertical-align: middle">Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -116,7 +116,7 @@
                                         <td><b class="text-success">{{$item->formatUser()}}</b></td>
                                         <td>
                                             <a href="{{route('payment-schedules.index', $item->id)}}" style="text-decoration: underline">
-                                            {!! $item->formatCustomer('<br/>') !!}
+                                                {!! $item->formatCustomer('<br/>') !!}
                                             </a>
                                             <br/>
 
@@ -141,35 +141,16 @@
                                             </div>
 
                                         </td>
+                                        <td>{{$item->formatStartDate()}}</td>
                                         <td>{{$item->formatShippedDate()}}</td>
-                                        <td>{{$item->formatDateBuild()}}</td>
-                                        <td>{{$item->formatShippedDateReal()}}</td>
                                         <td>{{$item->product_number}}</td>
-                                        <td>{{$item->power}}</td>
-                                        <td>{{$item->voltage_input}}</td>
-                                        <td>{{$item->voltage_output}}</td>
+                                        <td>{{$item->power}}<br/>{{$item->voltage_input}}<br/>{{$item->voltage_output}}</td>
                                         <td>{{$item->amount}}</td>
-                                        <td>{{$item->formatStandard()}}</td>
-                                        <td>{{$item->formatStandardReal()}}</td>
-                                        <td>{{$item->formatGroupWork()}}</td>
-                                        <td>{{$item->setup_at}}</td>
-                                        <td>{{$item->delivery_at}}</td>
-                                        <td>{{$item->guarantee}} tháng</td>
-                                        <td>{{$item->formatSkin()}}</td>
-                                        <td>{!! $item->note !!}</td>
-                                        <td>{{$item->formatPrice()}}</td>
-                                        <td>---</td>
                                         <td>{{$item->formatTotalMoney()}}</td>
-                                        <td>{{$item->formatVat()}}</td>
-                                        <td>{{$item->formatDifferenceVat()}}</td>
-                                        <td>{{$item->formatPrePayRequiredText()}}</td>
-                                        <td>hạn tt</td>
-                                        <td>{{$item->formatPrePay()}}</td>
-                                        <td>{{$item->formatDebt() }}</td>
-                                        <td>{{$item->formatDateBuild()}} ngày</td>
-                                        <td>{{$item->formatOutDate()}} ngày</td>
-                                        <td>{{$item->formatProductType()}}</td>
-                                        <td>{{$item->formatConditionPass()}}</td>
+                                        <td>0 vnđ</td>
+                                        <td>0 vnđ</td>
+                                        <td>{!! $item->formatPrePayRequired() !!}</td>
+                                        <td>{!! $item->formatStatus() !!}</td>
                                     </tr>
                                 @endforeach
                             @else
