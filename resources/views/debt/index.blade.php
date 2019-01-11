@@ -52,11 +52,11 @@
                         <tr class="headings">
                             <th>No.</th>
                             <th>Khách hàng</th>
+                            <th>Công ty</th>
                             <th>Khu vực</th>
                             <th>Ngày tạo</th>
                             <th>Số nợ</th>
                             <th>Nhân viên KD</th>
-                            <th>Trạng Thái</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -65,15 +65,23 @@
                             @foreach($data as $index => $item)
                                 <tr>
                                     <td>{{ $index + $data->firstItem() }}</td>
-                                    <td>{!! $item->formatCustomer() !!}</td>
+                                    <td>
+                                        <a href="{{route('customers.show', ['id'=>$item->customer->id])}}">
+                                            {!! $item->formatCustomer() !!}
+                                        </a>
+                                    </td>
+                                    <td>{{$item->customer->formatCompany()}}</td>
                                     <td>{{$item->formatCustomerCity()}}</td>
                                     <td>{{$item->formatDateCreate()}}</td>
                                     <td>{{$item->formatMoney()}}</td>
                                     <td>{{$item->formatCustomerUser()}}</td>
-                                    <td>{!! $item->formatType() !!}</td>
                                     <td class="text-right">
                                         @can('admin')
                                             @if($item->status == \App\Debt::OLD_STATUS)
+                                                <a href="{{route('debts.show', $item->id)}}"
+                                                   class="btn btn-success btn-xs">
+                                                    <i class="fa fa-folder"></i> Xem
+                                                </a>
                                                 <a href="{{route('debts.edit', $item->id)}}"
                                                    class="btn btn-info btn-xs">
                                                     <i class="fa fa-pencil"></i> Sửa

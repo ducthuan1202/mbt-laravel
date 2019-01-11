@@ -41,6 +41,38 @@ var MBT_PaymentSchedule = function () {
         });
     };
 
+    var toSaveDebt = function (debtId) {
+        var data = $("#payment-schedule-form").serialize();
+
+        sendAjax({
+            url: "/payment-schedules/" + debtId + '/debt',
+            method: "POST",
+            data: data,
+            beforeSend: function () {
+                $('#btnSave').html('đang lưu dữ liệu...');
+            },
+            fnSuccess: function (response) {
+                if (response.success) {
+                    alertSuccess({title: response.message});
+                    setTimeout(function () {
+                        window.location.reload(true);
+                    }, 1e3);
+                } else {
+                    alertError({title: response.message});
+                }
+            },
+            fnError: function(response){
+                var data = response.responseJSON;
+                if(data.hasOwnProperty('errors')){
+                    $("#display-error").html(printError(data.errors)).removeClass('hidden');
+                } else {
+                    $("#display-error").html('không thể lưu dữ liệu').removeClass('hidden');
+                }
+                $('#btnSave').html('Lưu');
+            }
+        });
+    };
+
 
     var openForm = function(id){
 
@@ -102,8 +134,11 @@ var MBT_PaymentSchedule = function () {
 
 
     return {
-        toSave: function (orderId) {
-            toSave(orderId);
+        toSave: function (id) {
+            toSave(id);
+        },
+        toSaveDebt: function (id) {
+            toSaveDebt(id);
         },
         openForm: function (id) {
             openForm(id);

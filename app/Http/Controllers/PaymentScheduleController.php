@@ -22,6 +22,7 @@ class PaymentScheduleController extends Controller
         $order = Order::findOrFail($orderId);
         $model = new PaymentSchedule();
         $model->order_id = $order->id;
+        $model->type = PaymentSchedule::ORDER_TYPE;
 
         $shared = [
             "model" => $model,
@@ -89,6 +90,36 @@ class PaymentScheduleController extends Controller
         return response()->json($output);
     }
 
+    public function storeDebt(Request $request, $debtId)
+    {
+
+        /**
+         * @var $order Order
+         * @var $debt Debt
+         */
+        $debt = Debt::findOrFail($debtId);
+        $model = new PaymentSchedule();
+
+        $this->validate($request, $model->validateRules, $model->validateMessage);
+        $model->fill($request->all());
+
+        $model->order_id = $debt->id;
+        $model->payment_date = Common::dmY2Ymd($model->payment_date);
+
+        $output = [
+            'success' => false,
+            'message' => Messages::UPDATE_ERROR
+        ];
+
+        if ($model->save()) {
+            $output = [
+                'success' => true,
+                'message' => Messages::UPDATE_SUCCESS
+            ];
+        }
+        return response()->json($output);
+    }
+
     /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
@@ -112,84 +143,6 @@ class PaymentScheduleController extends Controller
         return response()->json($output);
     }
 
-    public function saveForm_bk(Request $request, $id)
-    {
-
-        /**
-         * @var $model PaymentSchedule
-         * @var $debt Debt
-         * @var $order Order
-         */
-
-
-        $model = PaymentSchedule::findOrFail($id);
-        $oldData = $model->getOriginal();
-
-        $rules = $model->validateRules;
-        unset($rules['order_id']);
-
-        $this->validate($request, $rules, $model->validateMessage);
-        $model->fill($request->all());
-        $model->payment_date = Common::dmY2Ymd($model->payment_date);
-
-        // get debt
-        $debt = Debt::where('order_id', $model->order_id)->first();
-
-        if (!$debt) {
-            return response()->json([
-                'success' => false,
-                'message' => Messages::UPDATE_ERROR
-            ]);
-        }
-
-        $order = Order::find($model->order_id);
-
-        $oldMoney = $oldData['money'];
-        $newMoney = $model->money;
-
-        if ($model->getOriginal('status') == PaymentSchedule::PAID_STATUS) {
-            if ($model->status == PaymentSchedule::PAID_STATUS) {
-                // cập nhật lại công nợ
-                $debt->total_money = ($debt->total_money - $oldMoney) + $newMoney;
-            } else {
-                $debt->total_money = $debt->total_money - $oldMoney;
-            }
-        } else {
-            if ($model->status == PaymentSchedule::PAID_STATUS) {
-                // cập nhật công nợ
-                $debt->total_money = $debt->total_money - $newMoney;
-            }
-        }
-
-        // update payment schedule
-        if ($model->save()) {
-
-            // update debt
-            if ($debt->save()) {
-                $output = [
-                    'success' => true,
-                    'message' => Messages::UPDATE_SUCCESS
-                ];
-            } else {
-                // backup data if fail
-                $model->fill($oldData);
-                $model->save();
-                $output = [
-                    'success' => false,
-                    'message' => Messages::UPDATE_ERROR,
-                    'code' => 1
-                ];
-            }
-        } else {
-            $output = [
-                'success' => false,
-                'message' => Messages::UPDATE_ERROR,
-                'code' => 2
-            ];
-        }
-        return response()->json($output);
-    }
-
     /**
      * @param Request $request
      * @param $id
@@ -198,13 +151,11 @@ class PaymentScheduleController extends Controller
      */
     public function saveForm(Request $request, $id)
     {
-
         /**
          * @var $model PaymentSchedule
          * @var $debt Debt
          * @var $order Order
          */
-
         $model = PaymentSchedule::findOrFail($id);
         $order = Order::findOrFail($model->order_id);
 

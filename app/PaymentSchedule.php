@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer id
  *
  * @property integer order_id
+ * @property integer type
  * @property string money
  * @property string payment_date
  * @property string status
@@ -30,6 +31,9 @@ class PaymentSchedule extends Model
         PAID_STATUS = 1,
         PENDING_STATUS = 2,
         DELAY_STATUS = 3;
+    const
+        ORDER_TYPE = 1,
+        DEBT_TYPE = 2;
 
     protected $table = 'payment_schedules';
     /**
@@ -37,7 +41,7 @@ class PaymentSchedule extends Model
      *
      * @var array
      */
-    protected $fillable = ['order_id', 'money', 'payment_date', 'status', 'note'];
+    protected $fillable = ['order_id', 'type', 'money', 'payment_date', 'status', 'note'];
 
     public $validateMessage = [
         'order_id.required' => 'Chọn đơn hàng cần lên lịch thanh toán.',
@@ -68,16 +72,18 @@ class PaymentSchedule extends Model
 
     public function search()
     {
-        return $this->where('order_id', $this->order_id)
-            ->orderBy('payment_date', 'asc')->get();
+        $model = $this->where('order_id', $this->order_id)
+            ->where('type', $this->type);
+        return $model->orderBy('payment_date', 'asc')->get();
     }
 
-    private function getPayment($date){
+    private function getPayment($date)
+    {
         $date = Common::extractDate($date);
         $startDate = Common::dmY2Ymd($date[0]);
         $endDate = Common::dmY2Ymd($date[1]);
 
-        return self::with(['order', 'order.customer','order.customer.city','order.user' ])
+        return self::with(['order', 'order.customer', 'order.customer.city', 'order.user'])
             ->whereBetween('payment_date', [$startDate, $endDate])
             ->orderBy('payment_date', 'desc');
     }
@@ -100,6 +106,7 @@ class PaymentSchedule extends Model
     {
         return $this->where('order_id', $id)->count();
     }
+
     // TODO:  LIST DATA =====
     public function listStatus($addAll = false)
     {

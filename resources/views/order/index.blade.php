@@ -110,7 +110,6 @@
                         <tbody>
                             @if(count($data))
                                 @foreach($data as $index => $item)
-
                                     <tr>
                                         <td>{{ $index + $data->firstItem() }}</td>
                                         <td><b class="text-success">{{$item->formatUser()}}</b></td>
@@ -125,8 +124,10 @@
                                                         type="button" aria-expanded="false">Hành động <span class="caret"></span>
                                                 </button>
                                                 <ul role="menu" class="dropdown-menu">
+
                                                     <li>
-                                                        <a href="{{route('payment-schedules.index', $item->id)}}"><i class="fa fa-folder"></i> Xem đơn hàng</a>
+                                                        {{--<a href="{{route('payment-schedules.index', $item->id)}}"><i class="fa fa-folder"></i> Xem đơn hàng</a>--}}
+                                                        <a href="{{route('orders.show', $item->id)}}"><i class="fa fa-folder"></i> Xem đơn hàng</a>
                                                     </li>
                                                     <li>
                                                         <a href="{{route('orders.edit', $item->id)}}"><i class="fa fa-pencil"></i> Sửa đơn hàng</a>
@@ -147,8 +148,8 @@
                                         <td>{{$item->power}}<br/>{{$item->voltage_input}}<br/>{{$item->voltage_output}}</td>
                                         <td>{{$item->amount}}</td>
                                         <td>{{$item->formatTotalMoney()}}</td>
-                                        <td>0 vnđ</td>
-                                        <td>0 vnđ</td>
+                                        <td>{{$item->formatHasPaid()}}</td>
+                                        <td>{{$item->formatNotPaid()}}</td>
                                         <td>{!! $item->formatPrePayRequired() !!}</td>
                                         <td>{!! $item->formatStatus() !!}</td>
                                     </tr>

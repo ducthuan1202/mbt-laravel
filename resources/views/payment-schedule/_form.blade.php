@@ -17,6 +17,7 @@
 {{csrf_field()}}
 
 <input type="hidden" name="order_id" value="{{$order->id}}" />
+<input type="hidden" name="type" value="{{$type}}" />
 
 <div class="row">
     <div class="col-xs-12 col-sm-4 col-md-4">
@@ -57,6 +58,9 @@
 
 <div class="ln_solid"></div>
 <div class="form-group">
-    <button type="button" class="btn btn-success" id="btnSave"
-            onclick="MBT_PaymentSchedule.toSave('{{$order->id}}');">Lưu lịch trình</button>
+    @if($type == \App\PaymentSchedule::DEBT_TYPE)
+        <button type="button" class="btn btn-success" id="btnSave" onclick="MBT_PaymentSchedule.toSaveDebt('{{$order->id}}');">Lưu lịch trình</button>
+    @else
+        <button type="button" class="btn btn-success" id="btnSave" onclick="MBT_PaymentSchedule.toSave('{{$order->id}}');">Lưu lịch trình</button>
+    @endif
 </div>

@@ -6,6 +6,7 @@ use App\City;
 use App\Customer;
 use App\Debt;
 use App\Helpers\Messages;
+use App\PaymentSchedule;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -151,6 +152,25 @@ class DebtController extends Controller
             ->with('success', Messages::INSERT_SUCCESS);
     }
 
+    public function show($id){
+
+        $model = Debt::with(['customer', 'customer.user'])
+            ->where('id', $id)
+            ->first();
+
+        $paymentScheduleModel = new PaymentSchedule();
+        $paymentScheduleModel->order_id = $model->id;
+        $paymentScheduleModel->type = PaymentSchedule::DEBT_TYPE;
+        $payments = $paymentScheduleModel->search();
+
+        $shared = [
+            "model" => $model,
+            "payments" => $payments,
+            "paymentSchedule" => $paymentScheduleModel,
+        ];
+
+        return view('debt.show', $shared);
+    }
     /**
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

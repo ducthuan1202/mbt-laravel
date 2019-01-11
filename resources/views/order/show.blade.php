@@ -1,8 +1,8 @@
 @php
     use \App\Helpers\Common;
     /**
-    * @var $order \App\Order
-    * @var $data \App\PaymentSchedule[]
+    * @var $model \App\Order
+    * @var $payments \App\PaymentSchedule[]
     */
     $sum = 0;
 @endphp
@@ -11,33 +11,25 @@
 @section('title') {{$title}} @endsection
 
 @section('content')
-
     <div class="right_col" role="main">
-
-
         @if($message = Session::get('success'))
             <div class="alert alert-success">{{$message}}</div>
         @endif
 
         <div class="clearfix">
-
-            <a href="{{route('orders.edit', $order->id)}}" class="btn btn-info">
+            <a href="{{route('orders.edit', $model->id)}}" class="btn btn-info">
                 <i class="fa fa-pencil"></i> Sửa
             </a>
-
             <button onclick="window.history.back()" class="btn btn-default pull-right">
-                <i class="fa fa-reply"></i>  Quay lại</button>
+                <i class="fa fa-reply"></i>  Quay lại
+            </button>
         </div>
-
 
         <div class="row">
             <div class="col-xs-12 col-md-5">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>
-                            {{$title}} #{{$order->code}}
-                        </h2>
-
+                        <h2>{{$title}} #{{$model->code}}</h2>
 
                         <div class="clearfix"></div>
                     </div>
@@ -48,120 +40,120 @@
                                 <tbody>
                                 <tr class="bg-warning">
                                     <td>Nhân viên</td>
-                                    <td>{!! $order->formatUser()!!}</td>
+                                    <td>{!! $model->formatUser()!!}</td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Mã đơn hàng</td>
-                                    <td><kbd>{{$order->code}}</kbd></td>
+                                    <td><kbd>{{$model->code}}</kbd></td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Trạng thái đơn hàng</td>
-                                    <td>{!! $order->formatStatus() !!}</td>
+                                    <td>{!! $model->formatStatus() !!}</td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Khách hàng</td>
-                                    <td>{!! $order->formatCustomer() !!}</td>
+                                    <td>{!! $model->formatCustomer() !!}</td>
                                 </tr>
                                 <tr>
                                     <td>Khu vực</td>
-                                    <td>{{$order->formatCustomerCity()}}</td>
+                                    <td>{{$model->formatCustomerCity()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Ngày vào sản xuất</td>
-                                    <td>{{$order->formatStartDate()}}</td>
+                                    <td>{{$model->formatStartDate()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Ngày đăng ký giao hàng</td>
-                                    <td>{{$order->formatShippedDate()}}</td>
+                                    <td>{{$model->formatShippedDate()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Ngày giao hàng thực tế</td>
-                                    <td>{{$order->formatShippedDateReal()}}</td>
+                                    <td>{{$model->formatShippedDateReal()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Địa chỉ lắp đặt</td>
-                                    <td>{{$order->setup_at}}</td>
+                                    <td>{{$model->setup_at}}</td>
                                 </tr>
                                 <tr>
                                     <td>Địa chỉ giao hàng</td>
-                                    <td>{{$order->delivery_at}}</td>
+                                    <td>{{$model->delivery_at}}</td>
                                 </tr>
                                 <tr>
                                     <td>Số lượng</td>
-                                    <td>{{$order->amount}}</td>
+                                    <td>{{$model->amount}}</td>
                                 </tr>
                                 <tr>
                                     <td>Giá bán</td>
-                                    <td>{{$order->formatPrice()}}</td>
+                                    <td>{{$model->formatPrice()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Thành tiền</td>
-                                    <td>{{$order->formatTotalMoney()}}</td>
+                                    <td>{{$model->formatTotalMoney()}}</td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>VAT</td>
-                                    <td><span class="red">{{$order->formatVat()}}</span></td>
+                                    <td><span class="red">{{$model->formatVat()}}</span></td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Chênh lệc VAT</td>
-                                    <td><span class="red">{{$order->formatDifferenceVat()}}</span></td>
+                                    <td><span class="red">{{$model->formatDifferenceVat()}}</span></td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Tạm ứng trước khi giao</td>
-                                    <td>{{$order->formatPrePayRequiredText()}}</td>
+                                    <td>{{$model->formatPrePayRequiredText()}}</td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Đã tạm ứng</td>
                                     <td>
-                                        <span class="blue">{{$order->formatPrePay()}}</span>
+                                        <span class="blue">{{$model->formatPrePay()}}</span>
                                     </td>
                                 </tr>
                                 <tr class="bg-warning">
                                     <td>Còn lại</td>
-                                    <td>{{$order->formatPaymentPreShip()}}</td>
+                                    <td>{{$model->formatPaymentPreShip()}}</td>
                                 </tr>
                                 <tr class="bg-success">
                                     <td>Số máy</td>
-                                    <td><kbd>{{ $order->product_number }}</kbd></td>
+                                    <td><kbd>{{ $model->product_number }}</kbd></td>
                                 </tr>
                                 <tr>
                                     <td>Công suất</td>
-                                    <td>{{ $order->power }} kvA</td>
+                                    <td>{{ $model->power }} kvA</td>
                                 </tr>
 
                                 <tr>
                                     <td>Điện áp vào</td>
-                                    <td>{{ $order->voltage_input }} kv</td>
+                                    <td>{{ $model->voltage_input }} kv</td>
                                 </tr>
                                 <tr>
                                     <td>Điện áp ra</td>
-                                    <td>{{ $order->voltage_output}} kv</td>
+                                    <td>{{ $model->voltage_output}} kv</td>
                                 </tr>
 
                                 <tr>
                                     <td>Kiểu máy</td>
-                                    <td>{{$order->formatType()}}</td>
+                                    <td>{{$model->formatType()}}</td>
                                 </tr>
 
                                 <tr>
                                     <td>Ngoại hình máy</td>
-                                    <td>{{$order->formatSkin()}}</td>
+                                    <td>{{$model->formatSkin()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Bảo hành</td>
-                                    <td>{{$order->guarantee}} tháng</td>
+                                    <td>{{$model->guarantee}} tháng</td>
                                 </tr>
                                 <tr>
                                     <td>Tiêu chuẩn</td>
-                                    <td>{{$order->formatStandard()}}</td>
+                                    <td>{{$model->formatStandard()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Lý do xuất</td>
-                                    <td>{{$order->formatConditionPass()}}</td>
+                                    <td>{{$model->formatConditionPass()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Ghi chú đơn hàng</td>
-                                    <td style="width: 60%">{{$order->note}}</td>
+                                    <td style="width: 60%">{{$model->note}}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -190,9 +182,9 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @if(count($data))
+                                @if(count($payments))
 
-                                    @foreach($data as $item)
+                                    @foreach($payments as $item)
                                         @php if($item->status == \App\PaymentSchedule::PAID_STATUS) $sum += $item->money; @endphp
                                         <tr>
                                             <td {{(!empty($item->note)) ? 'rowspan=2' : ''}} style="vertical-align: middle; width: 150px">{{$item->formatDate()}}</td>
@@ -232,7 +224,11 @@
                     <div class="x_content">
                         <div id="display-error" class="alert alert-danger hidden"></div>
                         <form id="payment-schedule-form" onsubmit="return;">
-                            @include('payment-schedule._form')
+                            @include('payment-schedule._form', [
+                                'model'=>$paymentSchedule,
+                                'order'=>$model,
+                                'type'=>\App\PaymentSchedule::ORDER_TYPE
+                            ])
                         </form>
                     </div>
                 </div>
@@ -249,19 +245,19 @@
                             <table class="table table-striped">
                                 <tr>
                                     <td>Tổng đơn hàng</td>
-                                    <td class="text-right">{{$order->formatTotalMoney()}}</td>
+                                    <td class="text-right">{{$model->formatTotalMoney()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Tạm ứng</td>
-                                    <td class="text-right">{{$order->formatPrePay()}}</td>
+                                    <td class="text-right">{{$model->formatPrePay()}}</td>
                                 </tr>
                                 <tr>
                                     <td>VAT</td>
-                                    <td class="text-right">{{$order->formatVat()}}</td>
+                                    <td class="text-right">{{$model->formatVat()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Chênh lệch VAT</td>
-                                    <td class="text-right">{{$order->formatDifferenceVat()}}</td>
+                                    <td class="text-right">{{$model->formatDifferenceVat()}}</td>
                                 </tr>
                                 <tr>
                                     <td>Đã thanh toán</td>
@@ -269,7 +265,7 @@
                                 </tr>
                                 <tr>
                                     <td>Còn lại</td>
-                                    <td class="text-right">{{Common::formatMoney($order->getTotalMoneyWithoutPayment() -$sum)}}</td>
+                                    <td class="text-right">{{Common::formatMoney($model->getTotalMoneyWithoutPayment() -$sum)}}</td>
                                 </tr>
                             </table>
                         </div>

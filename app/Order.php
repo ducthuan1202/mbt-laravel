@@ -183,7 +183,8 @@ class Order extends Model
          * @var $userLogin User
          */
         $model = $this->with(['user', 'customer', 'customer.city', 'debt', 'payments' => function ($query) {
-            $query->where('status', PaymentSchedule::PAID_STATUS);
+            $query->where('status', PaymentSchedule::PAID_STATUS)
+            ->where('type', PaymentSchedule::ORDER_TYPE);
         }]);
 
         $userLogin = Auth::user();
@@ -662,6 +663,7 @@ class Order extends Model
     {
         return Common::formatDate($this->shipped_date_real);
     }
+
     public function formatDateChange()
     {
         return Common::formatDate($this->date_change);
@@ -693,6 +695,25 @@ class Order extends Model
     public function formatTotalMoney()
     {
         return Common::formatMoney($this->total_money);
+    }
+
+    public function formatHasPaid(){
+        $hasPaid = $this->prepay;
+
+        foreach ($this->payments as $paid):
+            $hasPaid += (int) $paid->money;
+        endforeach;
+
+        return Common::formatMoney($hasPaid);
+    }
+
+    public function formatNotPaid(){
+        $hasPaid = 0;
+        foreach ($this->payments as $paid):
+            $hasPaid += (int) $paid->money;
+        endforeach;
+        $total = $this->getTotalMoneyWithoutPayment() - $hasPaid;
+        return Common::formatMoney($total);
     }
 
     public function formatPrePay()

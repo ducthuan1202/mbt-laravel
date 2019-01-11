@@ -16,12 +16,8 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <h2>
-                    {{$title}}: #{{$model->name}}
-                </h2>
-
+                <h2>{{$title}}: #{{$model->name}}</h2>
                 <button onclick="window.history.back()" class="btn btn-default pull-right">Quay lại</button>
-
                 <div class="clearfix"></div>
             </div>
 
@@ -32,6 +28,10 @@
                         <tr>
                             <td>Họ tên</td>
                             <td>{{$model->name}}</td>
+                        </tr>
+                        <tr>
+                            <td>Ngày sinh</td>
+                            <td>{{$model->formatBirthDay()}}</td>
                         </tr>
                         <tr>
                             <td>Số điện thoại</td>
@@ -51,7 +51,7 @@
                         </tr>
                         <tr>
                             <td>Công ty</td>
-                            <td>{{$model->company}}</td>
+                            <td>{{$model->formatCompany()}}</td>
                         </tr>
                         <tr>
                             <td>Mã khách hàng</td>

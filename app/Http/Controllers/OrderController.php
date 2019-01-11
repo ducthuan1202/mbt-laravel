@@ -214,6 +214,21 @@ class OrderController extends Controller
         }
     }
 
+    public function show($id){
+        $model = Order::findOrFail($id);
+        $paymentScheduleModel = new PaymentSchedule();
+        $paymentScheduleModel->order_id = $model->id;
+        $paymentScheduleModel->type = PaymentSchedule::ORDER_TYPE;
+
+        $payments = $paymentScheduleModel->search();
+        $shared = [
+            "model" => $model,
+            "payments" => $payments,
+            "paymentSchedule" => $paymentScheduleModel,
+        ];
+        return view('order.show', $shared);
+    }
+
     /**
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

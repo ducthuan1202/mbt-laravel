@@ -54,7 +54,6 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                         <a href="{{route('cares.index')}}"><i class="fa fa-phone-square"></i> CSKH</a>
                     </li>
                     <li>
-                        {{--<a href="{{route('quotations.index')}}"><i class="fa fa-bullhorn"></i> Báo Giá</a>--}}
                         <a><i class="fa fa-bullhorn"></i> Báo Giá <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="{{route('quotations.index')}}">Tất cả</a></li>
@@ -63,21 +62,26 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                             <li><a href="{{route('quotations.index', ['status'=>\App\PriceQuotation::FAIL_STATUS])}}">Thất bại</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a><i class="fa fa-shopping-cart"></i> Đơn Hàng <span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
-                            <li><a href="{{route('orders.index')}}">Tất cả</a></li>
-                            <li><a href="{{route('orders.index', ['status'=>\App\Order::SHIPPED_STATUS])}}">Đã giao</a></li>
-                            <li><a href="{{route('orders.index', ['status'=>\App\Order::NOT_SHIPPED_STATUS])}}">Chưa giao</a></li>
-                            <li><a href="{{route('orders.index', ['status'=>\App\Order::CANCEL_STATUS])}}">Đã hủy</a></li>
-                        </ul>
-                    </li>
+
                     @can('admin')
                         <li>
-                            <a><i class="fa fa-slideshare"></i> Công Nợ <span class="fa fa-chevron-down"></span></a>
+                            <a><i class="fa fa-shopping-cart"></i> Đơn Hàng <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                                <li><a href="{{route('debts.list_old')}}">Công nợ cũ</a></li>
-                                <li><a href="{{route('debts.list_new')}}">Công nợ mới</a></li>
+                                <li><a href="{{route('orders.index')}}">Tất cả</a></li>
+                                <li><a href="{{route('orders.index', ['status'=>\App\Order::SHIPPED_STATUS])}}">Đã giao</a></li>
+                                <li><a href="{{route('orders.index', ['status'=>\App\Order::NOT_SHIPPED_STATUS])}}">Chưa giao</a></li>
+                                <li><a href="{{route('orders.index', ['status'=>\App\Order::CANCEL_STATUS])}}">Đã hủy</a></li>
+                            </ul>
+                        </li>
+                        <li class="{{Request::is('debts') || Request::is('debts/*')  ? 'active' : ''}}">
+                            <a><i class="fa fa-slideshare"></i> Công Nợ <span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu" style="{{Request::is('debts') || Request::is('debts/*')  ? 'display:block' : ''}}">
+                                <li>
+                                    <a href="{{route('debts.index', ['status'=>\App\Debt::OLD_STATUS])}}">Công nợ cũ</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('debts.index', ['status'=>\App\Debt::NEW_STATUS])}}">Công nợ mới</a>
+                                </li>
                             </ul>
                         </li>
                     @endcan
@@ -106,6 +110,8 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                                 <li><a href="{{route('report.money_future', ['date'=>$dateRangeNextMonth])}}">Tháng tới</a></li>
                             </ul>
                         </li>
+
+
                     @endcan
                 </ul>
             </div>

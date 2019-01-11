@@ -16,6 +16,7 @@ class CreatePaymentSchedules extends Migration
         Schema::create('payment_schedules', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id');
+            $table->boolean('type');
             $table->integer('money');
             $table->timestamp('payment_date')->nullable()->comment('ngày thanh toán');
             $table->string('status')->comment('[1:đã thanh toán, 2:hẹn thanh toán, 3:chậm thanh toán]');
