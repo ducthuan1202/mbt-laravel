@@ -120,6 +120,11 @@ class PaymentScheduleController extends Controller
         return response()->json($output);
     }
 
+    public function switchStatusPaymentSchedule(){
+        $paymentScheduleModel = new PaymentSchedule();
+        $paymentScheduleModel->updateStatusSchedule();
+        return 'hoàn thành';
+    }
     /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse

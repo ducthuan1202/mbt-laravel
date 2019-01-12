@@ -764,11 +764,43 @@ class Order extends Model
 
     public function checkConditionShip()
     {
-        if ($this->prepay_required == self::YES && $this->prepay <= 0) {
-            return false;
+        // tổng thanh toán = tạm ứng + số đã thanh toán
+        $totalPaid = $this->prepay;
+        if($this->payments){
+            foreach ($this->payments as $payment):
+                if($payment->status == PaymentSchedule::PAID_STATUS){
+                    $totalPaid += $payment->money;
+                }
+            endforeach;
         }
 
-        return true;
+        // nếu tổng thanh toán >= tổng tiền hóa đơn thì đủ đk giao hàng
+        // cho cả 2 trường hợp thanh toán trước hoặc sau giao
+        if($totalPaid >= $this->total_money){
+            return true;
+        }
+
+        // nếu đơn hàng thanh toán hết trước giao
+        if($this->payment_pre_shipped == self::YES){
+
+        }
+
+        // nếu đơn hàng thanh toán sau giao
+        if($this->payment_pre_shipped == self::NO){
+
+            // nếu đơn hàng yêu cầu tạm ứng trước 1 phần giá trị đơn hàng
+            if($this->prepay_required== self::YES && $this->prepay > 0){
+                return true;
+            }
+
+            // nếu đơn hàng không yêu cầu tạm ứng trước
+            else {
+                return true;
+            }
+        }
+
+        // còn lại thì trả về không đủ đk giao hàng
+        return false;
     }
 
 }

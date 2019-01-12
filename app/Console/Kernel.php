@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        "App\Console\Commands\cronPaymentSchedule"
     ];
 
     /**
@@ -26,6 +26,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+
+        // thực hiện lúc 00:01 mỗi ngày
+        $schedule->command('cron:paymentSchedule')
+            ->dailyAt("00:01");
     }
 
     /**

@@ -16,3 +16,6 @@ ALTER TABLE `orders` ADD `date_change` DATE NULL DEFAULT NULL AFTER `shipped_dat
 #===== 2019-01-11 =====
 ALTER TABLE `price_quotations` CHANGE `terms_of_payment` `terms_of_payment` VARCHAR(255) NULL DEFAULT NULL;
 ALTER TABLE `payment_schedules` ADD `type` BOOLEAN NOT NULL DEFAULT '1' COMMENT '1: đơn hàng; 2:nợ cũ' AFTER `order_id`;
+
+#===== 2019-01-12 =====
+ALTER TABLE `payment_schedules` CHANGE `payment_date` `payment_date` DATE NULL DEFAULT NULL COMMENT 'ngày thanh toán';

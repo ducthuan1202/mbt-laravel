@@ -14,7 +14,6 @@
 // Route::get('/import/customer', 'HomeController@importCustomer');
 // Route::get('/convert-data', 'HomeController@convertData');
 // Route::get('/update-code', 'HomeController@updateCode');
- Route::get('/export/quotation-form', 'HomeController@exportExcel');
 
 Route::namespace('Auth')->group(function () {
     Route::get('login', 'LoginController@showLoginForm')->name('login');
@@ -56,6 +55,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report/{userId}/orders', 'ReportController@ordersDetail')->name('report.orders_detail');
     Route::get('/report/money/present', 'ReportController@moneyPresent')->name('report.money_present');
     Route::get('/report/money/future', 'ReportController@moneyFuture')->name('report.money_future');
+
+    // cron job - ssps (switch status payment schedule)
+    Route::get('/cronjob/ssps', 'PaymentScheduleController@switchStatusPaymentSchedule')->name('cronjob.ssps');
 
     // resource
     Route::resource('cities', 'CityController')->except(['show']);

@@ -107,6 +107,24 @@ class PaymentSchedule extends Model
         return $this->where('order_id', $id)->count();
     }
 
+    /**
+     * Cron job schedule
+     * used: App\Console\Commands\cronPaymentSchedule
+     */
+    public function updateStatusSchedule(){
+        $currentDate = date('Y-m-d');
+        $paymentSchedule = self::where('status', self::PENDING_STATUS)
+            ->whereDate('payment_date', '<', $currentDate)
+            ->get();
+
+        if($paymentSchedule){
+            foreach ($paymentSchedule as $payment):
+                $payment->status = self::DELAY_STATUS;
+                $payment->save();
+            endforeach;
+        }
+    }
+
     // TODO:  LIST DATA =====
     public function listStatus($addAll = false)
     {
