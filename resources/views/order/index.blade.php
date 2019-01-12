@@ -105,6 +105,7 @@
                                 <th style="vertical-align: middle">Số tiền còn lại</th>
                                 <th style="vertical-align: middle">Đk giao hàng</th>
                                 <th style="vertical-align: middle">Trạng thái</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -151,6 +152,7 @@
                                         <td>{{$item->formatNotPaid()}}</td>
                                         <td>{!! $item->formatPrePayRequired() !!}</td>
                                         <td>{!! $item->formatStatus() !!}</td>
+                                        <td><span class="badge badge-inverse">{{count($item->payments)}}</span> </td>
                                     </tr>
                                 @endforeach
                             @else
