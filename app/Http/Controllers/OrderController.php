@@ -202,10 +202,8 @@ class OrderController extends Controller
             $debtModel = new Debt();
             $debtModel->syncWhenUpdateOrder($model);
 
-            $routeName = $model->getRouteName();
-
             return redirect()
-                ->route($routeName)
+                ->route('orders.index')
                 ->with('success', Messages::UPDATE_SUCCESS);
         } else {
             return redirect()
@@ -274,9 +272,8 @@ class OrderController extends Controller
             $debtModel->syncWhenUpdateOrder($model);
         }
 
-        $routeName = $model->getRouteName();
         return redirect()
-            ->route($routeName)
+            ->route('orders.index')
             ->with('success', Messages::UPDATE_SUCCESS);
     }
 
