@@ -13,8 +13,8 @@
 
 // Route::get('/import/customer', 'HomeController@importCustomer');
 // Route::get('/convert-data', 'HomeController@convertData');
- Route::get('/update-code', 'HomeController@updateCode');
-// Route::get('/export/quotation-form', 'HomeController@exportExcel');
+// Route::get('/update-code', 'HomeController@updateCode');
+ Route::get('/export/quotation-form', 'HomeController@exportExcel');
 
 Route::namespace('Auth')->group(function () {
     Route::get('login', 'LoginController@showLoginForm')->name('login');
@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('companies', 'CompanyController')->except(['show']);
     Route::resource('customers', 'CustomerController');
     Route::resource('quotations', 'PriceQuotationController');
+    Route::get('quotations/{id}/print', 'PriceQuotationController@print')->name('quotations.print');
     Route::resource('cares', 'CareController')->except(['show']);
     Route::resource('orders', 'OrderController');
     Route::resource('users', 'UserController')->except(['show']);

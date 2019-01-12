@@ -493,15 +493,6 @@ class PriceQuotation extends Model
         return '';
     }
 
-    public function formatTermsOfPayment()
-    {
-        $list = $this->listTermsOfPayment();
-        if (isset($list[$this->terms_of_payment])) {
-            return $list[$this->terms_of_payment];
-        }
-        return '';
-    }
-
     public function formatQuotationDate()
     {
         return Common::formatDate($this->quotations_date);

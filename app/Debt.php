@@ -128,10 +128,18 @@ class Debt extends Model
     // TODO: QUERY DATA =========
     public function search($searchParams = [])
     {
-        $model = $this->with(['order', 'customer', 'order.customer','payments' => function ($query) {
-            $query->where('status', PaymentSchedule::PAID_STATUS)
-                ->where('type', PaymentSchedule::DEBT_TYPE);
-        }]);
+        $model = $this->with([
+            'customer', 'customer.city', 'customer.companyName', 'customer.user',
+            'payments' => function ($query) {
+                $query->where('status', PaymentSchedule::PAID_STATUS)->where('type', PaymentSchedule::DEBT_TYPE);
+            }
+        ]);
+
+        if ($searchParams['status'] == self::NEW_STATUS) {
+            $model = $model->whereHas('order', function($query){
+                $query->where('status', Order::SHIPPED_STATUS);
+            });
+        }
 
         $model = $model->orderBy('id', 'desc');
 
@@ -154,6 +162,7 @@ class Debt extends Model
         if (isset($searchParams['status']) && !empty($searchParams['status'])) {
             $model = $model->where('status', $searchParams['status']);
         }
+
 
         if (isset($searchParams['type']) && !empty($searchParams['type'])) {
             $model = $model->where('type', $searchParams['type']);
@@ -355,19 +364,21 @@ class Debt extends Model
         return Common::UNKNOWN_TEXT;
     }
 
-    public function formatHasPaid(){
+    public function formatHasPaid()
+    {
         $hasPaid = 0;
         foreach ($this->payments as $paid):
-            $hasPaid += (int) $paid->money;
+            $hasPaid += (int)$paid->money;
         endforeach;
 
         return Common::formatMoney($hasPaid);
     }
 
-    public function formatNotPaid(){
+    public function formatNotPaid()
+    {
         $hasPaid = 0;
         foreach ($this->payments as $paid):
-            $hasPaid += (int) $paid->money;
+            $hasPaid += (int)$paid->money;
         endforeach;
         $total = $this->total_money - $hasPaid;
         return Common::formatMoney($total);

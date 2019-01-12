@@ -248,19 +248,10 @@ class Customer extends Model
     // TODO:  FORMAT =====
     public function formatCity()
     {
-        $location = '';
-        if (!empty($this->address)) {
-//            $location = $this->address;
-        }
-
         if (isset($this->city)) {
-            if (empty($location)) {
-                $location = $this->city->name;
-            } else {
-                $location .= ' - ' . $this->city->name;
-            }
+            $this->city->name;
         }
-        return $location;
+        return '';
     }
 
     public function formatCompany(){

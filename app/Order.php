@@ -168,7 +168,7 @@ class Order extends Model
 
     public function debt()
     {
-        return $this->belongsTo(Debt::class, 'id', 'order_id');
+        return $this->hasOne(Debt::class, 'id', 'order_id');
     }
 
     public function payments()
@@ -764,10 +764,11 @@ class Order extends Model
 
     public function checkConditionShip()
     {
-        if ($this->prepay_required == self::YES && $this->prepay > 0) {
-            return true;
+        if ($this->prepay_required == self::YES && $this->prepay <= 0) {
+            return false;
         }
-        return false;
+
+        return true;
     }
 
 }

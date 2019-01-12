@@ -91,6 +91,9 @@
                                                     <a href="{{route('quotations.show', $item->id)}}"><i class="fa fa-folder"></i> Xem báo giá</a>
                                                 </li>
                                                 <li>
+                                                    <a href="{{route('quotations.print', $item->id)}}"><i class="fa fa-print"></i> In báo giá</a>
+                                                </li>
+                                                <li>
                                                     <a href="{{route('quotations.edit', $item->id)}}"><i class="fa fa-pencil"></i> Sửa báo giá</a>
                                                 </li>
                                                 @can('admin')

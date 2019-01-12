@@ -6,6 +6,7 @@ use App\City;
 use App\Customer;
 use App\Debt;
 use App\Helpers\Messages;
+use App\Order;
 use App\PaymentSchedule;
 use App\User;
 use Illuminate\Http\Request;

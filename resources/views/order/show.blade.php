@@ -67,6 +67,10 @@
                                     <td>{{$model->formatShippedDateReal()}}</td>
                                 </tr>
                                 <tr class="bg-info">
+                                    <td>Số ngày vào sản xuất</td>
+                                    <td>{{$model->formatDateBuild()}} ngày</td>
+                                </tr>
+                                <tr class="bg-info">
                                     <td>Ngày thay đổi</td>
                                     <td>{{$model->formatDateChange()}}</td>
                                 </tr>
