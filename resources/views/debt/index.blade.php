@@ -57,7 +57,6 @@
                             <th>Số nợ</th>
                             <th>Đã thanh toán</th>
                             <th>Còn lại</th>
-                            <th>Trang thai</th>
                             <th>Nhân viên KD</th>
                             <th></th>
                         </tr>
@@ -77,7 +76,6 @@
                                     <td>{{$item->formatMoney()}}</td>
                                     <td>{{$item->formatHasPaid()}}</td>
                                     <td>{{$item->formatNotPaid()}}</td>
-                                    <td>{!! $item->order ? $item->order->formatStatus() : '' !!}</td>
                                     <td>{{$item->formatCustomerUser()}}</td>
                                     <td class="text-right">
                                         @can('admin')
