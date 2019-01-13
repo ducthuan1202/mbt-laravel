@@ -19,3 +19,5 @@ ALTER TABLE `payment_schedules` ADD `type` BOOLEAN NOT NULL DEFAULT '1' COMMENT 
 
 #===== 2019-01-12 =====
 ALTER TABLE `payment_schedules` CHANGE `payment_date` `payment_date` DATE NULL DEFAULT NULL COMMENT 'ngày thanh toán';
+ALTER TABLE `orders` CHANGE `difference_vat` `difference_vat` INT(11) NULL DEFAULT '0';
+ALTER TABLE `orders` CHANGE `date_delay_payment` `date_delay_payment` INT(11) NULL DEFAULT '0';

@@ -150,6 +150,21 @@ class Order extends Model
         $this->total_money = (int)$this->price * (int)$this->amount;
     }
 
+    public function loadValueCreateDefault(){
+        if(empty($this->amount)){
+            $this->amount = 1;
+        }
+        if(empty($this->guarantee)){
+            $this->guarantee = 12;
+        }
+        $this->vat = 0;
+        $this->prepay = 0;
+        $this->difference_vat = 0;
+        $this->date_delay_payment = 0;
+        $this->status = self::NOT_SHIPPED_STATUS;
+        $this->start_date = date('Y-m-d');
+        $this->shipped_date = date('Y-m-d', strtotime("+1 month"));
+    }
     // TODO:  RELATIONSHIP =====
     public function user()
     {

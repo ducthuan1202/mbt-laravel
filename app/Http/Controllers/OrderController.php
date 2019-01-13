@@ -133,7 +133,6 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-
         $this->authorize('admin');
 
         /**
@@ -154,11 +153,7 @@ class OrderController extends Controller
             $message = sprintf('Không có báo giá phù hợp, đơn hàng phải nhập số liệu từ đầu');
         }
 
-        $model->vat = 0;
-        $model->prepay = 0;
-        $model->status = Order::NOT_SHIPPED_STATUS;
-        $model->start_date = date('Y-m-d');
-        $model->shipped_date = date('Y-m-d', strtotime("+1 month"));
+        $model->loadValueCreateDefault();
 
         $shared = [
             "message" => $message,
@@ -201,6 +196,12 @@ class OrderController extends Controller
             }
             $debtModel = new Debt();
             $debtModel->syncWhenUpdateOrder($model);
+
+            // update status for customer if has buy
+            if($model->status == Order::SHIPPED_STATUS){
+                $customer = new Customer();
+                $customer->setStatusHasBuy($model->customer_id);
+            }
 
             return redirect()
                 ->route('orders.index')
@@ -270,6 +271,12 @@ class OrderController extends Controller
 
             $debtModel = new Debt();
             $debtModel->syncWhenUpdateOrder($model);
+
+            // update status for customer if has buy
+            if($model->status == Order::SHIPPED_STATUS){
+                $customer = new Customer();
+                $customer->setStatusHasBuy($model->customer_id);
+            }
         }
 
         return redirect()

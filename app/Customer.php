@@ -121,6 +121,16 @@ class Customer extends Model
         return $model->get();
     }
 
+    public function setStatusHasBuy($id){
+        /** @var Customer $customer */
+        $customer = self::where('id', $id)->where('status', self::NO_BUY_STATUS)->first();
+        if($customer){
+            $customer->status = self::BUY_STATUS;
+            return $customer->save();
+        }
+        return false;
+    }
+
     // TODO:  QUERY TO DATABASE =====
     public function search($searchParams = [])
     {
