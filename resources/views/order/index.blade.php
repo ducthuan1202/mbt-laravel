@@ -97,6 +97,7 @@
                                 <th style="vertical-align: middle">Khách hàng</th>
                                 <th style="vertical-align: middle">Ngày vào sản xuất</th>
                                 <th style="vertical-align: middle">Ngày ĐK giao</th>
+                                <th style="vertical-align: middle">Ngày giao hangf</th>
                                 <th style="vertical-align: middle">Số máy</th>
                                 <th style="vertical-align: middle">Công suất</th>
                                 <th style="vertical-align: middle">Số lượng</th>
@@ -144,6 +145,7 @@
                                         </td>
                                         <td>{{$item->formatStartDate()}}</td>
                                         <td>{{$item->formatShippedDate()}}</td>
+                                        <td>{{$item->formatShippedDateReal()}}</td>
                                         <td>{{$item->product_number}}</td>
                                         <td>{{$item->power}}<br/>{{$item->voltage_input}}<br/>{{$item->voltage_output}}</td>
                                         <td>{{$item->amount}}</td>

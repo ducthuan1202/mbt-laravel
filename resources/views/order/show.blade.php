@@ -71,6 +71,10 @@
                                     <td>{{$model->formatDateBuild()}} ngày</td>
                                 </tr>
                                 <tr class="bg-info">
+                                    <td>Số ngày quá hạn giao hàng</td>
+                                    <td>{{$model->formatOutDate()}} ngày</td>
+                                </tr>
+                                <tr class="bg-info">
                                     <td>Ngày thay đổi</td>
                                     <td>{{$model->formatDateChange()}}</td>
                                 </tr>
