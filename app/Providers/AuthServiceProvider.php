@@ -35,5 +35,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('employee', function ($user) {
             return ($user->role === User::EMPLOYEE_ROLE || $user->role === User::ADMIN_ROLE);
         });
+
+        # view order
+        Gate::define('view-order', function ($user, $order) {
+            return $user->id == $order->user_id;
+        });
     }
 }
