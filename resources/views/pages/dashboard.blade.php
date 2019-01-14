@@ -37,7 +37,7 @@
         <div class="row">
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="tile-stats">
-                    <div class="icon"><i class="fa fa-briefcase"></i>
+                    <div class="icon"><i class="fa fa-bullhorn"></i>
                     </div>
                     <div class="count">{{$quotationCount}}</div>
 
@@ -47,7 +47,7 @@
             </div>
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="tile-stats">
-                    <div class="icon"><i class="fa fa-briefcase"></i>
+                    <div class="icon"><i class="fa fa-shopping-cart"></i>
                     </div>
                     <div class="count">{{$orderCount}}</div>
 
@@ -57,7 +57,7 @@
             </div>
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="tile-stats">
-                    <div class="icon"><i class="fa fa-briefcase"></i>
+                    <div class="icon"><i class="fa fa-users"></i>
                     </div>
                     <div class="count">{{$customerCount}}</div>
 
@@ -67,7 +67,7 @@
             </div>
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="tile-stats">
-                    <div class="icon"><i class="fa fa-briefcase"></i>
+                    <div class="icon"><i class="fa fa-phone-square"></i>
                     </div>
                     <div class="count">{{$careCount}}</div>
 
@@ -88,7 +88,7 @@
             </div>
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="tile-stats">
-                    <div class="icon"><i class="fa fa-map-marker"></i>
+                    <div class="icon"><i class="fa fa-credit-card"></i>
                     </div>
                     <div class="count">{{$companyCount}}</div>
 
@@ -98,7 +98,7 @@
             </div>
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="tile-stats">
-                    <div class="icon"><i class="fa fa-map-marker"></i>
+                    <div class="icon"><i class="fa fa-user"></i>
                     </div>
                     <div class="count">{{$userCount}}</div>
 
