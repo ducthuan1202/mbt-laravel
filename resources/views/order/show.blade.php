@@ -180,8 +180,7 @@
                                 <tr class="headings">
                                     <th>Ngày thanh toán</th>
                                     <th>Số tiền</th>
-                                    <th>Kiểu</th>
-                                    <th></th>
+                                    <th colspan="2">Kiểu</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -196,11 +195,13 @@
                                             <td {{(!empty($item->note)) ? 'rowspan=2' : ''}} style="vertical-align: middle; width: 150px">{{$item->formatDate()}}</td>
                                             <td>{{$item->formatMoney()}}</td>
                                             <td>{!! $item->formatStatus() !!}</td>
+                                            @can('admin')
                                             <td style="width: 30px">
                                                 <button class="btn btn-xs btn-outline" onclick="MBT_PaymentSchedule.openForm({{$item->id}})">
                                                     <i class="fa fa-pencil"></i> Sửa
                                                 </button>
                                             </td>
+                                            @endcan
                                         </tr>
                                         @if(!empty($item->note))
                                             <tr>
@@ -222,22 +223,24 @@
                     </div>
                 </div>
 
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>Thêm mới 1 lịch thanh toán cho đơn hàng</h2>
-                        <div class="clearfix"></div>
+                @can('admin')
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Thêm mới 1 lịch thanh toán cho đơn hàng</h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div id="display-error" class="alert alert-danger hidden"></div>
+                            <form id="payment-schedule-form" onsubmit="return;">
+                                @include('payment-schedule._form', [
+                                    'model'=>$paymentSchedule,
+                                    'order'=>$model,
+                                    'type'=>\App\PaymentSchedule::ORDER_TYPE
+                                ])
+                            </form>
+                        </div>
                     </div>
-                    <div class="x_content">
-                        <div id="display-error" class="alert alert-danger hidden"></div>
-                        <form id="payment-schedule-form" onsubmit="return;">
-                            @include('payment-schedule._form', [
-                                'model'=>$paymentSchedule,
-                                'order'=>$model,
-                                'type'=>\App\PaymentSchedule::ORDER_TYPE
-                            ])
-                        </form>
-                    </div>
-                </div>
+                @endcan
 
                 <div class="x_panel">
                     <div class="x_title">

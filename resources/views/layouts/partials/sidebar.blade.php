@@ -63,16 +63,17 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                         </ul>
                     </li>
 
+                    <li>
+                        <a><i class="fa fa-shopping-cart"></i> Đơn Hàng <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{{route('orders.index')}}">Tất cả</a></li>
+                            <li><a href="{{route('orders.index', ['status'=>\App\Order::SHIPPED_STATUS])}}">Đã giao</a></li>
+                            <li><a href="{{route('orders.index', ['status'=>\App\Order::NOT_SHIPPED_STATUS])}}">Chưa giao</a></li>
+                            <li><a href="{{route('orders.index', ['status'=>\App\Order::CANCEL_STATUS])}}">Đã hủy</a></li>
+                        </ul>
+                    </li>
+
                     @can('admin')
-                        <li>
-                            <a><i class="fa fa-shopping-cart"></i> Đơn Hàng <span class="fa fa-chevron-down"></span></a>
-                            <ul class="nav child_menu">
-                                <li><a href="{{route('orders.index')}}">Tất cả</a></li>
-                                <li><a href="{{route('orders.index', ['status'=>\App\Order::SHIPPED_STATUS])}}">Đã giao</a></li>
-                                <li><a href="{{route('orders.index', ['status'=>\App\Order::NOT_SHIPPED_STATUS])}}">Chưa giao</a></li>
-                                <li><a href="{{route('orders.index', ['status'=>\App\Order::CANCEL_STATUS])}}">Đã hủy</a></li>
-                            </ul>
-                        </li>
                         <li class="{{Request::is('debts') || Request::is('debts/*')  ? 'active' : ''}}">
                             <a><i class="fa fa-slideshare"></i> Công Nợ <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu" style="{{Request::is('debts') || Request::is('debts/*')  ? 'display:block' : ''}}">

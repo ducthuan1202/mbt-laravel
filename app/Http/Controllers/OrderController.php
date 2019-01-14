@@ -22,7 +22,6 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('admin');
         $searchParams = [
             'customer' => null,
             'user' => null,
@@ -47,84 +46,6 @@ class OrderController extends Controller
         return view('order.index', $shared);
     }
 
-    public function shipped(Request $request)
-    {
-        $searchParams = [
-            'customer' => null,
-            'user' => null,
-            'city' => null,
-            'keyword' => null,
-            'date' => null,
-            'status' => Order::SHIPPED_STATUS,
-        ];
-        $searchParams = array_merge($searchParams, $request->all());
-
-        // get relation
-        $userModel = new User();
-        $model = new Order();
-        $shared = [
-            'model' => $model,
-            'data' => $model->search($searchParams),
-            'count' => $model->countByStatus($searchParams),
-            'searchParams' => $searchParams,
-            'users' => $userModel->getDropDownList(true),
-        ];
-
-
-        return view('order.index', $shared);
-    }
-
-    public function noShipped(Request $request)
-    {
-        $searchParams = [
-            'customer' => null,
-            'user' => null,
-            'city' => null,
-            'keyword' => null,
-            'date' => null,
-            'status' => Order::NOT_SHIPPED_STATUS,
-        ];
-        $searchParams = array_merge($searchParams, $request->all());
-
-        // get relation
-        $userModel = new User();
-        $model = new Order();
-        $shared = [
-            'model' => $model,
-            'data' => $model->search($searchParams),
-            'count' => $model->countByStatus($searchParams),
-            'searchParams' => $searchParams,
-            'users' => $userModel->getDropDownList(true),
-        ];
-
-        return view('order.index', $shared);
-    }
-
-    public function cancel(Request $request)
-    {
-        $searchParams = [
-            'customer' => null,
-            'user' => null,
-            'city' => null,
-            'keyword' => null,
-            'date' => null,
-            'status' => Order::CANCEL_STATUS,
-        ];
-        $searchParams = array_merge($searchParams, $request->all());
-
-        // get relation
-        $userModel = new User();
-        $model = new Order();
-        $shared = [
-            'model' => $model,
-            'data' => $model->search($searchParams),
-            'count' => $model->countByStatus($searchParams),
-            'searchParams' => $searchParams,
-            'users' => $userModel->getDropDownList(true),
-        ];
-
-        return view('order.index', $shared);
-    }
 
     /**
      * @param Request $request
@@ -214,7 +135,10 @@ class OrderController extends Controller
     }
 
     public function show($id){
+
         $model = Order::findOrFail($id);
+        $this->authorize('view-order', $model);
+
         $paymentScheduleModel = new PaymentSchedule();
         $paymentScheduleModel->order_id = $model->id;
         $paymentScheduleModel->type = PaymentSchedule::ORDER_TYPE;

@@ -270,6 +270,11 @@ class Order extends Model
             ->join($userTbl, "$userTbl.id", "=", "$orderTbl.user_id")
             ->select(DB::raw("COUNT($orderTbl.id) AS 'value', SUM(total_money) as 'total', $orderTbl.status"));
 
+        $userLogin = Auth::user();
+        if ($userLogin->role !== User::ADMIN_ROLE) {
+            $query = $query->where("$orderTbl.user_id", $userLogin->id);
+        }
+
         if (isset($searchParams['date']) && !empty($searchParams['date'])) {
             $d = Common::extractDate($searchParams['date']);
             $startDate = Common::dmY2Ymd($d[0]);

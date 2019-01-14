@@ -126,14 +126,13 @@
                                                         type="button" aria-expanded="false">Hành động <span class="caret"></span>
                                                 </button>
                                                 <ul role="menu" class="dropdown-menu">
-
                                                     <li>
                                                         <a href="{{route('orders.show', $item->id)}}"><i class="fa fa-folder"></i> Xem đơn hàng</a>
                                                     </li>
-                                                    <li>
-                                                        <a href="{{route('orders.edit', $item->id)}}"><i class="fa fa-pencil"></i> Sửa đơn hàng</a>
-                                                    </li>
                                                     @can('admin')
+                                                        <li>
+                                                            <a href="{{route('orders.edit', $item->id)}}"><i class="fa fa-pencil"></i> Sửa đơn hàng</a>
+                                                        </li>
                                                         <li class="divider"></li>
                                                         <li>
                                                             <a onclick="MBT_Order.delete({{$item->id}})"><i class="fa fa-trash-o"></i>  Xóa đơn hàng</a>
