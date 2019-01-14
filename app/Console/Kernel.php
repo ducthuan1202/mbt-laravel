@@ -28,10 +28,8 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
 
         // thực hiện lúc 00:01 mỗi ngày
-//        $schedule->command('cron:paymentSchedule')
-//            ->dailyAt("00:01");
-
-        $schedule->command('cron:paymentSchedule')->everyMinute();
+        $schedule->command('cron:paymentSchedule')->dailyAt("00:01");
+//        $schedule->command('cron:paymentSchedule')->everyMinute();
     }
 
     /**
