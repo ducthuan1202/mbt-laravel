@@ -17,3 +17,6 @@
 - Xóa thư mục có chứa dữ liệu: `rm -rf picture` (cần chắc chắn để vì có thể mất hết dữ liệu)
 
 - set quyền cho thư mục: `chmode 777 -R storage` (storage là tên thư mục)
+
+## Cron job
+- Hiện tại, dự án đang chạy 1 lệnh cronjob ở file crontab (với quyền root) để cập nhật trạng thái cho lịch trình thanh toán
