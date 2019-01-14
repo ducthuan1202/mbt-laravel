@@ -39,19 +39,7 @@ class cronPaymentSchedule extends Command
      */
     public function handle()
     {
-
-        $name = sprintf('cronjob/cron_job_%s.txt', date('Y_m_d_H_i_s'));
-        $file = fopen(public_path($name), "w") or die("Unable to open file!");
-        fwrite($file, sprintf('call task schedule at %s', date('Y-m-d H:i:s')));
-        fclose($file);
-        $this->info(sprintf('create file %s success', $name));
-
-//        $this->info('START [cron:paymentSchedule]');
-//
-//        $paymentScheduleModel = new PaymentSchedule();
-//        $paymentScheduleModel->updateStatusSchedule();
-//
-//        $this->info('END [cron:paymentSchedule]');
-
+        $paymentScheduleModel = new PaymentSchedule();
+        $paymentScheduleModel->updateStatusSchedule();
     }
 }

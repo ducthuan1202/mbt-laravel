@@ -117,12 +117,26 @@ class PaymentSchedule extends Model
             ->whereDate('payment_date', '<', $currentDate)
             ->get();
 
+        $listId = [];
         if($paymentSchedule){
             foreach ($paymentSchedule as $payment):
+                $listId[] =  $payment->id;
                 $payment->status = self::DELAY_STATUS;
                 $payment->save();
             endforeach;
         }
+
+        // set log file
+        $name = sprintf('cronjob/cron_job_%s.txt', date('Y_m_d_H_i_s'));
+        $file = fopen(public_path($name), "w") or die("Unable to open file!");
+        if(!empty($listId)){
+            $content = sprintf('có %s lịch trình đã được sử lý [%s]', join($listId, ','));
+        } else {
+            $content = 'không có lịch trình nào cần xử lý.';
+        }
+        fwrite($file, $content);
+        fclose($file);
+
     }
 
     // TODO:  LIST DATA =====
