@@ -57,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report/money/future', 'ReportController@moneyFuture')->name('report.money_future');
 
     // cron job - ssps (switch status payment schedule)
-    Route::get('/cronjob/ssps', 'PaymentScheduleController@switchStatusPaymentSchedule')->name('cronjob.ssps');
+//    Route::get('/cronjob/ssps', 'PaymentScheduleController@switchStatusPaymentSchedule')->name('cronjob.ssps');
 
     // resource
     Route::resource('cities', 'CityController')->except(['show']);

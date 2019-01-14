@@ -110,10 +110,6 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                                 <li><a href="{{route('report.money_future', ['date'=>$dateRangeNextMonth])}}">Tháng tới</a></li>
                             </ul>
                         </li>
-
-                        <li>
-                            <a href="{{route('cronjob.ssps')}}"><i class="fa fa-refresh"></i> Cập nhật lịch thanh toán</a>
-                        </li>
                     @endcan
                 </ul>
             </div>

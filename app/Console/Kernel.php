@@ -24,12 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
-
         // thực hiện lúc 00:01 mỗi ngày
         $schedule->command('cron:paymentSchedule')->dailyAt("00:01");
-//        $schedule->command('cron:paymentSchedule')->everyMinute();
     }
 
     /**
