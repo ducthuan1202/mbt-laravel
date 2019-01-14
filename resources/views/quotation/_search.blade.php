@@ -6,6 +6,9 @@
 
 <div class="well" style="overflow: auto">
     <form class="form" action="{{route('quotations.index')}}" method="GET">
+
+        <input type="hidden" name="status" value="{{$searchParams['status']}}"/>
+
         <div class="row">
 
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
