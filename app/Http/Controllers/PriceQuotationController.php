@@ -359,7 +359,7 @@ class PriceQuotationController extends Controller
             ->setFormatCode('#,##0');
 
         // tiêu chuẩn
-        $standard = $model->formatStandard();
+        $standard = $model->formatStandardReal();
         $sheet->setCellValue('G14', $standard)
             ->getStyle('G14')
             ->applyFromArray($horizontalCenter)
