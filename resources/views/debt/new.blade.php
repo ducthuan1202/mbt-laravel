@@ -30,7 +30,7 @@
                     <table class="table table-striped jambo_table bulk_action">
                         <thead>
                             <tr class="headings">
-                                <th style="vertical-align: middle">No.</th>
+                                <th style="vertical-align: middle">STT</th>
                                 <th style="vertical-align: middle">Khách hàng</th>
                                 <th class="text-right">Tổng nợ</th>
                                 <th class="text-right">Đã thanh toán</th>
@@ -40,10 +40,11 @@
                         </thead>
                         <tbody>
                             @if(count($data))
+                                @php $stt = 0; @endphp
                                 @foreach($data as $index => $item)
                                     @if($item->getNotPaid() > 0)
                                         <tr>
-                                            <td>{{ $index + $data->firstItem() }}</td>
+                                            <td>{{ ++$stt }}</td>
                                             <td><b class="text-success">{{$item->formatCustomer()}}</b></td>
                                             <td class="text-right">{{$item->formatTotalMoney()}}</td>
                                             <td class="text-right">{{$item->formatHasPaid()}}</td>
