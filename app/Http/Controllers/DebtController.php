@@ -92,6 +92,7 @@ class DebtController extends Controller
             'status' => Order::SHIPPED_STATUS,
             'type' => null,
             'date' => null,
+            'isDebt' => true,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 

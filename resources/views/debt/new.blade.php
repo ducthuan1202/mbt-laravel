@@ -13,7 +13,7 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_title">
-                <h2>{{$title}}</h2>
+                <h2>{{$title}} ({{ Common::formatNumber($data->total()) }})</h2>
                 <div class="clearfix"></div>
             </div>
 
@@ -30,7 +30,7 @@
                     <table class="table table-striped jambo_table bulk_action">
                         <thead>
                             <tr class="headings">
-                                <th style="vertical-align: middle">STT</th>
+                                <th style="vertical-align: middle">No.</th>
                                 <th style="vertical-align: middle">Khách hàng</th>
                                 <th class="text-right">Tổng nợ</th>
                                 <th class="text-right">Đã thanh toán</th>
@@ -40,18 +40,15 @@
                         </thead>
                         <tbody>
                             @if(count($data))
-                                @php $stt = 0; @endphp
                                 @foreach($data as $index => $item)
-                                    @if($item->getNotPaid() > 0)
-                                        <tr>
-                                            <td>{{ ++$stt }}</td>
-                                            <td><b class="text-success">{{$item->formatCustomer()}}</b></td>
-                                            <td class="text-right">{{$item->formatTotalMoney()}}</td>
-                                            <td class="text-right">{{$item->formatHasPaid()}}</td>
-                                            <td class="text-right">{{$item->formatNotPaid()}}</td>
-                                            <td class="text-right"><b class="text-success">{{$item->formatUser()}}</b></td>
-                                        </tr>
-                                    @endif
+                                    <tr>
+                                        <td>{{ $index + $data->firstItem() }}</td>
+                                        <td><b class="text-success">{{$item->formatCustomer()}}</b></td>
+                                        <td class="text-right">{{$item->formatTotalMoney()}}</td>
+                                        <td class="text-right">{{$item->formatHasPaid()}}</td>
+                                        <td class="text-right">{{$item->formatNotPaid()}}</td>
+                                        <td class="text-right"><b class="text-success">{{$item->formatUser()}}</b></td>
+                                    </tr>
                                 @endforeach
                             @else
                                 <tr>

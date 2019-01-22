@@ -183,7 +183,7 @@ class Order extends Model
 
     public function debt()
     {
-        return $this->hasOne(Debt::class, 'id', 'order_id');
+        return $this->hasOne(Debt::class, 'order_id', 'id');
     }
 
     public function payments()
@@ -238,6 +238,16 @@ class Order extends Model
         // filter by status
         if (isset($searchParams['status']) && !empty($searchParams['status'])) {
             $model = $model->where('status', $searchParams['status']);
+        }
+
+        // filter by total money not paid
+        if (isset($searchParams['isDebt']) && $searchParams['isDebt'] === true) {
+//            $model = $model->with(['debt'=>function($query){
+//                $query->where('total_money', '>', '0');
+//            }]);
+            $model = $model->whereHas('debt', function ($query) use ($searchParams) {
+                $query->where('total_money', '>', '0');
+            });
         }
 
         return $model;
@@ -724,6 +734,7 @@ class Order extends Model
         $total = $this->getTotalMoneyWithoutPayment() - $hasPaid;
         return $total;
     }
+
     public function formatNotPaid(){
 
         $total = $this->getNotPaid();
