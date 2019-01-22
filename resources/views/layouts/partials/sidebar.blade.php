@@ -78,10 +78,10 @@ $dateRangeNextMonth = Common::getDateRangeOfNextMonth();
                             <a><i class="fa fa-slideshare"></i> Công Nợ <span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu" style="{{Request::is('debts') || Request::is('debts/*')  ? 'display:block' : ''}}">
                                 <li>
-                                    <a href="{{route('debts.index', ['status'=>\App\Debt::OLD_STATUS])}}">Công nợ cũ</a>
+                                    <a href="{{route('debts.list_old')}}">Công nợ cũ</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('debts.index', ['status'=>\App\Debt::NEW_STATUS])}}">Công nợ mới</a>
+                                    <a href="{{route('debts.list_new')}}">Công nợ mới</a>
                                 </li>
                             </ul>
                         </li>

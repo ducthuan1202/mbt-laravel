@@ -690,21 +690,11 @@ class Order extends Model
     }
 
     public function formatDateBuild(){
-        if(empty($this->shipped_date) || empty($this->start_date)){
-            return '0';
-        }
-        $time = strtotime($this->shipped_date) - strtotime($this->start_date);
-        $oneDay = 60*60*24;
-        return round($time / $oneDay);
+        return Common::calcDateAgo($this->start_date, date('Y-m-d'));
     }
 
     public function formatOutDate(){
-        if(empty($this->shipped_date_real) || empty($this->shipped_date)){
-            return '0';
-        }
-        $time = strtotime($this->shipped_date_real) - strtotime($this->shipped_date);
-        $oneDay = 60*60*24;
-        return round($time / $oneDay);
+        return Common::calcDateAgo($this->shipped_date, $this->shipped_date_real);
     }
 
     public function formatPrice()
@@ -726,13 +716,17 @@ class Order extends Model
 
         return Common::formatMoney($hasPaid);
     }
-
-    public function formatNotPaid(){
+    public function getNotPaid(){
         $hasPaid = 0;
         foreach ($this->payments as $paid):
             $hasPaid += (int) $paid->money;
         endforeach;
         $total = $this->getTotalMoneyWithoutPayment() - $hasPaid;
+        return $total;
+    }
+    public function formatNotPaid(){
+
+        $total = $this->getNotPaid();
         return Common::formatMoney($total);
     }
 

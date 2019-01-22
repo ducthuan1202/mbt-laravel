@@ -3,8 +3,6 @@
 namespace App\Helpers;
 
 
-use function GuzzleHttp\Psr7\str;
-
 class Common
 {
     const UNKNOWN_TEXT = 'không xác định';
@@ -17,7 +15,7 @@ class Common
 
     public static function extractDate($str = '', $separator = ' - ')
     {
-        if(empty($str)) return [];
+        if (empty($str)) return [];
         return explode($separator, $str);
     }
 
@@ -29,12 +27,12 @@ class Common
         return date('d/m/Y', strtotime($date));
     }
 
-    public static function formatMoney($money, $suffix = ' VNĐ')
+    public static function formatMoney($money, $suffix = '')
     {
-        if(!empty($money)){
+        if (!empty($money)) {
             return number_format((int)$money * 1000) . $suffix;
         }
-        return '0'.$suffix;
+        return '0' . $suffix;
     }
 
     public static function dmY2Ymd($date)
@@ -46,12 +44,23 @@ class Common
         return $date;
     }
 
-    public static function formatNumber($number){
+    public static function formatNumber($number)
+    {
         return number_format($number);
     }
 
+    public static function calcDateAgo($start, $end)
+    {
+        if (empty($end) || empty($start)) return '0';
+        if(strtotime($end) < strtotime($start)) return '0';
+        $time = strtotime($end) - strtotime($start);
+        $oneDay = 60 * 60 * 24;
+        return round($time / $oneDay);
+    }
+
     // TODO: get time
-    public static function getDateRangeOfThisWeek($format = 'd/m/Y', $separator = ' - '){
+    public static function getDateRangeOfThisWeek($format = 'd/m/Y', $separator = ' - ')
+    {
         $startTime = strtotime('this week');
 
         $startOfWeek = date($format, $startTime);
@@ -59,7 +68,8 @@ class Common
         return sprintf('%s%s%s', $startOfWeek, $separator, $endOfWeek);
     }
 
-    public static function getDateRangeOfNextWeek($format = 'd/m/Y', $separator = ' - '){
+    public static function getDateRangeOfNextWeek($format = 'd/m/Y', $separator = ' - ')
+    {
         $startTime = strtotime('next week');
 
         $startOfWeek = date($format, $startTime);
@@ -67,15 +77,17 @@ class Common
         return sprintf('%s%s%s', $startOfWeek, $separator, $endOfWeek);
     }
 
-    public static function getDateRangeOfThisMonth($format = 'm/Y', $separator = ' - '){
-        $startOfWeek = date('01/'.$format);
-        $endOfWeek = date('t/'.$format);
+    public static function getDateRangeOfThisMonth($format = 'm/Y', $separator = ' - ')
+    {
+        $startOfWeek = date('01/' . $format);
+        $endOfWeek = date('t/' . $format);
         return sprintf('%s%s%s', $startOfWeek, $separator, $endOfWeek);
     }
 
-    public static function getDateRangeOfNextMonth($format = 'd/m/Y', $separator = ' - '){
-        $startOfWeek = date('01/'.$format, strtotime( '+1 month'));
-        $endOfWeek = date('t/'.$format, strtotime( '+1 month'));
+    public static function getDateRangeOfNextMonth($format = 'd/m/Y', $separator = ' - ')
+    {
+        $startOfWeek = date('01/' . $format, strtotime('+1 month'));
+        $endOfWeek = date('t/' . $format, strtotime('+1 month'));
         return sprintf('%s%s%s', $startOfWeek, $separator, $endOfWeek);
     }
 }

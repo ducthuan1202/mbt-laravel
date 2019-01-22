@@ -1,6 +1,6 @@
 
 <div class="well" style="overflow: auto">
-    <form class="form" action="{{route('debts.index')}}" method="GET">
+    <form class="form" action="{{route('debts.list_new')}}" method="GET">
 
         <input type="hidden" name="status" value="{{$searchParams['status']}}"/>
 
@@ -28,17 +28,6 @@
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer" id="customer_id">
                         <option value="{{$searchParams['customer']}}">đang tải dữ liệu</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-                <div class="form-group">
-                    <label>Tình trạng</label>
-                    <select class="form-control chosen-select" name="type">
-                        @foreach($types as $key => $val)
-                            <option value="{{ $key }}" {{ $key == $searchParams['type'] ? 'selected' : '' }}>{!! $val !!}</option>
-                        @endforeach
                     </select>
                 </div>
             </div>

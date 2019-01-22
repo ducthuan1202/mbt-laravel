@@ -193,12 +193,16 @@
                                         @endphp
                                         <tr class="{{$hasPaid ? 'bg-success' : ''}}">
                                             <td {{(!empty($item->note)) ? 'rowspan=2' : ''}} style="vertical-align: middle; width: 150px">{{$item->formatDate()}}</td>
-                                            <td>{{$item->formatMoney()}}</td>
-                                            <td>{!! $item->formatStatus() !!}</td>
+                                            <td style="vertical-align: middle;">{{$item->formatMoney()}}</td>
+                                            <td style="vertical-align: middle;">{!! $item->formatStatus() !!}</td>
                                             @can('admin')
                                             <td style="width: 30px">
                                                 <button class="btn btn-xs btn-outline" onclick="MBT_PaymentSchedule.openForm({{$item->id}})">
                                                     <i class="fa fa-pencil"></i> Sửa
+                                                </button>
+
+                                                <button class="btn btn-xs btn-outline" onclick="MBT_PaymentSchedule.deleteForm({{$item->id}})">
+                                                    <i class="fa fa-trash"></i> Xóa
                                                 </button>
                                             </td>
                                             @endcan

@@ -112,7 +112,7 @@ class Debt extends Model
     // TODO: RELATIONSHIP =========
     public function order()
     {
-        return $this->hasOne(Order::class, 'id', 'order_id');
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
     public function payments()
@@ -128,10 +128,11 @@ class Debt extends Model
     // TODO: QUERY DATA =========
     public function search($searchParams = [])
     {
-        $model = $this->with([
+        $model = $this->with([ 'order',
             'customer', 'customer.city', 'customer.companyName', 'customer.user',
             'payments' => function ($query) {
-                $query->where('status', PaymentSchedule::PAID_STATUS)->where('type', PaymentSchedule::DEBT_TYPE);
+                $query->where('status', PaymentSchedule::PAID_STATUS)
+                    ->where('type', PaymentSchedule::DEBT_TYPE);
             }
         ]);
 
@@ -141,7 +142,6 @@ class Debt extends Model
             });
         }
 
-        $model = $model->orderBy('id', 'desc');
 
         if (isset($searchParams['user']) && !empty($searchParams['user'])) {
             $model = $model->whereHas('customer', function ($query) use ($searchParams) {
@@ -168,6 +168,7 @@ class Debt extends Model
             $model = $model->where('type', $searchParams['type']);
         }
 
+        $model = $model->orderBy('id', 'desc');
         return $model->paginate(self::LIMIT);
     }
 

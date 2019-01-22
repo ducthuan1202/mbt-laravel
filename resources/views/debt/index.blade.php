@@ -51,6 +51,7 @@
                         <thead>
                         <tr class="headings">
                             <th>No.</th>
+                            <th>trạng thái</th>
                             <th>Khách hàng</th>
                             <th>Công ty</th>
                             <th>Khu vực</th>
@@ -66,6 +67,7 @@
                             @foreach($data as $index => $item)
                                 <tr>
                                     <td>{{ $index + $data->firstItem() }}</td>
+                                    <td>{!! $item->order ? $item->order->formatStatus() : '' !!}</td>
                                     <td>
                                         <a href="{{route('customers.show', ['id'=>$item->customer->id])}}">
                                             {!! $item->formatCustomer() !!}

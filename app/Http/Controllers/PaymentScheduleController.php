@@ -70,7 +70,7 @@ class PaymentScheduleController extends Controller
                 ->where('customer_id', $order->customer_id)
                 ->first();
 
-            if(!$debt){
+            if (!$debt) {
                 $debt = new Debt();
                 $debt->order_id = $order->id;
                 $debt->customer_id = $order->customer_id;
@@ -120,11 +120,6 @@ class PaymentScheduleController extends Controller
         return response()->json($output);
     }
 
-    public function switchStatusPaymentSchedule(){
-        $paymentScheduleModel = new PaymentSchedule();
-        $paymentScheduleModel->updateStatusSchedule();
-        return 'hoàn thành';
-    }
     /**
      * @param $id
      * @return \Illuminate\Http\JsonResponse
@@ -188,7 +183,7 @@ class PaymentScheduleController extends Controller
                 ->where('customer_id', $order->customer_id)
                 ->first();
 
-            if(!$debt){
+            if (!$debt) {
                 $debt = new Debt();
                 $debt->order_id = $order->id;
                 $debt->customer_id = $order->customer_id;
@@ -209,6 +204,47 @@ class PaymentScheduleController extends Controller
                 $model->save();
             }
         }
+        return response()->json($output);
+    }
+
+    public function deleteForm($id)
+    {
+        /**
+         * @var $model PaymentSchedule
+         * @var $debt Debt
+         * @var $order Order
+         */
+        $model = PaymentSchedule::findOrFail($id);
+        $order = Order::findOrFail($model->order_id);
+
+        $output = [
+            'success' => false,
+            'message' => Messages::DELETE_ERROR
+        ];
+
+        if ($model->delete()) {
+            $totalHasPay = DB::table('payment_schedules')
+                ->select(DB::raw('SUM(money) AS total'))
+                ->where('order_id', $order->id)
+                ->where('status', PaymentSchedule::PAID_STATUS)
+                ->first();
+
+            $debt = Debt::where('order_id', $order->id)
+                ->where('customer_id', $order->customer_id)
+                ->first();
+
+            if ($debt) {
+                $debt->total_money = $order->getTotalMoneyWithoutPayment() - $totalHasPay->total;
+                $debt->save();
+
+            }
+
+            $output = [
+                'success' => true,
+                'message' => Messages::DELETE_ERROR
+            ];
+        }
+
         return response()->json($output);
     }
 

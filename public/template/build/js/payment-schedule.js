@@ -73,7 +73,6 @@ var MBT_PaymentSchedule = function () {
         });
     };
 
-
     var openForm = function(id){
 
         sendAjax({
@@ -132,6 +131,27 @@ var MBT_PaymentSchedule = function () {
         });
     };
 
+    var deleteForm = function(id){
+        sendAjax({
+            url: "/payment-schedules/ajax/" + id,
+            method: "DELETE",
+            beforeSend: function () {
+                // do something
+            },
+            fnSuccess: function (response) {
+                if(response.success){
+                    alertSuccess({title: "xóa thành công"});
+                    window.location.reload(true);
+                } else {
+                    alertError({title: "xóa thất bại"});
+                }
+            },
+            fnError: function(response){
+                alertError({title: "xóa thất bại"});
+            }
+        });
+    };
+
 
     return {
         toSave: function (id) {
@@ -145,6 +165,14 @@ var MBT_PaymentSchedule = function () {
         },
         saveForm: function (id) {
             saveForm(id);
+        },
+        deleteForm: function (id) {
+            alertConfirm({
+                cbSuccess: function () {
+                    deleteForm(id);
+                }
+            });
+
         }
     };
 

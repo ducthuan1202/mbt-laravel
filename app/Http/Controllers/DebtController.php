@@ -89,15 +89,16 @@ class DebtController extends Controller
             'customer' => null,
             'user' => null,
             'city' => null,
-            'status' => Debt::NEW_STATUS,
+            'status' => Order::SHIPPED_STATUS,
             'type' => null,
+            'date' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
         $cityModel = new City();
         $userModel = new User();
         $customerModel = new Customer();
-        $model = new Debt();
+        $model = new Order();
 
         $shared = [
             'data' => $model->search($searchParams),
@@ -109,7 +110,7 @@ class DebtController extends Controller
             'types' => $model->listType(true),
         ];
 
-        return view('debt.index', $shared);
+        return view('debt.new', $shared);
     }
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
