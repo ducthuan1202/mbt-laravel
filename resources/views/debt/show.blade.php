@@ -20,7 +20,7 @@
 
         <div class="clearfix">
 
-            <a href="#" class="btn btn-info">
+            <a href="{{route('debts.edit', ['id' => $model->id])}}" class="btn btn-info">
                 <i class="fa fa-pencil"></i> Sửa
             </a>
 
