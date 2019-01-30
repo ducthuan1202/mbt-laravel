@@ -241,11 +241,8 @@ class Order extends Model
         }
 
         // filter by total money not paid
-        if (isset($searchParams['isDebt']) && $searchParams['isDebt'] === true) {
-//            $model = $model->with(['debt'=>function($query){
-//                $query->where('total_money', '>', '0');
-//            }]);
-            $model = $model->whereHas('debt', function ($query) use ($searchParams) {
+        if (isset($searchParams['isDebt']) && !empty($searchParams['isDebt'])) {
+            $model = $model->whereHas('debt', function ($query){
                 $query->where('total_money', '>', '0');
             });
         }
