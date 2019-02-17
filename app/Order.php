@@ -90,7 +90,7 @@ class Order extends Model
         'amount.integer' => 'Số lượng phải là kiểu số.',
         'price.required' => 'Giá báo không thể bỏ trống.',
         'price.integer' => 'Giá báo phải là kiểu số.',
-        'power.integer' => 'Công suất sản phẩm không thể bỏ trống.',
+        'power.required' => 'Công suất sản phẩm không thể bỏ trống.',
         'voltage_input.required' => 'Điện áp đầu vào không thể bỏ trống.',
         'voltage_output.required' => 'Điện áp đầu ra không thể bỏ trống.',
         'standard_output.required' => 'Tiêu chuẩn máy không thể bỏ trống.',
@@ -98,6 +98,8 @@ class Order extends Model
         'guarantee.required' => 'Thời gian bảo hành không thể bỏ trống.',
         'guarantee.numeric' => 'Thời gian bảo hành phải là kiểu số.',
         'product_number.required' => 'Số máy không thể bỏ trống.',
+        'product_number.unique' => 'Số máy này đã tồn tại.',
+        'code.unique' => 'Đơn hàng cho báo giá này đã tồn tại.',
         'product_skin.required' => 'Chọn ngoại hình máy.',
         'product_type.required' => 'Chọn kiểu máy.',
         'setup_at.required' => 'Địa chỉ lắp đặt không thể bỏ trống.',
@@ -151,12 +153,8 @@ class Order extends Model
     }
 
     public function loadValueCreateDefault(){
-        if(empty($this->amount)){
-            $this->amount = 1;
-        }
-        if(empty($this->guarantee)){
-            $this->guarantee = 12;
-        }
+        if(empty($this->amount)) $this->amount = 1;
+        if(empty($this->guarantee)) $this->guarantee = 12;
         $this->vat = 0;
         $this->prepay = 0;
         $this->difference_vat = 0;

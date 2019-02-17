@@ -2,9 +2,9 @@
     /**
      * @var $model \App\Order
      */
-$userId = isset($model->customer) ? $model->customer->user_id : 0;
-$cityId = isset($model->customer) ? $model->customer->city_id : 0;
-$customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
+    $userId = isset($model->customer) ? $model->customer->user_id : 0;
+    $cityId = isset($model->customer) ? $model->customer->city_id : 0;
+    $customerId = old('customer_id') ? old('customer_id') : $model->customer_id;
 @endphp
 
 @if(count($errors))

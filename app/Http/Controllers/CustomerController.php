@@ -14,6 +14,10 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class CustomerController
+ * @package App\Http\Controllers
+ */
 class CustomerController extends Controller
 {
 
@@ -57,7 +61,6 @@ class CustomerController extends Controller
      */
     public function create()
     {
-
 
         $userModel = new User();
         $cityModel = new City();

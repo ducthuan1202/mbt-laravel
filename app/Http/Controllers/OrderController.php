@@ -46,7 +46,6 @@ class OrderController extends Controller
         return view('order.index', $shared);
     }
 
-
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -97,16 +96,15 @@ class OrderController extends Controller
          */
         $this->authorize('admin');
         $model = new Order();
+
+        $rules = $model->validateRules;
         if ($request->get('code')) {
-            $this->validate($request, [
+            $rules = array_merge($model->validateRules, [
                 'code' => 'unique:orders,code',
-                'product_number' => 'unique:orders,product_number',
-            ], [
-                'code.unique' => 'Đơn hàng cho báo giá này đã tồn tại.',
-                'product_number.unique' => 'Số máy này đã tồn tại.',
+                'product_number' => 'required|unique:orders,product_number',
             ]);
         }
-        $this->validate($request, $model->validateRules, $model->validateMessage);
+        $this->validate($request, $rules, $model->validateMessage);
         $model->fill($request->all());
         $model->checkBeforeSave();
 
