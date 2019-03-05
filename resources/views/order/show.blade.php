@@ -6,8 +6,11 @@
     */
     $sum = 0;
 @endphp
+
 @php $title = 'Đơn hàng'; @endphp
+
 @extends('layouts.main')
+
 @section('title') {{$title}} @endsection
 
 @section('content')
@@ -21,7 +24,7 @@
                 <i class="fa fa-pencil"></i> Sửa
             </a>
             <button onclick="window.history.back()" class="btn btn-default pull-right">
-                <i class="fa fa-reply"></i>  Quay lại
+                <i class="fa fa-reply"></i> Quay lại
             </button>
         </div>
 
@@ -196,21 +199,24 @@
                                             <td style="vertical-align: middle;">{{$item->formatMoney()}}</td>
                                             <td style="vertical-align: middle;">{!! $item->formatStatus() !!}</td>
                                             @can('admin')
-                                            <td style="width: 30px">
-                                                <button class="btn btn-xs btn-outline" onclick="MBT_PaymentSchedule.openForm({{$item->id}})">
-                                                    <i class="fa fa-pencil"></i> Sửa
-                                                </button>
+                                                <td style="width: 30px">
+                                                    <button class="btn btn-xs btn-outline"
+                                                            onclick="MBT_PaymentSchedule.openForm({{$item->id}})">
+                                                        <i class="fa fa-pencil"></i> Sửa
+                                                    </button>
 
-                                                <button class="btn btn-xs btn-outline" onclick="MBT_PaymentSchedule.deleteForm({{$item->id}})">
-                                                    <i class="fa fa-trash"></i> Xóa
-                                                </button>
-                                            </td>
+                                                    <button class="btn btn-xs btn-outline"
+                                                            onclick="MBT_PaymentSchedule.deleteForm({{$item->id}})">
+                                                        <i class="fa fa-trash"></i> Xóa
+                                                    </button>
+                                                </td>
                                             @endcan
                                         </tr>
                                         @if(!empty($item->note))
                                             <tr>
                                                 <td colspan="3">
-                                                    <span style="font-weight: bold; text-decoration: underline; padding-right: 10px;">Ghi chú:</span>
+                                                    <span
+                                                        style="font-weight: bold; text-decoration: underline; padding-right: 10px;">Ghi chú:</span>
                                                     {!! $item->note !!}
                                                 </td>
                                             </tr>
