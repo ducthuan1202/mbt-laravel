@@ -462,7 +462,7 @@
                                 var options = {
                                     title: 'Số tiền báo giá',
                                     is3D: true,
-                                    sliceVisibilityThreshold: .001
+                                    sliceVisibilityThreshold: .0001
                                 };
 
                                 var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
@@ -508,7 +508,7 @@
                                 data.addRows([
                                         @foreach($db7 as $index => $item)
 
-                                    ['{{$item->name}}', {{$item->total}}]
+                                    ['{{$item->name}}', {{$item->total*1000}}]
 
                                     @if($index + 1 < count($db7))
                                     ,
