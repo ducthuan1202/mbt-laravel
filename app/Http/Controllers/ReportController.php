@@ -11,6 +11,7 @@ use App\PaymentSchedule;
 use App\User;
 use App\PriceQuotation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -35,7 +36,7 @@ class ReportController extends Controller
         $debtPaid = $debt->getDebtThisTime($date);
 
         return [
-            'date'=>$date,
+            'date' => $date,
             'revenue' => $revenue,
             'payment' => $payment,
             'debtPaid' => $debtPaid
@@ -58,7 +59,7 @@ class ReportController extends Controller
         $payment = $paymentSchedule->getPaymentNextTime($date);
 
         return [
-            'date'=>$date,
+            'date' => $date,
             'revenue' => $revenue,
             'payment' => $payment,
         ];
@@ -90,14 +91,16 @@ class ReportController extends Controller
     }
 
     // report money
-    public function moneyPresent(Request $request){
+    public function moneyPresent(Request $request)
+    {
         $date = $request->get('date');
         $data = $this->calculatorThis($date);
 
         return view('report.money.present', $data);
     }
 
-    public function moneyFuture(Request $request){
+    public function moneyFuture(Request $request)
+    {
         $date = $request->get('date');
         $data = $this->calculatorNext($date);
 
@@ -108,8 +111,93 @@ class ReportController extends Controller
     public function overview(Request $request)
     {
         $date = $request->get('date');
+        $dt = Common::extractDate($date);
+        $startDate = Common::dmY2Ymd($dt[0]);
+        $endDate = Common::dmY2Ymd($dt[1]);
+
+        $uid =  $request->get('user');
+        //dd($date);
         $shared = $this->byTime($date);
+        $userModel = new User();
         $shared['date'] = $date;
+        $shared['users'] = $userModel->getDropDownList();
+        $shared['uid'] = $uid;
+        //get so luong bao gia theo ngay
+
+        $query1 = DB::table('price_quotations')
+            ->select(DB::raw('count(id) as count , quotations_date as date'))
+            ->whereBetween('quotations_date', [$startDate, $endDate]);
+        if($uid!=0){
+            $query1 = $query1->where('user_id',$uid);
+        }
+        $db1 = $query1->groupBy('quotations_date')->get()->toArray();
+        $shared['db1'] = $db1;
+        //get data ty le
+        $query2 = DB::table('price_quotations')
+            ->select(DB::raw('count(id) as count, status, 
+            CASE
+                WHEN status = 1 THEN "Thành công"
+                WHEN status = 2 THEN "Đang theo"
+                ELSE "Thất bại"
+            END AS statusText
+            '))
+            ->whereBetween('quotations_date', [$startDate, $endDate]);
+
+        if($uid!=0){
+            $query2 = $query2->where('user_id',$uid);
+        }
+
+        $db2 = $query2->groupBy('status')->get()->toArray();
+        $shared['db2'] = $db2;
+
+        //get data theo user
+        $query3 = DB::table('price_quotations')
+            ->select(DB::raw('count(price_quotations.id) as count, users.name as name'))
+            ->join('users', 'users.id', '=', 'price_quotations.user_id')
+            ->whereBetween('price_quotations.quotations_date', [$startDate, $endDate]);
+        if($uid!=0){
+            $query3 = $query3->where('price_quotations.user_id',$uid);
+        }
+        $db3 = $query3->groupBy('price_quotations.user_id')->get()->toArray();
+        $shared['db3'] = $db3;
+
+        // lay du lieu so tien bao gia
+        $query5 = DB::table('price_quotations')
+            ->select(DB::raw('sum(total_money) as total , quotations_date as date'))
+            ->whereBetween('quotations_date', [$startDate, $endDate]);
+        if($uid!=0){
+            $query5 = $query5->where('user_id',$uid);
+        }
+        $db5 = $query5->groupBy('quotations_date')->get()->toArray();
+        $shared['db5'] = $db5;
+        //dd($db3);
+
+        //lay du lieu tong tien theo trang thai
+        $query6 = DB::table('price_quotations')
+            ->select(DB::raw('sum(total_money) as total, status, 
+            CASE
+                WHEN status = 1 THEN "Thành công"
+                WHEN status = 2 THEN "Đang theo"
+                ELSE "Thất bại"
+            END AS statusText
+            '))
+            ->whereBetween('quotations_date', [$startDate, $endDate]);
+        if($uid!=0){
+            $query6 = $query6->where('user_id',$uid);
+        }
+        $db6 = $query6->groupBy('status')->get()->toArray();
+        $shared['db6'] = $db6;
+        //lay data bieu do thu 7
+        $query7 = DB::table('price_quotations')
+            ->select(DB::raw('sum(price_quotations.total_money) as total, users.name as name'))
+            ->join('users', 'users.id', '=', 'price_quotations.user_id')
+            ->whereBetween('price_quotations.quotations_date', [$startDate, $endDate]);
+        if($uid!=0){
+            $query7 = $query7->where('price_quotations.user_id',$uid);
+        }
+        $db7 = $query7->groupBy('price_quotations.user_id')->get()->toArray();
+        $shared['db7'] = $db7;
+       // dd($db7);
         return view('report.overview', $shared);
     }
 

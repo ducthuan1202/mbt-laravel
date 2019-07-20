@@ -9,6 +9,7 @@ use App\Customer;
 use App\Order;
 use App\PriceQuotation;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -21,7 +22,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
 //        $orderModel = new Order();
 //        $customerModel = new Customer();
 //        $eChartCustomerData = $customerModel->countCustomerByStatus();
@@ -30,6 +30,24 @@ class HomeController extends Controller
 //        $userModel = new User();
 //        $eChartData = $userModel->countCustomerByUser();
 //        $debtModel = new Debt();
+
+
+        $today = date("Y-m-d");
+        $t1 = Carbon::now()->subDays(1)->startOfDay()->format('Y-m-d');
+        $t2 = Carbon::now()->subDays(2)->startOfDay()->format('Y-m-d');
+        $t3 = Carbon::now()->subDays(3)->startOfDay()->format('Y-m-d');
+        $t4 = Carbon::now()->subDays(4)->startOfDay()->format('Y-m-d');
+        $t5 = Carbon::now()->subDays(5)->startOfDay()->format('Y-m-d');
+        $t6 = Carbon::now()->subDays(6)->startOfDay()->format('Y-m-d');
+        $today_data = PriceQuotation::getDataByDate($today);
+        $t1_data = PriceQuotation::getDataByDate($t1);
+        $t2_data = PriceQuotation::getDataByDate($t2);
+        $t3_data = PriceQuotation::getDataByDate($t3);
+        $t4_data = PriceQuotation::getDataByDate($t4);
+        $t5_data = PriceQuotation::getDataByDate($t5);
+        $t6_data = PriceQuotation::getDataByDate($t6);
+
+
         $shared = [
             'customerCount' => Customer::countNumber(),
             'cityCount' => City::countNumber(),
@@ -38,12 +56,16 @@ class HomeController extends Controller
             'quotationCount' => PriceQuotation::countNumber(),
             'companyCount' => Company::countNumber(),
             'userCount' => User::countNumber(),
-
-//            'totalMoney' => $orderModel->sumTotalMoney(),
-//            'totalMoneyDebt' => $debtModel->sumTotalMoney(),
-//            'eChartData' => $userModel->eChartGenerateData($eChartData),
-//            'eChartCustomerData' => $customerModel->eChartGenerateData($eChartCustomerData),
+            'today' => $today_data,
+            't1' => $t1_data,
+            't2' => $t2_data,
+            't3' => $t3_data,
+            't4' => $t4_data,
+            't5' => $t5_data,
+            't6' => $t6_data,
         ];
+
+        //dd($t6_data);
 
         return view('pages/dashboard', $shared);
     }
@@ -117,7 +139,7 @@ class HomeController extends Controller
             if (!empty($customer->company)) {
                 $list[] = [
                     'name' => trim($customer->company),
-                    'slug'=>str_slug(trim($customer->company)),
+                    'slug' => str_slug(trim($customer->company)),
                     'created_at' => date('Y-m-d H:i:s')
                 ];
             }

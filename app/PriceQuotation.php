@@ -4,6 +4,7 @@ namespace App;
 
 use App\Helpers\Common;
 use App\Helpers\Messages;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -172,31 +173,19 @@ class PriceQuotation extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public function countByStatus($data = [])
+    public function countByStatus()
     {
-        $count = [
-            self::SUCCESS_STATUS => 0,
-            self::PENDING_STATUS => 0,
-            self::FAIL_STATUS => 0,
-        ];
 
-        foreach ($data as $item) {
-            switch ($item->status) {
-                case self::SUCCESS_STATUS:
-                    $count[self::SUCCESS_STATUS]++;
-                    break;
-                case self::PENDING_STATUS:
-                    $count[self::PENDING_STATUS]++;
-                    break;
-                case self::FAIL_STATUS:
-                    $count[self::FAIL_STATUS]++;
-                    break;
-                default:
-                    break;
-            }
+        $query = PriceQuotation::select(DB::raw('status, COUNT(id) as count'))
+            ->groupBy('status');
+
+        /** @var User $userLogin */
+        $userLogin = \auth()->user();
+        if ($userLogin && (int)$userLogin->role === User::EMPLOYEE_ROLE) {
+            $query = $query->where('user_id', $userLogin->id);
         }
 
-        return $count;
+        return $query->get()->pluck('count', 'status');
     }
 
     private function buildQuerySearch($searchParams = [])
@@ -278,6 +267,16 @@ class PriceQuotation extends Model
         return $data;
     }
 
+    public static function getDataByDate($date){
+        return [
+            'date' => $date,
+            'data'=>DB::table('price_quotations')
+                ->select(DB::raw('count(id) as count, status'))
+                ->where('quotations_date', $date)
+                ->groupBy('status')
+                ->get()->toArray()
+        ];
+    }
     // TODO:  LIST DATA =====
     public function listGroupWork($addAll = false)
     {

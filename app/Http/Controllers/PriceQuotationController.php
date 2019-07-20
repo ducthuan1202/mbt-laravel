@@ -38,16 +38,19 @@ class PriceQuotationController extends Controller
 
         $model = new PriceQuotation();
         $data = $model->search($searchParams);
+        $counter = $model->countByStatus();
+
         $shared = [
             'model' => $model,
             'data' => $data,
-            'counter' => $model->countByStatus($data),
+            'counter' => $counter,
             'searchParams' => $searchParams,
             'users' => $userModel->getDropDownList(true),
             'cities' => $cityModel->getDropDownList(true),
             'customers' => $customerModel->getDropDownList(true),
         ];
 
+        //dd($shared);
         return view('quotation.index', $shared);
     }
 
@@ -109,7 +112,7 @@ class PriceQuotationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -453,7 +456,7 @@ class PriceQuotationController extends Controller
 
         // ngày tháng năm
         $sheet->mergeCells('D26:G26')
-            ->setCellValue('D26', 'Hà Nội, ngày ... tháng ... năm '. date('Y'))
+            ->setCellValue('D26', 'Hà Nội, ngày ... tháng ... năm ' . date('Y'))
             ->getStyle('D26')
             ->applyFromArray(array_merge($fontItalic, $horizontalCenter));
 
@@ -487,7 +490,7 @@ class PriceQuotationController extends Controller
         // output file
         $name = sprintf('bao_gia_%s_%s_KH_%s.xlsx', str_slug($model->user->name, '_'), date('d_m_Y'), str_slug($model->customer->name, '_'));
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.$name.'"');
+        header('Content-Disposition: attachment;filename="' . $name . '"');
         header('Cache-Control: max-age=0');
         $writer = IOFactory::createWriter($spreadSheet, 'Xlsx');
         $writer->save('php://output');

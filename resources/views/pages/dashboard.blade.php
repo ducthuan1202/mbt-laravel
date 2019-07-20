@@ -12,27 +12,6 @@
     <!-- page content -->
     <div class="right_col" role="main">
 
-        <div class="well hidden" style="margin-top: 70px">
-
-            <!-- top tiles -->
-            <div class="row tile_count">
-                <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count">
-                    <span class="count_top"><i class="fa fa-user"></i> Tổng giá trị đơn hàng</span>
-                    <div class="count green">{{Common::formatMoney(0)}}</div>
-                </div>
-                <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count">
-                    <span class="count_top"><i class="fa fa-user"></i> Tổng công nợ</span>
-                    <div class="count">{{Common::formatMoney(0)}}</div>
-                </div>
-                <div class="col-md-4 col-sm-4 col-xs-12 tile_stats_count">
-                    <span class="count_top"><i class="fa fa-clock-o"></i> Tổng tiền thu về</span>
-                    <div class="count">{{Common::formatMoney(0)}}</div>
-                </div>
-            </div>
-            <!-- /top tiles -->
-
-
-        </div>
 
         <div class="row">
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -133,6 +112,120 @@
                     </div>
                 </div>
             </div>
+
+        </div>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <div>
+
+            <div class="x_panel tile">
+                <div class="x_title">
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Settings 1</a>
+                                </li>
+                                <li><a href="#">Settings 2</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div id="container"></div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+
+
+            <script>
+                Highcharts.chart('container', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Thống kê báo giá khách hàng'
+                    },
+                    xAxis: {
+                        categories: [ '{{$t6['date']}}', '{{$t5['date']}}', '{{$t4['date']}}', '{{$t3['date']}}', '{{$t2['date']}}', '{{$t1['date']}}', '{{$today['date']}}']
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Số lượt'
+                        },
+                        stackLabels: {
+                            enabled: true,
+                            style: {
+                                fontWeight: 'bold',
+                                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                            }
+                        }
+                    },
+                    legend: {
+                        align: 'right',
+                        x: -30,
+                        verticalAlign: 'top',
+                        y: 25,
+                        floating: true,
+                        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                        borderColor: '#CCC',
+                        borderWidth: 1,
+                        shadow: false
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{point.x}</b><br/>',
+                        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                    },
+                    plotOptions: {
+                        column: {
+                            stacking: 'normal',
+                            dataLabels: {
+                                enabled: true,
+                                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Đang theo',
+                        data: [
+                            @php  if(isset($t6['data'][2]->count)) echo $t6['data'][2]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t5['data'][2]->count)) echo $t5['data'][2]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t4['data'][2]->count)) echo $t4['data'][2]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t3['data'][2]->count)) echo $t3['data'][2]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t2['data'][2]->count)) echo $t2['data'][2]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t1['data'][2]->count)) echo $t1['data'][2]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($today['data'][2]->count)) echo $today['data'][2]->count; else{echo 0;} @endphp]
+                    }, {
+                        name: 'Thất bại',
+                        data: [
+                            @php  if(isset($t6['data'][1]->count)) echo $t6['data'][1]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t5['data'][1]->count)) echo $t5['data'][1]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t4['data'][1]->count)) echo $t4['data'][1]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t3['data'][1]->count)) echo $t3['data'][1]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t2['data'][1]->count)) echo $t2['data'][1]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t1['data'][1]->count)) echo $t1['data'][1]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($today['data'][1]->count)) echo $today['data'][1]->count; else{echo 0;} @endphp]
+                    }, {
+                        name: 'Thành công',
+                        {{--data: [5, 5, 5, 3, 4, 7, @if isset($today['data'][0]['count']){{$today['data'][0]['count']}}  @else 0 @endif]--}}
+                        data: [
+                            @php  if(isset($t6['data'][0]->count)) echo $t6['data'][0]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t5['data'][0]->count)) echo $t5['data'][0]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t4['data'][0]->count)) echo $t4['data'][0]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t3['data'][0]->count)) echo $t3['data'][0]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t2['data'][0]->count)) echo $t2['data'][0]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($t1['data'][0]->count)) echo $t1['data'][0]->count; else{echo 0;} @endphp ,
+                            @php  if(isset($today['data'][0]->count)) echo $today['data'][0]->count; else{echo 0;} @endphp]
+                    }]
+                });
+            </script>
 
         </div>
 
