@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', 'HomeController@index')->name('home');
 
     Route::get('/users/change-password', 'UserController@changePassword')->name('users.change_password');
+    Route::get('/users/{id}/login-as', 'UserController@loginAs')->name('users.login_as');
     Route::post('/users/change-password', 'UserController@updatePassword')->name('users.update_password');
     Route::get('payment-schedules/{orderId}', 'PaymentScheduleController@index')->name('payment-schedules.index');
     Route::post('payment-schedules/{orderId}', 'PaymentScheduleController@store')->name('payment-schedules.store');

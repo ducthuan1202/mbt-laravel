@@ -1,8 +1,8 @@
 @php
-    /**
-     * @var $data \App\User[]
-     */
-     $user = \Illuminate\Support\Facades\Auth::user();
+/**
+ * @var $data \App\User[]
+ */
+ $user = auth()->user();
 @endphp
 
 @php $title = 'Nhân Sự'; @endphp
@@ -41,9 +41,7 @@
                             <th>Số điện thoại - email</th>
                             <th>Chức danh</th>
                             <th>Trạng thái</th>
-                            @can('admin')
-                                <th></th>
-                            @endif
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -63,16 +61,23 @@
                                     </td>
                                     <td>{!! $item->formatRolesText() !!}</td>
                                     <td>{!! $item->formatStatus() !!}</td>
-                                    @can('admin')
-                                        <td class="text-right" style="min-width: 150px">
-                                            <a href="{{route('users.edit', $item->id)}}" class="btn btn-info btn-xs">
-                                                <i class="fa fa-pencil"></i> Sửa
-                                            </a>
-                                            <a onclick="MBT_User.delete({{$item->id}})" class="btn btn-danger btn-xs">
-                                                <i class="fa fa-trash-o"></i> Xóa
-                                            </a>
-                                        </td>
-                                    @endif
+                                    <td class="text-right" style="min-width: 150px">
+                                        @can('admin')
+
+                                            @if((int)$item->role !== \App\User::ADMIN_ROLE)
+                                                <a href="{{route('users.edit', $item->id)}}" class="btn btn-info btn-xs">
+                                                    <i class="fa fa-pencil"></i> Sửa
+                                                </a>
+
+                                                @if((int)$user->role === \App\User::ADMIN_ROLE)
+                                                    <a href="{{ route('users.login_as', $item->id) }}" class="btn btn-warning btn-xs">
+                                                        <i class="fa fa-sign-in"></i> Login
+                                                    </a>
+                                                @endif
+                                            @endif
+                                        @endcan
+
+                                    </td>
                                 </tr>
                             @endforeach
                         @else

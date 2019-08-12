@@ -1,8 +1,15 @@
 @php
-    /**
-     * @var $data \App\PriceQuotation[]
-     */
-    use App\Helpers\Common;
+/**
+ * @var \App\PriceQuotation[] $data
+ * @var array $counter
+ */
+use App\Helpers\Common;
+use Illuminate\Support\Arr;
+use App\PriceQuotation;
+
+$counterSuccess = Arr::has($counter, PriceQuotation::SUCCESS_STATUS) ? Arr::get($counter, PriceQuotation::SUCCESS_STATUS, 0) : 0;
+$counterPending = Arr::has($counter, PriceQuotation::PENDING_STATUS, 0) ? Arr::get($counter, PriceQuotation::PENDING_STATUS, 0) : 0;
+$counterFail = Arr::has($counter, PriceQuotation::FAIL_STATUS, 0) ? Arr::get($counter, PriceQuotation::FAIL_STATUS, 0) : 0;
 @endphp
 
 @php $title = 'Báo Giá'; @endphp
@@ -32,15 +39,15 @@
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                         <span class="count_top">THÀNH CÔNG</span>
-                        <div class="count green">{{Common::formatNumber($counter[\App\PriceQuotation::SUCCESS_STATUS])}}</div>
+                        <div class="count green">{{Common::formatNumber($counterSuccess)}}</div>
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                         <span class="count_top">ĐANG THEO</span>
-                        <div class="count purple">{{Common::formatNumber($counter[\App\PriceQuotation::PENDING_STATUS])}}</div>
+                        <div class="count purple">{{Common::formatNumber($counterPending)}}</div>
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
                         <span class="count_top">THẤT BẠI</span>
-                        <div class="count red">{{Common::formatNumber($counter[\App\PriceQuotation::FAIL_STATUS])}}</div>
+                        <div class="count red">{{Common::formatNumber($counterFail)}}</div>
                     </div>
                 </div>
 

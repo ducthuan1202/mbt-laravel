@@ -18,6 +18,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('admin');
         $searchParams = [
             'keyword' => '',
             'role' => '',
@@ -32,6 +33,14 @@ class UserController extends Controller
             'status' => $model->getStatus(true),
         ];
         return view('user.index', $shared);
+    }
+
+    public function loginAs(Request $request, $id)
+    {
+        $this->authorize('admin');
+        $model = User::findOrFail($id);
+        Auth::login($model);
+        return redirect(route('home'));
     }
 
     /**
@@ -159,7 +168,6 @@ class UserController extends Controller
                 ->withErrors(['Mật khẩu hiện tại không đúng.']);
         }
     }
-
 
     /**
      * Remove the specified resource from storage.

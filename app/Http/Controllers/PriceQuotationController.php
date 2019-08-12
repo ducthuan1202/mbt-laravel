@@ -50,7 +50,6 @@ class PriceQuotationController extends Controller
             'customers' => $customerModel->getDropDownList(true),
         ];
 
-        //dd($shared);
         return view('quotation.index', $shared);
     }
 
