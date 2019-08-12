@@ -74,11 +74,6 @@
                                         <a href="{{route('cares.edit', $item->id)}}" class="btn btn-info btn-xs">
                                             <i class="fa fa-pencil"></i> Sửa
                                         </a>
-                                        @can('admin')
-                                            <a onclick="MBT_Care.delete({{$item->id}})" class="btn btn-danger btn-xs">
-                                                <i class="fa fa-trash-o"></i> Xóa
-                                            </a>
-                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
