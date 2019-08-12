@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Order;
 use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -37,7 +38,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         # view order
-        Gate::define('view-order', function ($order) {
+        Gate::define('view-order', function ($user, Order $order) {
             return (int)auth()->id() === (int)$order->user_id || (int)auth()->user()->role === User::ADMIN_ROLE;
         });
     }
