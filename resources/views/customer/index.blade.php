@@ -50,9 +50,9 @@
                         <tr class="headings">
                             <th>No.</th>
                             <th>Họ tên</th>
+                            <th>Khu vực</th>
                             <th>Số điện thoại</th>
                             <th>Công ty</th>
-                            <th>Khu vực</th>
                             <th>Nhân viên KD</th>
                             <th class="text-right" style="width: 80px">Trạng thái</th>
                             <th class="text-right">Ngày tạo</th>
@@ -68,13 +68,13 @@
                                         <strong class="text-success">{{$item->name}}</strong>
                                         <p style="font-size: 11px">{{$item->position}}</p>
                                     </td>
+                                    <td>{{$item->formatCity()}}</td>
                                     <td>
                                         <a class="text-primary" href="tel:{{$item->mobile}}"><b>{{$item->mobile}}</b></a><br/>
                                     </td>
                                     <td>
                                         <span>{{$item->formatCompany()}}</span>
                                     </td>
-                                    <td>{{$item->formatCity()}}</td>
                                     <td>
                                         <strong class="text-danger">{!! $item->formatUser() !!}</strong>
                                     </td>

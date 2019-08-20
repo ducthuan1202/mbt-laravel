@@ -28,6 +28,8 @@ class PriceQuotationController extends Controller
             'keyword' => null,
             'date' => null,
             'status' => null,
+            'power' => null,
+            'setup_at' => null,
         ];
         $searchParams = array_merge($searchParams, $request->all());
 
@@ -35,15 +37,13 @@ class PriceQuotationController extends Controller
         $cityModel = new City();
         $userModel = new User();
         $customerModel = new Customer();
-
         $model = new PriceQuotation();
-        $data = $model->search($searchParams);
-        $counter = $model->countByStatus();
 
         $shared = [
             'model' => $model,
-            'data' => $data,
-            'counter' => $counter,
+            'data' => $model->search($searchParams),
+            'counter' => $model->countByStatus($searchParams),
+            'sumMoney' => $model->countMoney($searchParams),
             'searchParams' => $searchParams,
             'users' => $userModel->getDropDownList(true),
             'cities' => $cityModel->getDropDownList(true),

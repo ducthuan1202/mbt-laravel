@@ -5,6 +5,7 @@ namespace App;
 use App\Helpers\Common;
 use App\Helpers\Messages;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -173,24 +174,33 @@ class PriceQuotation extends Model
         return $model->paginate(self::LIMIT);
     }
 
-    public function countByStatus()
+    public function countByStatus($searchParams=[])
     {
 
-        $query = PriceQuotation::select(DB::raw('status, COUNT(id) as count'))
-            ->groupBy('status');
-
-        /** @var User $userLogin */
-        $userLogin = \auth()->user();
-        if ($userLogin && (int)$userLogin->role === User::EMPLOYEE_ROLE) {
-            $query = $query->where('user_id', $userLogin->id);
-        }
-
-        return $query->get()->pluck('count', 'status');
+        return self::filterWithParams($searchParams)
+            ->select(DB::raw('status, COUNT(id) as count'))
+            ->groupBy('status')
+            ->get()
+            ->pluck('count', 'status');
     }
 
-    private function buildQuerySearch($searchParams = [])
+    public function countMoney($searchParams=[])
     {
-        $model = $this->with(['customer', 'user', 'customer.city', 'order']);
+        return self::filterWithParams($searchParams)
+            ->select(DB::raw('status, SUM(total_money) as money'))
+            ->groupBy('status')
+            ->get()
+            ->pluck('money', 'status');
+    }
+
+    public function buildQuerySearch($searchParams = [])
+    {
+        return self::filterWithParams($searchParams)->with(['customer', 'user', 'customer.city', 'order']);
+    }
+
+    public function scopeFilterWithParams(Builder $builder, $searchParams = [])
+    {
+        $model = $builder;
 
         $userLogin = $this->getUserLogin();
         if ($userLogin && $userLogin->role !== User::ADMIN_ROLE) {
@@ -205,6 +215,16 @@ class PriceQuotation extends Model
         // filter by customer
         if (isset($searchParams['user']) && !empty($searchParams['user'])) {
             $model = $model->where('user_id', $searchParams['user']);
+        }
+
+        // filter by setup_at
+        if (isset($searchParams['setup_at']) && !empty($searchParams['setup_at'])) {
+            $model = $model->where('setup_at', $searchParams['setup_at']);
+        }
+
+        // filter by power
+        if (isset($searchParams['power']) && !empty($searchParams['power'])) {
+            $model = $model->where('power', $searchParams['power']);
         }
 
         // filter by customer

@@ -259,7 +259,7 @@ class Customer extends Model
     public function formatCity()
     {
         if (isset($this->city)) {
-            $this->city->name;
+            return $this->city->name;
         }
         return '';
     }

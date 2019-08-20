@@ -11,7 +11,7 @@
 
         <div class="row">
 
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
                 <div class="form-group">
                     <label>Nhân viên</label>
                     @can('admin')
@@ -29,7 +29,7 @@
 
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
                 <div class="form-group">
                     <label>Khu vực</label>
                     <select class="form-control chosen-select" name="city" id="city_id" onchange="getCustomerByCityAndUser()">
@@ -37,7 +37,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
                 <div class="form-group">
                     <label>Khách hàng</label>
                     <select class="form-control chosen-select" name="customer" id="customer_id">
@@ -45,18 +45,23 @@
                     </select>
                 </div>
             </div>
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label>Công suất</label>
+                    <input type="text" name="power" class="form-control" value="{{$searchParams['power']}}"/>
+                </div>
+            </div>
 
-            {{--<div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">--}}
-                {{--<div class="form-group">--}}
-                    {{--<label>Trạng thái KH</label>--}}
-                    {{--<select class="form-control chosen-select" name="status">--}}
-                        {{--@foreach($model->listStatus(true) as $key => $val)--}}
-                            {{--<option value="{{ $key }}" {{ $key == $searchParams['status'] ? 'selected' : '' }}>{!! $val !!}</option>--}}
-                        {{--@endforeach--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                <div class="form-group">
+                    <label>Nơi lắp</label>
+                    <input type="text" name="setup_at" class="form-control" value="{{$searchParams['setup_at']}}"/>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
                 <div class="form-group">
                     <label>Chọn Ngày</label>
                     <div class="input-group date">
@@ -69,7 +74,7 @@
 
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
                 <div class="form-group" style="margin-top: 24px;">
                     <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
                 </div>

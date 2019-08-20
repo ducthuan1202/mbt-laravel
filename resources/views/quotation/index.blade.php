@@ -2,6 +2,7 @@
 /**
  * @var \App\PriceQuotation[] $data
  * @var array $counter
+ * @var array $sumMoney
  */
 use App\Helpers\Common;
 use Illuminate\Support\Arr;
@@ -10,6 +11,14 @@ use App\PriceQuotation;
 $counterSuccess = Arr::has($counter, PriceQuotation::SUCCESS_STATUS) ? Arr::get($counter, PriceQuotation::SUCCESS_STATUS, 0) : 0;
 $counterPending = Arr::has($counter, PriceQuotation::PENDING_STATUS, 0) ? Arr::get($counter, PriceQuotation::PENDING_STATUS, 0) : 0;
 $counterFail = Arr::has($counter, PriceQuotation::FAIL_STATUS, 0) ? Arr::get($counter, PriceQuotation::FAIL_STATUS, 0) : 0;
+
+
+$sumMoneySuccess = Arr::has($sumMoney, PriceQuotation::SUCCESS_STATUS) ? Arr::get($sumMoney, PriceQuotation::SUCCESS_STATUS, 0) : 0;
+$sumMoneyPending = Arr::has($sumMoney, PriceQuotation::PENDING_STATUS, 0) ? Arr::get($sumMoney, PriceQuotation::PENDING_STATUS, 0) : 0;
+$sumMoneyFail = Arr::has($sumMoney, PriceQuotation::FAIL_STATUS, 0) ? Arr::get($sumMoney, PriceQuotation::FAIL_STATUS, 0) : 0;
+
+$sumAll = $sumMoneySuccess + $sumMoneyPending + $sumMoneyFail;
+
 @endphp
 
 @php $title = 'Báo Giá'; @endphp
@@ -18,19 +27,10 @@ $counterFail = Arr::has($counter, PriceQuotation::FAIL_STATUS, 0) ? Arr::get($co
 
 @section('content')
     <div class="right_col" role="main">
-        <div class="x_panel">
-            <div class="x_title">
-                <h2>{{$title}}</h2>
 
-                <a class="btn btn-success pull-right" href="{{route('quotations.create')}}">
-                    <i class="fa fa-plus"></i> Thêm mới
-                </a>
-                <div class="clearfix"></div>
-            </div>
+        <div class="x_panel">
 
             <div class="x_content">
-
-                @include('quotation._search')
 
                 <div class="row tile_count text-center" style="margin-top: 0;">
                     <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
@@ -51,6 +51,40 @@ $counterFail = Arr::has($counter, PriceQuotation::FAIL_STATUS, 0) ? Arr::get($co
                     </div>
                 </div>
 
+                <hr/>
+
+                <div class="row tile_count text-center" style="margin-top: 0;">
+                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                        <div class="count blue" style="font-size: 2em">{{Common::formatNumber($sumAll)}}</div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                        <div class="count green" style="font-size: 2em">{{Common::formatNumber($sumMoneySuccess)}}</div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                        <div class="count purple" style="font-size: 2em">{{Common::formatNumber($sumMoneyPending)}}</div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-6 tile_stats_count" style="margin-bottom: 0">
+                        <div class="count red" style="font-size: 2em">{{Common::formatNumber($sumMoneyFail)}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>{{$title}}</h2>
+
+                <a class="btn btn-success pull-right" href="{{route('quotations.create')}}">
+                    <i class="fa fa-plus"></i> Thêm mới
+                </a>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+
+                @include('quotation._search')
+
                 @if($message = Session::get('success'))
                     <div class="alert alert-success">{{$message}}</div>
                 @endif
@@ -62,6 +96,7 @@ $counterFail = Arr::has($counter, PriceQuotation::FAIL_STATUS, 0) ? Arr::get($co
                             <th style="vertical-align: middle">No.</th>
                             <th style="vertical-align: middle">Ngày</th>
                             <th style="vertical-align: middle">Khách hàng</th>
+                            <th style="vertical-align: middle">Khu vực</th>
                             <th style="vertical-align: middle">Công suất</th>
                             <th style="vertical-align: middle">Nơi lắp</th>
                             <th style="vertical-align: middle">Số lượng</th>
@@ -118,6 +153,9 @@ $counterFail = Arr::has($counter, PriceQuotation::FAIL_STATUS, 0) ? Arr::get($co
                                         </a>
                                     </td>
                                     <td>
+                                        {{ $item->formatCustomerCity() }}
+                                    </td>
+                                    <td>
                                         {{$item->power}}<br/>
                                         {{$item->voltage_input}}<br/>
                                         {{$item->voltage_output}}
@@ -127,7 +165,7 @@ $counterFail = Arr::has($counter, PriceQuotation::FAIL_STATUS, 0) ? Arr::get($co
                                     <td>{{$item->formatTotalMoney()}}</td>
                                     <td>{{empty($item->expired) ? '' : $item->expired.' ngày'}}</td>
                                     <td>{!! $item->formatStatus() !!}</td>
-                                    <td><strong class="text-danger">{!! $item->formatUser() !!}</strong></td>
+                                    <td><strong class="text-danger text-truncate">{!! $item->formatUser() !!}</strong></td>
 
                                 </tr>
                             @endforeach
